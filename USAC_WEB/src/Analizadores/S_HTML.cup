@@ -1,0 +1,30 @@
+package Analizadores; 
+
+import Estructuras.*;
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import javax.swing.JOptionPane;
+import Errores.Erro_r;
+
+
+action code {:
+    //se declaran variables globales etc.
+    //GestorC3D gs = new GestorC3D();
+    
+:}
+
+terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,INT,DOUBLE,STRING,CHAR,BOOLEAN,PYC,IGUAL,VOID,APAR,CPAR,ALLA,CLLA;
+non terminal Nodo programa,expr_a, E_1, T_1,F_1;
+
+
+/*
+precedence left MAS MENOS;
+precedence left POR DIV;
+*/
+
+start with programa;
+
+programa ::= E_1;
+
+E_1 ::= NUM;
