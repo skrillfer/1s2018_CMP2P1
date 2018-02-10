@@ -11,18 +11,19 @@ import Errores.Erro_r;
 action code {:
     //se declaran variables globales etc.
     //GestorC3D gs = new GestorC3D();
-    
 :}
 
 terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,INT,DOUBLE,STRING,CHAR,BOOLEAN,PYC,
 IGUAL,VOID,APAR,CPAR,ALLA,CLLA,IHTML,IENCABEZADO,ICUERPO,ITITULO,IPANEL,ITEXTO,IIMAGEN,
 IBOTON,IENLACE,ITABLA,IFIL_T,ICB,ICT,ITEXTO_A,ICAJA_TEXTO,ICAJA,IOPCION,ISPINNER,ISALTOF,
 FHTML,FENCABEZADO,FCUERPO,FTITULO,FPANEL,FTEXTO,FIMAGEN,FBOTON,FENLACE,FTABLA,FFIL_T,FCB,
-FCT,FTEXTO_A,FCAJA_TEXTO,FCAJA,FOPCION,FSPINNER,MAYQ,MENQ,ICJS,FCJS,ICSS,FCSS;
+FCT,FTEXTO_A,FCAJA_TEXTO,FCAJA,FOPCION,FSPINNER,MAYQ,MENQ,ICJS,FCJS,ICSS,FCSS,FONDO,RUTA,
+CLICK,VALOR,ID,GRUPO,ALTO,ANCHO,ALINEADO,CCSS,STRING_LITERAL,IZQ,DER,CENT;
 
 non terminal Nodo programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,
 contenidocuerpo,contenidocjs,contenidocss,etiquetas_encabezado,fin_encabezado,et_encabezado,
-etiquetacss,etiquetacjs,etiquetas_cuerpo,et_cuerpo,etiquetatitulo,contenidopanel;
+etiquetacss,etiquetacjs,etiquetas_cuerpo,et_cuerpo,etiquetatitulo,contenidopanel,atributo,
+list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,valor_alineado;
 
 
 /*
@@ -36,13 +37,13 @@ programa ::= raiz;
 
 raiz ::= MENQ IHTML MAYQ   MENQ contenidohtml;
 
-contenidohtml ::=  IENCABEZADO  MAYQ   contenidoencabezado
-                   |ICUERPO     MAYQ   contenidocuerpo
+contenidohtml ::=  IENCABEZADO            MAYQ   contenidoencabezado
+                   |ICUERPO     list_atts MAYQ   contenidocuerpo
                    |FHTML MAYQ;
 
 contenidoencabezado ::=  etiquetas_encabezado fin_encabezado
                         |MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO MAYQ   contenidocuerpo;
+                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO  list_atts MAYQ   contenidocuerpo;
 
 etiquetas_encabezado ::= etiquetas_encabezado MENQ et_encabezado
                         |MENQ et_encabezado;
@@ -51,17 +52,17 @@ et_encabezado ::= etiquetacss
                  |etiquetacjs
                  |etiquetatitulo;
 
-etiquetacss ::=  ICJS MAYQ  MENQ FCJS MAYQ;
-etiquetacjs ::=  ICSS MAYQ  MENQ FCSS MAYQ;
+etiquetacss ::=  ICJS list_atts MAYQ  MENQ FCJS MAYQ;
+etiquetacjs ::=  ICSS list_atts MAYQ  MENQ FCSS MAYQ;
 etiquetatitulo::= ITITULO MAYQ  MENQ FTITULO MAYQ;
 
 
 fin_encabezado ::= MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                  |MENQ FENCABEZADO MAYQ    MENQ ICUERPO MAYQ   contenidocuerpo;
+                  |MENQ FENCABEZADO MAYQ    MENQ ICUERPO list_atts MAYQ   contenidocuerpo;
 
 
 contenidocss ::= FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                 FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ ICUERPO MAYQ   contenidocuerpo;
+                 FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ ICUERPO  list_atts MAYQ   contenidocuerpo;
    
 contenidocuerpo ::= etiquetas_cuerpo MENQ FCUERPO MAYQ MENQ FHTML MAYQ
                     |MENQ FCUERPO MAYQ MENQ FHTML MAYQ;
@@ -70,18 +71,58 @@ etiquetas_cuerpo ::= etiquetas_cuerpo MENQ et_cuerpo
                      |MENQ et_cuerpo;
 
 
-et_cuerpo ::=  IPANEL       MAYQ        contenidopanel
-              |ITEXTO       MAYQ        MENQ FTEXTO      MAYQ
-              |IIMAGEN      MAYQ        MENQ FIMAGEN     MAYQ
-              |IBOTON       MAYQ        MENQ FBOTON      MAYQ
-              |IENLACE      MAYQ        MENQ FENLACE     MAYQ
-              |ITABLA       MAYQ        MENQ FTABLA      MAYQ
-              |ITEXTO_A     MAYQ        MENQ FTEXTO_A    MAYQ
-              |ICAJA_TEXTO  MAYQ        MENQ FCAJA_TEXTO MAYQ
-              |ICAJA        MAYQ        MENQ FCAJA       MAYQ  
-              |ISPINNER     MAYQ        MENQ FSPINNER    MAYQ
+et_cuerpo ::=  IPANEL   list_atts    MAYQ        contenidopanel
+              |ITEXTO   list_atts    MAYQ        MENQ FTEXTO      MAYQ
+              |IIMAGEN  list_atts    MAYQ        MENQ FIMAGEN     MAYQ
+              |IBOTON   list_atts    MAYQ        MENQ FBOTON      MAYQ
+              |IENLACE  list_atts    MAYQ        MENQ FENLACE     MAYQ
+              |ITABLA   list_atts    MAYQ        MENQ FTABLA      MAYQ
+              |ITEXTO_A list_atts    MAYQ        MENQ FTEXTO_A    MAYQ
+              |ICAJA_TEXTO list_atts MAYQ        MENQ FCAJA_TEXTO MAYQ
+              |ICAJA    list_atts    MAYQ        MENQ FCAJA       MAYQ  
+              |ISPINNER list_atts    MAYQ        MENQ FSPINNER    MAYQ
               |ISALTOF;
 
 
 contenidopanel ::= etiquetas_cuerpo    MENQ     FPANEL      MAYQ 
                   |MENQ     FPANEL      MAYQ ;  
+
+list_atts ::= {: :}
+             |list_atts2;
+
+list_atts2 ::= list_atts2 atributo PYC
+              |atributo PYC;
+        
+atributo ::= att_ruta 
+            |att_click
+            |att_valor
+            |att_id
+            |att_grupo
+            |att_alto
+            |att_ancho
+            |att_alineado;
+
+att_ruta  ::= RUTA IGUAL STRING_LITERAL:a {: System.out.println(a.getCadena()); :}; 
+
+att_click ::= CLICK IGUAL I_D APAR CPAR;
+
+att_valor ::= VALOR IGUAL STRING_LITERAL;
+
+att_id    ::= ID IGUAL I_D;
+
+att_grupo ::= GRUPO IGUAL I_D;
+
+att_alto  ::= ALTO IGUAL NUM;
+
+att_ancho ::= ANCHO IGUAL NUM;
+
+att_alineado  ::= ALINEADO IGUAL valor_alineado;
+
+
+
+
+valor_alineado ::=   IZQ
+                    |DER
+                    |CENT;
+
+

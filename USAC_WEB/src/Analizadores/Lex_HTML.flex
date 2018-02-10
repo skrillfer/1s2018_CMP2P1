@@ -8,6 +8,7 @@ import Errores.*;
 %%
  
 %{
+    StringBuilder string = new StringBuilder();
 
 static LinkedList<Erro_r> listaErrores= new LinkedList();
 
@@ -42,6 +43,7 @@ public LinkedList<Erro_r> retornarErrores(){
 %char
 %cup
 %state COMENTARIO
+%state STRING
 
 LineTerminator = \r|\n|\r\n|\n\r|\t
 WhiteSpace = {LineTerminator} | [ \t\f]|\t
@@ -51,6 +53,10 @@ Decimal = ([:digit:][[:digit:]]*)? ([.][:digit:][[:digit:]]*)?
 Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 
+/* string and character literals */
+StringCharacter = [^\r\n\"\\]
+SingleCharacter = [^\r\n\'\\]
+OctDigit = [0-7]
 
 %%
 
@@ -72,6 +78,7 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 <YYINITIAL> "{" {return new Symbol(sym.ALLA, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "}" {return new Symbol(sym.CLLA, new token(yycolumn, yyline, yytext()));}
 
+
 <YYINITIAL> "<!"    {yybegin(COMENTARIO);}
 
 <COMENTARIO> [\n]		{System.out.println ("Una linea de comentario");}
@@ -80,7 +87,31 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 <COMENTARIO> "!>"		{yybegin(YYINITIAL);}
 
 
+<YYINITIAL> "\"" { yybegin(STRING); string.setLength(0); }
 
+
+<STRING> {
+  \"                             { yybegin(YYINITIAL); return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, string.toString())); }
+  
+  {StringCharacter}+             { string.append( yytext() ); }
+  
+  /* escape sequences */
+    
+  "\\b"                          { string.append( '\b' ); }
+  "\\t"                          { string.append( '\t' ); }
+  "\\n"                          { string.append( '\n' ); }
+  "\\f"                          { string.append( '\f' ); }
+  "\\r"                          { string.append( '\r' ); }
+  "\\\""                         { string.append( '\"' ); }
+  "\\'"                          { string.append( '\'' ); }
+  "\\\\"                         { string.append( '\\' ); }
+  \\[0-3]?{OctDigit}?{OctDigit}  { char val = (char) Integer.parseInt(yytext().substring(1),8);
+                        				   string.append( val ); }
+  
+  /* error cases */
+  \\.                            { string.append( yytext() ); }/*{ throw new RuntimeException("Illegal escape sequence \""+yytext()+"\""); }*/
+  {LineTerminator}               { throw new RuntimeException("Unterminated string at end of line"); }
+}
 
 
 /* PALABRAS RESERVADAS */
@@ -150,7 +181,20 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 //********************************************************************************************************
 //*********************************ATRIBUTOS**************************************************************
+<YYINITIAL> "fondo" {return new Symbol(sym.FONDO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "ruta" {return new Symbol(sym.RUTA, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "click" {return new Symbol(sym.CLICK, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "valor" {return new Symbol(sym.VALOR, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "Id" {return new Symbol(sym.ID, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "Grupo" {return new Symbol(sym.GRUPO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "Alto" {return new Symbol(sym.ALTO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "Ancho" {return new Symbol(sym.ANCHO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "Alineado" {return new Symbol(sym.ALINEADO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "ccss" {return new Symbol(sym.CCSS, new token(yycolumn, yyline, yytext()));}
 
+<YYINITIAL> "izquierda" {return new Symbol(sym.IZQ, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "derecha" {return new Symbol(sym.DER, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "centrado" {return new Symbol(sym.CENT, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "Void" {return new Symbol(sym.VOID, new token(yycolumn, yyline, yytext()));}
 
