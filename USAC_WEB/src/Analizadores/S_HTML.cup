@@ -15,8 +15,12 @@ action code {:
 :}
 
 terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,INT,DOUBLE,STRING,CHAR,BOOLEAN,PYC,
-IGUAL,VOID,APAR,CPAR,ALLA,CLLA;
-non terminal Nodo programa,expr_a, E_1, T_1,F_1;
+IGUAL,VOID,APAR,CPAR,ALLA,CLLA,IHTML,IENCABEZADO,ICUERPO,ITITULO,IPANEL,ITEXTO,IIMAGEN,
+IBOTON,IENLACE,ITABLA,IFIL_T,ICB,ICT,ITEXTO_A,ICAJA_TEXTO,ICAJA,IOPCION,ISPINNER,ISALTOF,
+FHTML,FENCABEZADO,FCUERPO,FTITULO,FPANEL,FTEXTO,FIMAGEN,FBOTON,FENLACE,FTABLA,FFIL_T,FCB,
+FCT,FTEXTO_A,FCAJA_TEXTO,FCAJA,FOPCION,FSPINNER,MAYQ,MENQ;
+
+non terminal Nodo programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,contenidocuerpo;
 
 
 /*
@@ -26,6 +30,17 @@ precedence left POR DIV;
 
 start with programa;
 
-programa ::= E_1;
+programa ::= raiz;
 
-E_1 ::= NUM;
+raiz ::= MENQ IHTML MAYQ contenidohtml MENQ FHTML MAYQ;
+
+contenidohtml ::= encabezado cuerpo
+                  |cuerpo; 
+
+encabezado ::= MENQ IENCABEZADO MAYQ contenidoencabezado MENQ FENCABEZADO MAYQ;
+
+contenidoencabezado ::= MENQ ITITULO MAYQ  MENQ FTITULO MAYQ;
+
+cuerpo ::= MENQ ICUERPO MAYQ contenidocuerpo MENQ FCUERPO MAYQ;
+
+contenidocuerpo ::= MENQ ITEXTO MAYQ MENQ FTEXTO MAYQ ;

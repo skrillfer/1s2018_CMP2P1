@@ -62,6 +62,9 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 <YYINITIAL> "*" {return new Symbol(sym.POR, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "/" {return new Symbol(sym.DIV, new token(yycolumn, yyline, yytext()));}
 
+<YYINITIAL> "<" {return new Symbol(sym.MENQ, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> ">" {return new Symbol(sym.MAYQ, new token(yycolumn, yyline, yytext()));} 
+
 <YYINITIAL> ";" {return new Symbol(sym.PYC, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "=" {return new Symbol(sym.IGUAL, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "(" {return new Symbol(sym.APAR, new token(yycolumn, yyline, yytext()));}
@@ -81,7 +84,7 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 
 /* PALABRAS RESERVADAS */
-//********************************************************************************************************
+//*************************************ELEMENTOS*************************************************************
 <YYINITIAL> "CHTML" {return new Symbol(sym.IHTML, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "FIN-CHTML" {return new Symbol(sym.FHTML, new token(yycolumn, yyline, yytext()));}
 
@@ -136,9 +139,11 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 <YYINITIAL> "SPINNER" {return new Symbol(sym.ISPINNER, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "FIN-SPINNER" {return new Symbol(sym.FSPINNER, new token(yycolumn, yyline, yytext()));}
 
-<YYINITIAL> "SALTO-FIN" {return new Symbol(sym.ISALTO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "SALTO-FIN" {return new Symbol(sym.ISALTOF, new token(yycolumn, yyline, yytext()));}
 
 //********************************************************************************************************
+//*********************************ATRIBUTOS**************************************************************
+
 
 <YYINITIAL> "Void" {return new Symbol(sym.VOID, new token(yycolumn, yyline, yytext()));}
 
