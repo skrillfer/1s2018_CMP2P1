@@ -18,9 +18,11 @@ terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,INT,DOUBLE,STRING,CHAR,BOOLEAN,
 IGUAL,VOID,APAR,CPAR,ALLA,CLLA,IHTML,IENCABEZADO,ICUERPO,ITITULO,IPANEL,ITEXTO,IIMAGEN,
 IBOTON,IENLACE,ITABLA,IFIL_T,ICB,ICT,ITEXTO_A,ICAJA_TEXTO,ICAJA,IOPCION,ISPINNER,ISALTOF,
 FHTML,FENCABEZADO,FCUERPO,FTITULO,FPANEL,FTEXTO,FIMAGEN,FBOTON,FENLACE,FTABLA,FFIL_T,FCB,
-FCT,FTEXTO_A,FCAJA_TEXTO,FCAJA,FOPCION,FSPINNER,MAYQ,MENQ;
+FCT,FTEXTO_A,FCAJA_TEXTO,FCAJA,FOPCION,FSPINNER,MAYQ,MENQ,ICJS,FCJS,ICSS,FCSS;
 
-non terminal Nodo programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,contenidocuerpo;
+non terminal Nodo programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,
+contenidocuerpo,contenidocjs,contenidocss,etiquetas_encabezado,fin_encabezado,et_encabezado,
+etiquetacss,etiquetacjs,etiquetas_cuerpo,et_cuerpo,etiquetatitulo,contenidopanel;
 
 
 /*
@@ -32,15 +34,54 @@ start with programa;
 
 programa ::= raiz;
 
-raiz ::= MENQ IHTML MAYQ contenidohtml MENQ FHTML MAYQ;
+raiz ::= MENQ IHTML MAYQ   MENQ contenidohtml;
 
-contenidohtml ::= encabezado cuerpo
-                  |cuerpo; 
+contenidohtml ::=  IENCABEZADO  MAYQ   contenidoencabezado
+                   |ICUERPO     MAYQ   contenidocuerpo
+                   |FHTML MAYQ;
 
-encabezado ::= MENQ IENCABEZADO MAYQ contenidoencabezado MENQ FENCABEZADO MAYQ;
+contenidoencabezado ::=  etiquetas_encabezado fin_encabezado
+                        |MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
+                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO MAYQ   contenidocuerpo;
 
-contenidoencabezado ::= MENQ ITITULO MAYQ  MENQ FTITULO MAYQ;
+etiquetas_encabezado ::= etiquetas_encabezado MENQ et_encabezado
+                        |MENQ et_encabezado;
 
-cuerpo ::= MENQ ICUERPO MAYQ contenidocuerpo MENQ FCUERPO MAYQ;
+et_encabezado ::= etiquetacss
+                 |etiquetacjs
+                 |etiquetatitulo;
 
-contenidocuerpo ::= MENQ ITEXTO MAYQ MENQ FTEXTO MAYQ ;
+etiquetacss ::=  ICJS MAYQ  MENQ FCJS MAYQ;
+etiquetacjs ::=  ICSS MAYQ  MENQ FCSS MAYQ;
+etiquetatitulo::= ITITULO MAYQ  MENQ FTITULO MAYQ;
+
+
+fin_encabezado ::= MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
+                  |MENQ FENCABEZADO MAYQ    MENQ ICUERPO MAYQ   contenidocuerpo;
+
+
+contenidocss ::= FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
+                 FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ ICUERPO MAYQ   contenidocuerpo;
+   
+contenidocuerpo ::= etiquetas_cuerpo MENQ FCUERPO MAYQ MENQ FHTML MAYQ
+                    |MENQ FCUERPO MAYQ MENQ FHTML MAYQ;
+
+etiquetas_cuerpo ::= etiquetas_cuerpo MENQ et_cuerpo
+                     |MENQ et_cuerpo;
+
+
+et_cuerpo ::=  IPANEL       MAYQ        contenidopanel
+              |ITEXTO       MAYQ        MENQ FTEXTO      MAYQ
+              |IIMAGEN      MAYQ        MENQ FIMAGEN     MAYQ
+              |IBOTON       MAYQ        MENQ FBOTON      MAYQ
+              |IENLACE      MAYQ        MENQ FENLACE     MAYQ
+              |ITABLA       MAYQ        MENQ FTABLA      MAYQ
+              |ITEXTO_A     MAYQ        MENQ FTEXTO_A    MAYQ
+              |ICAJA_TEXTO  MAYQ        MENQ FCAJA_TEXTO MAYQ
+              |ICAJA        MAYQ        MENQ FCAJA       MAYQ  
+              |ISPINNER     MAYQ        MENQ FSPINNER    MAYQ
+              |ISALTOF;
+
+
+contenidopanel ::= etiquetas_cuerpo    MENQ     FPANEL      MAYQ 
+                  |MENQ     FPANEL      MAYQ ;  

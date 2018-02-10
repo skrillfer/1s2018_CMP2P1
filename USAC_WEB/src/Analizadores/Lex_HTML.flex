@@ -91,6 +91,13 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 <YYINITIAL> "ENCABEZADO" {return new Symbol(sym.IENCABEZADO, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "FIN-ENCABEZADO" {return new Symbol(sym.FENCABEZADO, new token(yycolumn, yyline, yytext()));}
 
+<YYINITIAL> "CJS" {return new Symbol(sym.ICJS, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "FIN-CJS" {return new Symbol(sym.FCJS, new token(yycolumn, yyline, yytext()));}
+
+<YYINITIAL> "CCSS" {return new Symbol(sym.ICSS, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "FIN-CCSS" {return new Symbol(sym.FCSS, new token(yycolumn, yyline, yytext()));}
+
+
 <YYINITIAL> "CUERPO" {return new Symbol(sym.ICUERPO, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "FIN-CUERPO" {return new Symbol(sym.FCUERPO, new token(yycolumn, yyline, yytext()));}
 

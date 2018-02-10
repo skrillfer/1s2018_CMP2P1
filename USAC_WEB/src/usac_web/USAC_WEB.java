@@ -22,13 +22,13 @@ public class USAC_WEB {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        //Prueba de que todo funciona tbien
+    public static void main(String[] args) throws FileNotFoundException {
+        new USAC_WEB().Compilar();
     }
     
     
     public void Compilar() throws FileNotFoundException{
-        escribir("programa.txt","100");
+        //escribir("programa.txt","100");
         AL_HTML lex = new AL_HTML(new FileReader("programa.txt"));//se le pasa al analizador lexico lo que se escribio
         AS_HTML parser = new AS_HTML(lex);
 
