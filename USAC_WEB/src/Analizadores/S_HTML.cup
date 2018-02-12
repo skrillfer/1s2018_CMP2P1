@@ -23,7 +23,9 @@ CLICK,VALOR,ID,GRUPO,ALTO,ANCHO,ALINEADO,CCSS,STRING_LITERAL,IZQ,DER,CENT;
 non terminal Nodo programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,
 contenidocuerpo,contenidocjs,contenidocss,etiquetas_encabezado,fin_encabezado,et_encabezado,
 etiquetacss,etiquetacjs,etiquetas_cuerpo,et_cuerpo,etiquetatitulo,contenidopanel,atributo,
-list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,valor_alineado;
+list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,
+valor_alineado,contenidotabla,etiquetastabla,contenidofila,etiquetasfila,et_cb_ct,contenidoct,contenidocb,
+et_fila;
 
 
 /*
@@ -76,13 +78,40 @@ et_cuerpo ::=  IPANEL   list_atts    MAYQ        contenidopanel
               |IIMAGEN  list_atts    MAYQ        MENQ FIMAGEN     MAYQ
               |IBOTON   list_atts    MAYQ        MENQ FBOTON      MAYQ
               |IENLACE  list_atts    MAYQ        MENQ FENLACE     MAYQ
-              |ITABLA   list_atts    MAYQ        MENQ FTABLA      MAYQ
+              |ITABLA   list_atts    MAYQ        contenidotabla
               |ITEXTO_A list_atts    MAYQ        MENQ FTEXTO_A    MAYQ
               |ICAJA_TEXTO list_atts MAYQ        MENQ FCAJA_TEXTO MAYQ
               |ICAJA    list_atts    MAYQ        MENQ FCAJA       MAYQ  
               |ISPINNER list_atts    MAYQ        MENQ FSPINNER    MAYQ
               |ISALTOF;
 
+contenidotabla ::= etiquetastabla     MENQ     FTABLA      MAYQ
+                   |MENQ     FTABLA      MAYQ;
+                    
+etiquetastabla ::= etiquetastabla MENQ et_fila
+                  |MENQ et_fila;
+
+et_fila        ::= IFIL_T MAYQ  contenidofila;
+
+contenidofila   ::= etiquetasfila MENQ FFIL_T MAYQ
+                    |MENQ FFIL_T MAYQ;
+
+
+etiquetasfila  ::= etiquetasfila MENQ et_cb_ct
+                   |MENQ et_cb_ct;
+
+et_cb_ct       ::= ICB MAYQ contenidocb 
+                  |ICT MAYQ contenidoct;
+
+
+contenidocb    ::= I_D MENQ FCB MAYQ
+                  |MENQ FCB MAYQ;
+
+contenidoct    ::= I_D MENQ FCT MAYQ
+                  |MENQ FCT MAYQ;
+
+
+    
 
 contenidopanel ::= etiquetas_cuerpo    MENQ     FPANEL      MAYQ 
                   |MENQ     FPANEL      MAYQ ;  
@@ -117,8 +146,6 @@ att_alto  ::= ALTO IGUAL NUM;
 att_ancho ::= ANCHO IGUAL NUM;
 
 att_alineado  ::= ALINEADO IGUAL valor_alineado;
-
-
 
 
 valor_alineado ::=   IZQ
