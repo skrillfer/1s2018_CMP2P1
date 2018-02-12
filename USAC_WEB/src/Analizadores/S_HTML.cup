@@ -25,7 +25,7 @@ contenidocuerpo,contenidocjs,contenidocss,etiquetas_encabezado,fin_encabezado,et
 etiquetacss,etiquetacjs,etiquetas_cuerpo,et_cuerpo,etiquetatitulo,contenidopanel,atributo,
 list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,
 valor_alineado,contenidotabla,etiquetastabla,contenidofila,etiquetasfila,et_cb_ct,contenidoct,contenidocb,
-et_fila;
+et_fila,cont_celda, contenidos_celdas;
 
 
 /*
@@ -91,23 +91,22 @@ contenidotabla ::= etiquetastabla     MENQ     FTABLA      MAYQ
 etiquetastabla ::= etiquetastabla MENQ et_fila
                   |MENQ et_fila;
 
-et_fila        ::= IFIL_T MAYQ  contenidofila;
+et_fila        ::= IFIL_T list_atts MAYQ  contenidofila;
 
 contenidofila   ::= etiquetasfila MENQ FFIL_T MAYQ
                     |MENQ FFIL_T MAYQ;
 
-
 etiquetasfila  ::= etiquetasfila MENQ et_cb_ct
                    |MENQ et_cb_ct;
 
-et_cb_ct       ::= ICB MAYQ contenidocb 
-                  |ICT MAYQ contenidoct;
+et_cb_ct       ::= ICB list_atts MAYQ contenidocb 
+                  |ICT list_atts MAYQ contenidoct;
 
 
-contenidocb    ::= I_D MENQ FCB MAYQ
+contenidocb    ::= contenidos_celdas MENQ FCB MAYQ
                   |MENQ FCB MAYQ;
 
-contenidoct    ::= I_D MENQ FCT MAYQ
+contenidoct    ::= contenidos_celdas MENQ FCT MAYQ
                   |MENQ FCT MAYQ;
 
 
@@ -133,23 +132,26 @@ atributo ::= att_ruta
 
 att_ruta  ::= RUTA IGUAL STRING_LITERAL:a {: System.out.println(a.getCadena()); :}; 
 
-att_click ::= CLICK IGUAL I_D APAR CPAR;
+att_click ::= CLICK IGUAL STRING_LITERAL APAR CPAR;
 
 att_valor ::= VALOR IGUAL STRING_LITERAL;
 
-att_id    ::= ID IGUAL I_D;
+att_id    ::= ID IGUAL STRING_LITERAL;
 
-att_grupo ::= GRUPO IGUAL I_D;
+att_grupo ::= GRUPO IGUAL STRING_LITERAL;
 
-att_alto  ::= ALTO IGUAL NUM;
+att_alto  ::= ALTO IGUAL STRING_LITERAL:a {: System.out.println(a.getCadena()); :};
 
-att_ancho ::= ANCHO IGUAL NUM;
+att_ancho ::= ANCHO IGUAL STRING_LITERAL;
 
-att_alineado  ::= ALINEADO IGUAL valor_alineado;
+att_alineado  ::= ALINEADO IGUAL STRING_LITERAL;
 
+contenidos_celdas ::= contenidos_celdas cont_celda
+                    |cont_celda;
 
-valor_alineado ::=   IZQ
-                    |DER
-                    |CENT;
+cont_celda        ::= I_D
+                     |IBOTON   list_atts    MAYQ        MENQ FBOTON      MAYQ
+                     |IIMAGEN  list_atts    MAYQ        MENQ FIMAGEN     MAYQ;
+
 
 

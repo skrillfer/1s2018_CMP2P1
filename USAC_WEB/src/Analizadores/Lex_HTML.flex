@@ -42,7 +42,7 @@ public LinkedList<Erro_r> retornarErrores(){
 %column
 %char
 %cup
-%state COMENTARIO
+//%state COMENTARIO
 %state STRING
 
 LineTerminator = \r|\n|\r\n|\n\r|\t
@@ -53,10 +53,10 @@ Decimal = ([:digit:][[:digit:]]*)? ([.][:digit:][[:digit:]]*)?
 Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 
-/* string and character literals */
-StringCharacter = [^\r\n\"\\]
-SingleCharacter = [^\r\n\'\\]
-OctDigit = [0-7]
+cadena = [\"] [^(\")]* [\"]
+
+comentario_a = "<//-" ~ "-//>"
+
 
 %%
 
@@ -79,40 +79,17 @@ OctDigit = [0-7]
 <YYINITIAL> "}" {return new Symbol(sym.CLLA, new token(yycolumn, yyline, yytext()));}
 
 
-<YYINITIAL> "<!"    {yybegin(COMENTARIO);}
+<YYINITIAL> {comentario_a} {}
+
+/*<YYINITIAL> "<!"    {yybegin(COMENTARIO);}
 
 <COMENTARIO> [\n]		{System.out.println ("Una linea de comentario");}
 <COMENTARIO> "*"		{}
 <COMENTARIO> [^"!>"]            {}
 <COMENTARIO> "!>"		{yybegin(YYINITIAL);}
+*/
 
-
-<YYINITIAL> "\"" { yybegin(STRING); string.setLength(0); }
-
-
-<STRING> {
-  \"                             { yybegin(YYINITIAL); return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, string.toString())); }
-  
-  {StringCharacter}+             { string.append( yytext() ); }
-  
-  /* escape sequences */
-    
-  "\\b"                          { string.append( '\b' ); }
-  "\\t"                          { string.append( '\t' ); }
-  "\\n"                          { string.append( '\n' ); }
-  "\\f"                          { string.append( '\f' ); }
-  "\\r"                          { string.append( '\r' ); }
-  "\\\""                         { string.append( '\"' ); }
-  "\\'"                          { string.append( '\'' ); }
-  "\\\\"                         { string.append( '\\' ); }
-  \\[0-3]?{OctDigit}?{OctDigit}  { char val = (char) Integer.parseInt(yytext().substring(1),8);
-                        				   string.append( val ); }
-  
-  /* error cases */
-  \\.                            { string.append( yytext() ); }/*{ throw new RuntimeException("Illegal escape sequence \""+yytext()+"\""); }*/
-  {LineTerminator}               { throw new RuntimeException("Unterminated string at end of line"); }
-}
-
+<YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 /* PALABRAS RESERVADAS */
 //*************************************ELEMENTOS*************************************************************

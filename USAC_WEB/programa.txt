@@ -1,17 +1,22 @@
+<//- hola me llamo fernando -//> 
 <CHTML>
-<ENCABEZADO> 
-<TITULO><FIN-TITULO>
+<ENCABEZADO><FIN-ENCABEZADO>
 
-<CCSS><FIN-CCSS>
-<FIN-ENCABEZADO>
 <CUERPO>
-<PANEL>
-    <TEXTO><FIN-TEXTO>
-    <PANEL>
-    <TEXTO> <FIN-TEXTO>
-    <FIN-PANEL>
-<FIN-PANEL>
+
+<TABLA>
+
+<FIL_T>
+    <CB ruta = "c:\ruta1.jpg"; Alto = "34px";>
+    <FIN-CB>
+    <CT>
+    <FIN-CT>
+<FIN-FIL_T>
+
+<FIN-TABLA>
+
+<TEXTO_A>           <FIN-TEXTO_A>
+
 <FIN-CUERPO>
+
 <FIN-CHTML>
-
-

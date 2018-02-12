@@ -1,0 +1,103 @@
+package Analizadores;
+import java.util.ArrayList;
+import java_cup.runtime.Symbol;
+%%
+
+entero = [0-9]+
+decimal =[0-9]+ "."? [0-9]*
+letra =[a-zA-ZñÑ]+
+id ={letra}({letra}|{entero}|"_")*
+cadena = [\"] [^(\")]* [\"]
+imp = [\'] [^(\')]* [\']
+comentario_a = "/*" ~ "*/"
+comentario_b = "//"~\n
+
+%{
+
+    
+/* Metodo que es llamado al reconocer un token */
+ArrayList<String> errores = new ArrayList<>();
+private void error_token(String Lexema, int Linea, int Columna)
+{
+    System.out.println("Error ---- Lexema: "+Lexema + " Linea: " + Linea + " Columna: " + Columna);
+	this.errores.add(Lexema+","+Linea+","+Columna);
+}
+private void tokenEncontrado(String Lexema, int Linea, int Columna){
+    System.out.println("Encontrado l: "+Lexema + " Linea: " + Linea + " Columna: " + Columna);
+}
+
+public ArrayList get_errores()
+{
+    return this.errores;
+}
+
+%}
+
+%cupsym simbolos
+%class S1
+%cup
+%unicode
+%public
+%line
+%char
+%column
+%ignorecase
+%%
+/*palabras reservadas*/
+"incluir" {return new Symbol(simbolos.incluir, yycolumn,yyline,new String(yytext()));}
+"funciones" {return new Symbol(simbolos.funciones, yycolumn,yyline,new String(yytext())); }
+"concatenar" {return new Symbol(simbolos.concatenar, yycolumn,yyline,new String(yytext())); }
+"asignar" {return new Symbol(simbolos.asignar, yycolumn,yyline,new String(yytext())); }
+"si" {return new Symbol(simbolos.si, yycolumn,yyline,new String(yytext())); }
+"sino" {return new Symbol(simbolos.sino, yycolumn,yyline,new String(yytext())); }
+"repetir" {return new Symbol(simbolos.repetir, yycolumn,yyline,new String(yytext())); }
+"hasta" {return new Symbol(simbolos.hasta, yycolumn,yyline,new String(yytext())); }
+"para" {return new Symbol(simbolos.para, yycolumn,yyline,new String(yytext())); }
+"mientras" {return new Symbol(simbolos.mientras, yycolumn,yyline,new String(yytext())); }
+"Principal" {return new Symbol(simbolos.principal, yycolumn,yyline,new String(yytext())); }
+"Eventos" {return new Symbol(simbolos.eventos, yycolumn,yyline,new String(yytext())); }
+"variables" {return new Symbol(simbolos.variables, yycolumn,yyline,new String(yytext())); }
+"escribir" {return new Symbol(simbolos.escribir, yycolumn,yyline,new String(yytext())); }
+"agregar" {return new Symbol(simbolos.agregar, yycolumn,yyline,new String(yytext())); }
+"imprimir" {return new Symbol(simbolos.imprimir, yycolumn,yyline,new String(yytext())); }
+"iniciar" {return new Symbol(simbolos.iniciar, yycolumn,yyline,new String(yytext())); }
+"accion" {return new Symbol(simbolos.accion, yycolumn,yyline,new String(yytext())); }
+"obtenertexto" {return new Symbol(simbolos.ot, yycolumn,yyline,new String(yytext())); }
+"colocartexto" {return new Symbol(simbolos.ct, yycolumn,yyline,new String(yytext())); }
+
+"vacio" {return new Symbol(simbolos.vacio, yycolumn,yyline,new String(yytext())); }
+"entero" {return new Symbol(simbolos.entero, yycolumn,yyline,new String(yytext())); }
+"cadena" {return new Symbol(simbolos.cadena, yycolumn,yyline,new String(yytext())); }
+"decimal" {return new Symbol(simbolos.decimal, yycolumn,yyline,new String(yytext())); }
+
+"enteros" {return new Symbol(simbolos.enteros, yycolumn,yyline,new String(yytext())); }
+"retorno" {return new Symbol(simbolos.retorno, yycolumn,yyline,new String(yytext())); }
+
+/*simbolos varios*/
+"<" {return new Symbol(simbolos.menq, yycolumn,yyline,new String(yytext())); }
+">" {return new Symbol(simbolos.mayq, yycolumn,yyline,new String(yytext())); }
+"{" {return new Symbol(simbolos.cori, yycolumn,yyline,new String(yytext())); }
+"}" {return new Symbol(simbolos.corf, yycolumn,yyline,new String(yytext())); }
+"(" {return new Symbol(simbolos.pari, yycolumn,yyline,new String(yytext())); }
+")" {return new Symbol(simbolos.parf, yycolumn,yyline,new String(yytext())); }
+"[" {return new Symbol(simbolos.brai, yycolumn,yyline,new String(yytext())); }
+"]" {return new Symbol(simbolos.braf, yycolumn,yyline,new String(yytext())); }
+":" {return new Symbol(simbolos.dosp, yycolumn,yyline,new String(yytext())); }
+"," {return new Symbol(simbolos.coma, yycolumn,yyline,new String(yytext())); }
+";" {return new Symbol(simbolos.pcoma, yycolumn,yyline,new String(yytext())); }
+"=" {return new Symbol(simbolos.igual, yycolumn,yyline,new String(yytext())); }
+"&&" {return new Symbol(simbolos.and, yycolumn,yyline,new String(yytext())); }
+"||" {return new Symbol(simbolos.or, yycolumn,yyline,new String(yytext())); }
+"!" {return new Symbol(simbolos.Neg, yycolumn,yyline,new String(yytext())); }
+
+/*expresiones regulares*/
+{cadena} {return new Symbol(simbolos.cad, yycolumn,yyline,new String(yytext()));}
+{imp} {return new Symbol(simbolos.imp, yycolumn,yyline,new String(yytext()));}
+{entero} {return new Symbol(simbolos.Int, yycolumn,yyline,new String(yytext()));}
+{decimal} {return new Symbol(simbolos.dec, yycolumn,yyline,new String(yytext()));}
+{id} {return new Symbol(simbolos.id, yycolumn,yyline,new String(yytext()));}
+
+/*Espacios en Blanco*/
+[ \t\r\f\n]+ { /* Se ignoran */}
+/* Cualquier Otro */
+. { error_token(new String(yytext()),yyline,yycolumn); }
