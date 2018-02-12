@@ -10,6 +10,7 @@
     <CB ruta = "c:\ruta1.jpg"; Alto = "34px";>
     <FIN-CB>
     <CT>
+        hola
     <FIN-CT>
 <FIN-FIL_T>
 
