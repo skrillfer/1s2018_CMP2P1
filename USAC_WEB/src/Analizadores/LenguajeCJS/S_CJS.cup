@@ -1,0 +1,129 @@
+package Analizadores.LenguajeCJS; 
+
+import Estructuras.*;
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import javax.swing.JOptionPane;
+import Errores.Erro_r;
+
+
+action code {:
+    //se declaran variables globales etc.
+    //GestorC3D gs = new GestorC3D();
+:}
+
+terminal token COMA,MAS,MENOS,POR,DIV,POT,MOD,ADD,SUB,MENQ,MENIQ,MAYQ,MAYIQ,IG_IG,DIF,AND,OR,NOT,PYC,DSPTS,IGUAL,
+APAR,CPAR,ALLA,CLLA,ACORCH,CCORCH,CONTEO,ATEXTO,SI,SINO,SELECCIONA,CASO,DEFECTO,PARA,MIENTRAS,
+DETENER,IMPRIMIR,FUNCION,RETORNAR,MENSAJE,DOCUMENTO,OBTENER,OBSERVADOR,SETELEMENTO,STRING_LITERAL,
+DIMV,NUM,DECIMAL,I_D;
+
+non terminal Nodo programa,raiz;
+/*
+precedence left MAS MENOS;
+precedence left POR DIV;
+*/
+
+start with programa;
+
+programa ::= raiz;
+
+raiz ::= STRING_LITERAL;
+
+
+//***********************************DECLARACION DE VARIBLES********************
+
+declara_var ::= DIMV I_D asigna_var PYC;
+
+asigna_var  ::={::}
+               |DSPTS valor;
+//***********************************ASIGNACION ********************************
+asignacion   ::= I_D DSPTS valor PYC;
+
+//***********************************DECLARACION DE VECTORES********************
+declara_vecF1   ::= DIMV I_D DSPTS ALLA lista_valores CLLA PYC;  // se crea el vector con valores
+
+declara_vecF2   ::= DIMV I_D ALLA NUM CLLA PYC;// se declara el tamano del vector unidimensional
+
+asigna_vec      ::= I_D DSPTS ALLA lista_valores CLLA PYC;
+
+funcion_conteo  ::= I_D PTO CONTEO PYC;   // DEVUELVE VALOR
+
+funcion_acadena ::= I_D PTO ATEXTO PYC;  // DEVUELVE VALOR
+//******************************************************************************
+valor       ::= STRING_LITERAL
+                |NUM
+                |DECIMAL;
+
+//****************************SI-SINO*******************************************
+
+Si     ::= SI APAR condicion CPAR ALLA instrucciones CLLA opcional
+
+opcional ::= {}
+             |Sino;
+
+Sino   ::= SINO ALLA instrucciones CLLA;
+
+//**************************Selecciona *****************************************
+
+Selecciona ::= SELECCIONA APAR condicion CPAR ALLA lista_casos CLLA;
+
+lista_casos ::=lista_casos caso_defecto
+               |caso_defecto;
+              
+
+caso_defecto  ::= CASO valor DSPTS instrucc iones
+                |DEFECTO     DSPTS instrucciones;
+
+//**************************Ciclo Para******************************************
+Para     ::=   PARA APAR dec_for DSPTS condicion DSPTS operador CPAR ALLA intrucciones CLLA; 
+
+
+dec_for   ::=  I_D  DSPTS valor;
+
+
+operador  ::= ADD | SUB;
+
+
+//*************************Ciclo Mientras***************************************
+Mientras ::= MIENTRAS APAR condicion CPAR ALLA instrucciones CLLA;
+
+//*************************Funcion Detener**************************************
+Detener  ::= DETENER PYC;
+
+//*************************Funcion Imprimir ************************************
+Imprimir ::=IMPRIMIR APAR expr_a CPAR;
+
+//*************************Instrucciones****************************************
+instrucciones  ::= {::}
+                   |Instrucciones;
+
+Instrucciones  ::= asignacion
+                   |declara_vecF1
+                   |declara_vecF2
+                   |asigna_vec
+                   |declara_var
+                   |Si
+                   |Selecciona
+                   |Mientras
+                   |Para
+                   |Detener
+                   |Imprimir;
+
+//************************Metodos y Funciones***********************************
+funcion ::= FUNCION I_D APAR parametros CPAR ALLA instrucciones CLLA;
+
+
+parametros ::= {::}
+              |lista_parametros;
+
+lista_parametros ::=lista_parametros COMA expr_a
+                    |expr_a;
+
+//************************Expresiones Logicas***********************************
+
+//************************Expresiones Relacionales******************************
+
+//************************Expresiones Aritmeticas*******************************
+
+

@@ -1,5 +1,6 @@
 
-package Analizadores;
+
+package Analizadores.LenguajeCJS;
 import Estructuras.*;
 import java.util.LinkedList;
 import java_cup.runtime.*;
@@ -25,11 +26,11 @@ static LinkedList<Erro_r> listaErrores= new LinkedList();
 
 public LinkedList<Simbolo> retornarTablaSimbolos(){
      return AnalizadorLexico.TablaSimbolos;
-}*/
+}
 
 public LinkedList<Erro_r> retornarErrores(){       
 	return AnalizadorLexico.listaErrores;
-}
+}*/
 
 %}
 
@@ -53,7 +54,7 @@ Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 cadena = [\"] [^(\")]* [\"]
 
-comentario_a = "<//-" ~ "-//>"
+comm_multilinea = "'/" ~ "/'"
 
 
 %%
@@ -82,6 +83,7 @@ comentario_a = "<//-" ~ "-//>"
 <YYINITIAL> "||" {return new Symbol(sym.OR, new token(yycolumn, yyline, yytext()));} 
 <YYINITIAL> "!" {return new Symbol(sym.NOT, new token(yycolumn, yyline, yytext()));} 
 <YYINITIAL> ";" {return new Symbol(sym.PYC, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "," {return new Symbol(sym.COMA, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> ":" {return new Symbol(sym.DSPTS, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "=" {return new Symbol(sym.IGUAL, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "(" {return new Symbol(sym.APAR, new token(yycolumn, yyline, yytext()));}
@@ -113,7 +115,7 @@ comentario_a = "<//-" ~ "-//>"
 <YYINITIAL> "Observador" {return new Symbol(sym.OBSERVADOR, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "setElemento" {return new Symbol(sym.SETELEMENTO, new token(yycolumn, yyline, yytext()));}
 
-<YYINITIAL> {comentario_a} {}
+<YYINITIAL> {comm_multilinea} {}
 <YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 
