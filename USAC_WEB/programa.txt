@@ -1,23 +1,2 @@
-<//- hola me llamo fernando -//> 
-<CHTML>
-<ENCABEZADO><FIN-ENCABEZADO>
+DimV persona:12/12/12                    12:23:32;
 
-<CUERPO>
-
-<TABLA>
-
-<FIL_T>
-    <CB ruta = "c:\ruta1.jpg"; Alto = "34px";>
-    <FIN-CB>
-    <CT>
-        hola
-    <FIN-CT>
-<FIN-FIL_T>
-
-<FIN-TABLA>
-
-<TEXTO_A>           <FIN-TEXTO_A>
-
-<FIN-CUERPO>
-
-<FIN-CHTML>

@@ -1,0 +1,5 @@
+digraph G {
+node[shape=Mrecord]
+2[label="declara_var | ",style=bold]
+
+}

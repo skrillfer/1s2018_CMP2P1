@@ -52,6 +52,12 @@ Decimal = ([:digit:][[:digit:]]*)? ([.][:digit:][[:digit:]]*)?
 Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 
+
+fecha   =  {Numero}[/]{Numero}[/]{Numero}
+hora    =  {Numero}[:]{Numero}[:]{Numero}
+
+fecha_hora = {fecha}[ ]+ {hora}
+
 cadena = [\"] [^(\")]* [\"]
 
 comm_multilinea = "'/" ~ "/'"
@@ -82,6 +88,8 @@ comm_multilinea = "'/" ~ "/'"
 <YYINITIAL> "&&" {return new Symbol(sym.AND, new token(yycolumn, yyline, yytext()));} 
 <YYINITIAL> "||" {return new Symbol(sym.OR, new token(yycolumn, yyline, yytext()));} 
 <YYINITIAL> "!" {return new Symbol(sym.NOT, new token(yycolumn, yyline, yytext()));} 
+
+<YYINITIAL> "\'" {return new Symbol(sym.COMS, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> ";" {return new Symbol(sym.PYC, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "," {return new Symbol(sym.COMA, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "." {return new Symbol(sym.PTO, new token(yycolumn, yyline, yytext()));}
@@ -125,6 +133,8 @@ comm_multilinea = "'/" ~ "/'"
 //*************************************Palabras reservadas****************************************
 <YYINITIAL> "DimV" {return new Symbol(sym.DIMV, new token(yycolumn, yyline, yytext()));}
 
+<YYINITIAL> "true"|"false" {return new Symbol(sym.BOOLEAN_LITERAL, new token(yycolumn, yyline, yytext()));}
+
 //********************************************************************************************************
 
 /* EXPRESIONES */
@@ -136,11 +146,10 @@ comm_multilinea = "'/" ~ "/'"
 
 <YYINITIAL> {Id} {return new Symbol(sym.I_D, new token(yycolumn, yyline, yytext()));}
 
-//<YYINITIAL> {String_Literal} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> {fecha} {return new Symbol(sym.DATE_LITERAL, new token(yycolumn, yyline, yytext()));}
 
-
-
+<YYINITIAL> {fecha_hora} {return new Symbol(sym.DATETIME_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 {LineTerminator} {/* ignorar */}
 {WhiteSpace} {/* ignorar */}
-. {adderror(yyline,yycolumn,yytext());}
+. {adderror(yyline,yycolumn,yytext()); System.out.println("error lexico:"+yytext());}

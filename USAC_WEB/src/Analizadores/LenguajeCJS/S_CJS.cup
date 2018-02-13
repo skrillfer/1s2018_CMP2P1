@@ -11,17 +11,34 @@ import Errores.Erro_r;
 action code {:
     //se declaran variables globales etc.
     //GestorC3D gs = new GestorC3D();
+    public int Index=1;
+    public Nodo root = new Nodo();
+:}
+
+parser code
+{:
+    public Nodo crearNodo(String nombre,String valor,int linea,int columna){
+        Nodo nuevo = new Nodo(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        return nuevo;
+    }
+
+    //Este metodo retorna la RAIZ del arbol  generado 
+    public Nodo getRoot(){
+        return action_obj.root;
+    }
 :}
 
 terminal token COMA,MAS,MENOS,POR,DIV,POT,MOD,ADD,SUB,MENQ,MENIQ,MAYQ,MAYIQ,IG_IG,DIF,AND,OR,NOT,PYC,DSPTS,IGUAL,
 APAR,CPAR,ALLA,CLLA,ACORCH,CCORCH,CONTEO,ATEXTO,SI,SINO,SELECCIONA,CASO,DEFECTO,PARA,MIENTRAS,
 DETENER,IMPRIMIR,FUNCION,RETORNAR,MENSAJE,DOCUMENTO,OBTENER,OBSERVADOR,SETELEMENTO,STRING_LITERAL,
-DIMV,NUM,DECIMAL,I_D,PTO;
+DIMV,NUM,DECIMAL,I_D,PTO,BOOLEAN_LITERAL,DATE_LITERAL,DATETIME_LITERAL,COMS;
 
 non terminal Nodo programa,raiz,declara_var,asigna_var,asignacion,declara_vecF1,declara_vecF2,
 asigna_vec,lista_valores,funcion_conteo,funcion_acadena,valor,Si,opcional,Sino,Selecciona,
 lista_casos,caso_defecto,Para,dec_for,operador,instrucciones,Mientras,Detener,Imprimir,Retornar,
-Mensaje,Instrucciones,funcion,parametros,lista_parametros,expr_l,expr_r,expr_a,simplificada,dato;
+Mensaje,Instrucciones,funcion,parametros,lista_parametros,expr_l,expr_r,expr_a,simplificada,dato,
+Lcontenido_cjs,contenido_cjs;
 
 precedence left MAS, MENOS;
 precedence left POR, DIV,MOD;
@@ -35,19 +52,56 @@ precedence right NOT;
 
 start with programa;
 
-programa ::= raiz;
+programa ::= raiz:r          {:   root=r;   :};
 
-raiz ::= STRING_LITERAL;
+raiz ::=    Lcontenido_cjs:a {:     RESULT=a;     :}; 
 
+Lcontenido_cjs ::=  Lcontenido_cjs:x contenido_cjs:y{:
+                        x.add(y);    :}
+                    |contenido_cjs:x{:
+                        RESULT = parser.crearNodo("contenido","",0,0);  
+                        RESULT.add(x);
+                    :};
+
+contenido_cjs ::= declara_var:r{:
+                        RESULT = r; 
+                  :}
+                  |asignacion:r{:
+                        RESULT = r; 
+                  :}
+                  |declara_vecF1:r{:
+                        RESULT = r; 
+                  :}
+                  |declara_vecF2:r{:
+                        RESULT = r; 
+                  :}
+                  |asigna_vec:r{:
+                        RESULT = r; 
+                  :}
+                  |funcion:r{:
+                        RESULT = r; 
+                  :};
 
 //***********************************DECLARACION DE VARIABLES********************
 
-declara_var ::= DIMV I_D asigna_var PYC;
+declara_var ::= DIMV:a I_D:b asigna_var:c PYC{:
+                        RESULT = parser.crearNodo("declara_var","",a.getLinea(),a.getColumna());
+                        RESULT.add(parser.crearNodo("nombre",b.getCadena(),b.getLinea(),b.getColumna()));
+                        RESULT.add(c);
+                        
+                :};
 
-asigna_var  ::={::}
-               |DSPTS valor;
+asigna_var  ::={:   RESULT = parser.crearNodo("asigna_var","",0,0);    :}
+               |DSPTS expr_l:a{:
+                    RESULT = parser.crearNodo("asigna_var","",a.linea,a.columna);
+                    RESULT.add(a);   
+                :};
 //***********************************ASIGNACION ********************************
-asignacion   ::= I_D DSPTS valor PYC;
+asignacion   ::= I_D:a DSPTS expr_l:b PYC {:
+                    RESULT = parser.crearNodo("asignacion","",a.getLinea(),a.getColumna());
+                    RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
+                    RESULT.add(b);    
+                :};
 
 //***********************************DECLARACION DE VECTORES********************
 declara_vecF1   ::= DIMV I_D DSPTS ALLA lista_valores CLLA PYC;  // se crea el vector con valores
@@ -62,10 +116,12 @@ funcion_acadena ::= I_D PTO ATEXTO PYC;  // DEVUELVE VALOR
 
 //****************************LISTA DE VALOREs**********************************
 
-lista_valores ::= lista_valores COMA valor
-                |valor;
+lista_valores ::= lista_valores COMA expr_l
+                |expr_l;
 
-valor       ::= dato;
+valor       ::= dato:a {:
+                    RESULT = a;
+                    :};
 
 //****************************SI-SINO*******************************************
 
@@ -135,36 +191,87 @@ Instrucciones  ::= asignacion
 funcion ::= FUNCION I_D APAR parametros CPAR ALLA instrucciones CLLA;
 
 
-parametros ::= {::}
-              |lista_parametros;
+parametros ::= {:   RESULT = parser.crearNodo("parametros","",0,0);  :}
+              |lista_parametros:x{:     RESULT=x;   :};
 
-lista_parametros ::=lista_parametros COMA expr_a
-                    |expr_a;
+lista_parametros ::=lista_parametros:x COMA expr_a:y{:
+                        x.add(y);
+                        RESULT=x;
+                    :}
+                    |expr_a:x {:
+                        RESULT = parser.crearNodo("parametros","",x.linea,x.columna);
+                        RESULT.add(x);    
+                    :};
 
 //************************Expresiones Logicas***********************************
-expr_l ::= expr_l AND expr_l
-          |expr_l OR  expr_l
-          |NOT expr_l
-          |expr_r;
+expr_l ::= expr_l:b AND:a expr_l:c     {:
+                                          RESULT = parser.crearNodo("AND","",a.getLinea(),a.getColumna());
+                                          RESULT.add(b); RESULT.add(c);
+                                       :}
+          |expr_l:b OR:a  expr_l:c     {:
+                                          RESULT = parser.crearNodo("OR","",a.getLinea(),a.getColumna());
+                                          RESULT.add(b); RESULT.add(c);
+                                      :}
+          |NOT:a expr_l:b             {:    
+                                          RESULT = parser.crearNodo("NOT","",a.getLinea(),a.getColumna());
+                                          RESULT.add(b);
+                                      :}
+          |expr_r:a                   {:  RESULT=a;   :};
 
 //************************Expresiones Relacionales******************************
-expr_r ::= expr_a MENQ expr_a
-          |expr_a MENIQ expr_a
-          |expr_a MAYQ expr_a
-          |expr_a MAYIQ expr_a
-          |expr_a IG_IG expr_a
-          |expr_a DIF expr_a
-          |expr_a;
+expr_r ::= expr_a:b MENQ:a expr_a:c {:
+                                        RESULT = parser.crearNodo("MENQ","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                    :}
+          |expr_a:b MENIQ:a expr_a:c{:
+                                        RESULT = parser.crearNodo("MENIQ","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                    :}
+          |expr_a:b MAYQ:a expr_a:c {:
+                                        RESULT = parser.crearNodo("MAYQ","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                   :}
+          |expr_a:b MAYIQ:a expr_a:c{:
+                                        RESULT = parser.crearNodo("MAYIQ","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                   :}
+          |expr_a:b IG_IG:a expr_a:c{:
+                                        RESULT = parser.crearNodo("IG_IG","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                   :}
+          |expr_a:b DIF:a expr_a:c  {:
+                                        RESULT = parser.crearNodo("DIF","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                   :}
+          |expr_a:r                {:  RESULT = r;  :};
 
 //************************Expresiones Aritmeticas*******************************
-expr_a ::= expr_a MAS expr_a
-          |expr_a MENOS expr_a
-          |expr_a POR expr_a
-          |expr_a DIV expr_a
-          |expr_a MOD expr_a
-          |expr_a POT expr_a
-          |APAR expr_l CPAR
-          |dato
+expr_a ::= expr_a:b MAS:a expr_a:c    {:
+                                        RESULT = parser.crearNodo("MAS","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                      :}
+          |expr_a:b MENOS:a expr_a:c  {:
+                                        RESULT = parser.crearNodo("MENOS","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                      :}
+          |expr_a:b POR:a expr_a:c    {:
+                                        RESULT = parser.crearNodo("POR","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                      :}
+          |expr_a:b DIV:a expr_a:c    {:
+                                        RESULT = parser.crearNodo("DIV","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                      :}
+          |expr_a:b MOD:a expr_a:c    {:
+                                        RESULT = parser.crearNodo("MOD","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                      :}
+          |expr_a:b POT:a expr_a:c    {:
+                                        RESULT = parser.crearNodo("POT","",a.getLinea(),a.getColumna());
+                                        RESULT.add(b);    RESULT.add(c);
+                                      :}
+          |APAR expr_l:r CPAR     {:  RESULT=r;    :}
+          |dato:r                 {:  RESULT=r;    :}
           //|acceso
           |simplificada;
 
@@ -172,6 +279,12 @@ expr_a ::= expr_a MAS expr_a
 simplificada ::= expr_a ADD
                 |expr_a SUB;
           
-dato ::= STRING_LITERAL
-        |NUM
-        |DECIMAL;
+dato ::= STRING_LITERAL:a {:
+                            String cad = a.getCadena(); cad= cad.substring(1,cad.length()-1);
+                            RESULT = parser.crearNodo("string",cad,a.getLinea(),a.getColumna()); 
+                          :}
+        |NUM:a                          {: RESULT = parser.crearNodo("number",a.getCadena(),a.getLinea(),a.getColumna());    :}
+        |DECIMAL:a                      {: RESULT = parser.crearNodo("number",a.getCadena(),a.getLinea(),a.getColumna());    :}
+        |COMS BOOLEAN_LITERAL:a  COMS   {: RESULT = parser.crearNodo("boolean",a.getCadena(),a.getLinea(),a.getColumna());   :}
+        |COMS DATE_LITERAL:a     COMS   {: RESULT = parser.crearNodo("date",a.getCadena(),a.getLinea(),a.getColumna());      :}
+        |COMS DATETIME_LITERAL:a COMS   {: RESULT = parser.crearNodo("datetime",a.getCadena(),a.getLinea(),a.getColumna());  :};

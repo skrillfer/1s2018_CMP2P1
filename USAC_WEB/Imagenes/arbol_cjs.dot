@@ -1,0 +1,11 @@
+digraph G {
+node[shape=Mrecord]
+3[label="declara_var | ",style=bold]
+4[label="nombre | persona",style=bold]
+{3}->{4}
+2[label="asigna_var | ",style=bold]
+{3}->{2}
+1[label="datetime | 12/12/12                    12:23:32",style=bold]
+{2}->{1}
+
+}

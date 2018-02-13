@@ -5,10 +5,36 @@
  */
 package Estructuras;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author fernando
  */
 public class Nodo {
+    public String nombre;
+    public String valor;
+    public int linea;
+    public int columna;
+    public int index;
+    public ArrayList<Nodo> hijos;
+
+    public Nodo(String nombre, String valor, int linea, int columna, int index) {
+        this.nombre = nombre;
+        this.valor = valor;
+        this.linea = linea;
+        this.columna = columna;
+        this.index = index;
+        this.hijos = new ArrayList<>();
+    }
+
+    public Nodo() {
+        
+    }
+    
+    
+    public void add(Nodo h){
+        this.hijos.add(h);
+    }
     
 }
