@@ -57,7 +57,9 @@ programa ::= raiz:r          {:   root=r;   :};
 raiz ::=    Lcontenido_cjs:a {:     RESULT=a;     :}; 
 
 Lcontenido_cjs ::=  Lcontenido_cjs:x contenido_cjs:y{:
-                        x.add(y);    :}
+                        x.add(y);    
+                        RESULT=x;
+                    :}
                     |contenido_cjs:x{:
                         RESULT = parser.crearNodo("contenido","",0,0);  
                         RESULT.add(x);

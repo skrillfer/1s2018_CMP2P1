@@ -1,11 +1,41 @@
 digraph G {
 node[shape=Mrecord]
+5[label="contenido | ",style=bold]
 3[label="declara_var | ",style=bold]
-4[label="nombre | persona",style=bold]
+{5}->{3}
+4[label="nombre | v1_dt",style=bold]
 {3}->{4}
 2[label="asigna_var | ",style=bold]
 {3}->{2}
-1[label="datetime | 12/12/12                    12:23:32",style=bold]
+1[label="datetime | 12/12/12 12:23:32",style=bold]
 {2}->{1}
+14[label="declara_var | ",style=bold]
+{5}->{14}
+15[label="nombre | v2",style=bold]
+{14}->{15}
+13[label="asigna_var | ",style=bold]
+{14}->{13}
+12[label="MAS | ",style=bold]
+{13}->{12}
+6[label="number | 1994",style=bold]
+{12}->{6}
+11[label="DIV | ",style=bold]
+{12}->{11}
+9[label="POR | ",style=bold]
+{11}->{9}
+7[label="number | 9",style=bold]
+{9}->{7}
+8[label="number | 5",style=bold]
+{9}->{8}
+10[label="number | 5",style=bold]
+{11}->{10}
+18[label="declara_var | ",style=bold]
+{5}->{18}
+19[label="nombre | v3",style=bold]
+{18}->{19}
+17[label="asigna_var | ",style=bold]
+{18}->{17}
+16[label="string | hola perocirno",style=bold]
+{17}->{16}
 
 }

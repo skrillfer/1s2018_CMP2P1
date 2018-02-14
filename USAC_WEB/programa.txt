@@ -1,2 +1,5 @@
-DimV persona:12/12/12                    12:23:32;
+DimV v1_dt:'12/12/12 12:23:32';
 
+DimV v2:1994+9*5/5;
+
+DimV v3:"hola perocirno";
