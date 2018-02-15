@@ -78,22 +78,22 @@ contenidohtml ::=  IENCABEZADO:x            MAYQ  {:parser.m2("encabezado","",x.
 
 contenidoencabezado ::=  etiquetas_encabezado fin_encabezado
                         |MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x  {:parser.m1("cuerpo","",x.getLinea(),x.getColumna());:} list_atts MAYQ   contenidocuerpo;
+                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x  {: parser.m1("cuerpo","",x.getLinea(),x.getColumna());:} list_atts MAYQ   contenidocuerpo;
 
-etiquetas_encabezado ::= etiquetas_encabezado MENQ et_encabezado
-                        |MENQ et_encabezado;
+etiquetas_encabezado ::= etiquetas_encabezado MENQ et_encabezado:x  {: last.add(x); :}
+                        |MENQ et_encabezado:x     {: last.add(x); :};
 
-et_encabezado ::= etiquetacss
-                 |etiquetacjs
-                 |etiquetatitulo;
+et_encabezado ::= etiquetacss:r    {: RESULT = r; :}
+                 |etiquetacjs:r    {: RESULT = r; :}
+                 |etiquetatitulo:r {: RESULT = r; :};
 
-etiquetacss ::=  ICJS list_atts MAYQ  MENQ FCJS MAYQ;
-etiquetacjs ::=  ICSS list_atts MAYQ  MENQ FCSS MAYQ;
-etiquetatitulo::= ITITULO MAYQ  MENQ FTITULO MAYQ;
+etiquetacss ::=  ICJS list_atts MAYQ  MENQ FCJS MAYQ    {: RESULT = parser.crearNodo("cjs","",0,0); :};
+etiquetacjs ::=  ICSS list_atts MAYQ  MENQ FCSS MAYQ    {: RESULT = parser.crearNodo("ccss","",0,0); :};
+etiquetatitulo::= ITITULO MAYQ  MENQ FTITULO MAYQ       {: RESULT = parser.crearNodo("titulo","",0,0); :};
 
 
 fin_encabezado ::= MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                  |MENQ FENCABEZADO MAYQ    MENQ ICUERPO list_atts MAYQ   contenidocuerpo;
+                  |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x list_atts MAYQ   {: parser.m1("cuerpo","",x.getLinea(),x.getColumna());:} contenidocuerpo;
 
 
 contenidocss ::= FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
@@ -148,36 +148,43 @@ contenidoct    ::= contenidos_celdas MENQ FCT MAYQ
 contenidopanel ::= etiquetas_cuerpo    MENQ     FPANEL      MAYQ 
                   |MENQ     FPANEL      MAYQ ;  
 
-list_atts ::= {: :}
-             |list_atts2;
 
-list_atts2 ::= list_atts2 atributo PYC
-              |atributo PYC;
+list_atts ::= {:    RESULT = parser.crearNodo("propiedades","",0,0);   :}
+             |list_atts2:x {:   RESULT = x;  :};
+
+list_atts2 ::= list_atts2:x atributo:y PYC {:
+                                x.add(y);
+                                RESULT=x;    
+                            :}
+              |atributo:x PYC {: 
+                                RESULT = parser.crearNodo("propiedades","",0,0); 
+                                RESULT.add(x);
+                            :};
         
-atributo ::= att_ruta     {: RESULT = r;   :}
-            |att_click    {: RESULT = r;   :}
-            |att_valor    {: RESULT = r;   :}
-            |att_id       {: RESULT = r;   :}
-            |att_grupo    {: RESULT = r;   :}
-            |att_alto     {: RESULT = r;   :}
-            |att_ancho    {: RESULT = r;   :}
-            |att_alineado {: RESULT = r;   :};
+atributo ::= att_ruta:r     {: RESULT = r;   :}
+            |att_click:r    {: RESULT = r;   :}
+            |att_valor:r    {: RESULT = r;   :}
+            |att_id:r       {: RESULT = r;   :}
+            |att_grupo:r    {: RESULT = r;   :}
+            |att_alto:r     {: RESULT = r;   :}
+            |att_ancho:r    {: RESULT = r;   :}
+            |att_alineado:r {: RESULT = r;   :};
 
-att_ruta  ::= RUTA IGUAL STRING_LITERAL:a {: RESULT = crearNodo(""); :}; 
+att_ruta  ::= RUTA:x IGUAL STRING_LITERAL:y            {: RESULT = parser.crearNodo("ruta",y.getCadena(),x.getLinea(),x.getColumna()); :}; 
 
-att_click ::= CLICK IGUAL STRING_LITERAL APAR CPAR;
+att_click ::= CLICK:x IGUAL STRING_LITERAL:y APAR CPAR {: RESULT = parser.crearNodo("click",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-att_valor ::= VALOR IGUAL STRING_LITERAL;
+att_valor ::= VALOR:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("valor",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-att_id    ::= ID IGUAL STRING_LITERAL;
+att_id    ::= ID:x IGUAL STRING_LITERAL:y              {: RESULT = parser.crearNodo("id",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-att_grupo ::= GRUPO IGUAL STRING_LITERAL;
+att_grupo ::= GRUPO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("grupo",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-att_alto  ::= ALTO IGUAL STRING_LITERAL:a {: System.out.println(a.getCadena()); :};
+att_alto  ::= ALTO:x IGUAL STRING_LITERAL:y            {: RESULT = parser.crearNodo("alto",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-att_ancho ::= ANCHO IGUAL STRING_LITERAL;
+att_ancho ::= ANCHO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("ancho",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-att_alineado  ::= ALINEADO IGUAL STRING_LITERAL;
+att_alineado  ::= ALINEADO:x IGUAL STRING_LITERAL:y    {: RESULT = parser.crearNodo("alineado",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
 contenidos_celdas ::= contenidos_celdas cont_celda
                     |cont_celda;

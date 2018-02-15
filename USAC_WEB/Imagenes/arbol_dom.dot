@@ -1,0 +1,7 @@
+digraph G {
+node[shape=Mrecord]
+1[label="chtml | ",style=bold]
+3[label="cuerpo | ",style=bold]
+{1}->{3}
+
+}

@@ -1,5 +1,9 @@
-DimV v1_dt:'12/12/12 12:23:32';
-
-DimV v2:1994+9*5/5;
-
-DimV v3:"hola perocirno";
+<CHTML>
+    <ENCABEZADO> 
+    <CJS> <FIN-CJS>
+    <CJS> <FIN-CJS>
+    <CJS> <FIN-CJS>
+    <FIN-ENCABEZADO>
+    <CUERPO>
+    <FIN-CUERPO>
+<FIN-CHTML>

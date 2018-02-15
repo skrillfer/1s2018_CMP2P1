@@ -25,7 +25,7 @@ public class USAC_WEB {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        new USAC_WEB().CompilarCJS();
+        new USAC_WEB().CompilarCHTML();
     }
     
     public void CompilarCJS() throws FileNotFoundException{
@@ -53,6 +53,9 @@ public class USAC_WEB {
 
         try {
             parser.parse();
+            NodoDOM raiz = parser.getRoot();
+            Arbol_DOM gen_arbol = new Arbol_DOM();
+            gen_arbol.generacion_arbolCJS(raiz);
             //        Arma arma = new Arma(null, Destruir, null)
         } catch (Exception e) {
             // System.out.println(e.getMessage());
