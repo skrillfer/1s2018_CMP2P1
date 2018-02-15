@@ -10,7 +10,40 @@ import Errores.Erro_r;
 
 action code {:
     //se declaran variables globales etc.
-    //GestorC3D gs = new GestorC3D();
+    public int Index=1;
+    public NodoDOM root;
+    public NodoDOM tmpN ;
+    public NodoDOM last ;
+:}
+
+parser code {:
+    public NodoDOM crearNodo(String nombre,String valor,int linea,int columna){
+        NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        return nuevo;
+    }
+
+    //este metodo crear un nuevo nodo, lo agrega a la raiz actual y luego cambia la raizactual por el nuevo nodo creado
+    public void m1(String nombre,String valor,int linea,int columna){
+        NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        action_obj.tmpN.add(nuevo);
+        action_obj.tmpN=nuevo;         //despues de crear el nuevo nodo se deja en la variable tmpN
+    }
+
+
+    //este metodo crear un nuevo nodo y simplemente se lo agrega a la raiz actual sin cambiarla
+    public void m2(String nombre,String valor,int linea,int columna){
+        NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        action_obj.tmpN.add(nuevo);
+        action_obj.last=nuevo;
+    }
+
+    //Este metodo retorna la RAIZ del arbol  generado 
+    public NodoDOM getRoot(){
+        return action_obj.root;
+    }
 :}
 
 terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,INT,DOUBLE,STRING,CHAR,BOOLEAN,PYC,
@@ -20,7 +53,7 @@ FHTML,FENCABEZADO,FCUERPO,FTITULO,FPANEL,FTEXTO,FIMAGEN,FBOTON,FENLACE,FTABLA,FF
 FCT,FTEXTO_A,FCAJA_TEXTO,FCAJA,FOPCION,FSPINNER,MAYQ,MENQ,ICJS,FCJS,ICSS,FCSS,FONDO,RUTA,
 CLICK,VALOR,ID,GRUPO,ALTO,ANCHO,ALINEADO,CCSS,STRING_LITERAL,IZQ,DER,CENT;
 
-non terminal Nodo programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,
+non terminal NodoDOM programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,
 contenidocuerpo,contenidocjs,contenidocss,etiquetas_encabezado,fin_encabezado,et_encabezado,
 etiquetacss,etiquetacjs,etiquetas_cuerpo,et_cuerpo,etiquetatitulo,contenidopanel,atributo,
 list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,
@@ -37,15 +70,15 @@ start with programa;
 
 programa ::= raiz;
 
-raiz ::= MENQ IHTML MAYQ   MENQ contenidohtml;
+raiz ::= MENQ  IHTML:x MAYQ   MENQ {: root = parser.crearNodo("chtml","",x.getLinea(),x.getColumna());  tmpN=root; :} contenidohtml;
 
-contenidohtml ::=  IENCABEZADO            MAYQ   contenidoencabezado
-                   |ICUERPO     list_atts MAYQ   contenidocuerpo
+contenidohtml ::=  IENCABEZADO:x            MAYQ  {:parser.m2("encabezado","",x.getLinea(),x.getColumna());:}  contenidoencabezado
+                   |ICUERPO:x   list_atts   MAYQ  {:parser.m2("cuerpo","",x.getLinea(),x.getColumna());:}      contenidocuerpo
                    |FHTML MAYQ;
 
 contenidoencabezado ::=  etiquetas_encabezado fin_encabezado
                         |MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO  list_atts MAYQ   contenidocuerpo;
+                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x  {:parser.m1("cuerpo","",x.getLinea(),x.getColumna());:} list_atts MAYQ   contenidocuerpo;
 
 etiquetas_encabezado ::= etiquetas_encabezado MENQ et_encabezado
                         |MENQ et_encabezado;
@@ -121,16 +154,16 @@ list_atts ::= {: :}
 list_atts2 ::= list_atts2 atributo PYC
               |atributo PYC;
         
-atributo ::= att_ruta 
-            |att_click
-            |att_valor
-            |att_id
-            |att_grupo
-            |att_alto
-            |att_ancho
-            |att_alineado;
+atributo ::= att_ruta     {: RESULT = r;   :}
+            |att_click    {: RESULT = r;   :}
+            |att_valor    {: RESULT = r;   :}
+            |att_id       {: RESULT = r;   :}
+            |att_grupo    {: RESULT = r;   :}
+            |att_alto     {: RESULT = r;   :}
+            |att_ancho    {: RESULT = r;   :}
+            |att_alineado {: RESULT = r;   :};
 
-att_ruta  ::= RUTA IGUAL STRING_LITERAL:a {: System.out.println(a.getCadena()); :}; 
+att_ruta  ::= RUTA IGUAL STRING_LITERAL:a {: RESULT = crearNodo(""); :}; 
 
 att_click ::= CLICK IGUAL STRING_LITERAL APAR CPAR;
 
