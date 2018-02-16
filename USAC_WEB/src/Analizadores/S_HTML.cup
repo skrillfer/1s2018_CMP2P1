@@ -2,10 +2,8 @@ package Analizadores;
 
 import Estructuras.*;
 import java_cup.runtime.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import javax.swing.JOptionPane;
-import Errores.Erro_r;
+
+import java.util.*;
 
 
 action code {:
@@ -14,6 +12,8 @@ action code {:
     public NodoDOM root;
     public NodoDOM tmpN ;
     public NodoDOM last ;
+    public NodoDOM gCuerpo ;
+    public Stack<NodoDOM> pilaPanel = new Stack<>() ; // se guarda el ultimo panel
 :}
 
 parser code {:
@@ -38,6 +38,34 @@ parser code {:
         action_obj.Index++;
         action_obj.tmpN.add(nuevo);
         action_obj.last=nuevo;
+
+        if(nombre.equals("panel")){
+            if(action_obj.pilaPanel.isEmpty()){
+                action_obj.gCuerpo=action_obj.tmpN;
+            }
+            action_obj.tmpN=nuevo;
+            push(nuevo); // se agrega a la pila de paneles
+        }
+    }
+
+    //este metodo hace tmpN=last
+    public void Tadd(NodoDOM nodo){
+        action_obj.tmpN.add(nodo);
+    }
+
+    //este metodo agrega un panel al la cima de la pila
+    public void push(NodoDOM panel){
+        action_obj.pilaPanel.push(panel);
+    }
+
+    public void pop(){
+        action_obj.pilaPanel.pop();
+        if(action_obj.pilaPanel.isEmpty()){
+            action_obj.tmpN=action_obj.gCuerpo;
+        }else{
+            action_obj.tmpN=action_obj.pilaPanel.pop();
+            action_obj.pilaPanel.push(action_obj.tmpN);
+        }
     }
 
     //Este metodo retorna la RAIZ del arbol  generado 
@@ -73,12 +101,12 @@ programa ::= raiz;
 raiz ::= MENQ  IHTML:x MAYQ   MENQ {: root = parser.crearNodo("chtml","",x.getLinea(),x.getColumna());  tmpN=root; :} contenidohtml;
 
 contenidohtml ::=  IENCABEZADO:x            MAYQ  {:parser.m2("encabezado","",x.getLinea(),x.getColumna());:}  contenidoencabezado
-                   |ICUERPO:x   list_atts   MAYQ  {:parser.m2("cuerpo","",x.getLinea(),x.getColumna());:}      contenidocuerpo
+                   |ICUERPO:x   list_atts   MAYQ  {:parser.m1("cuerpo","",x.getLinea(),x.getColumna());  :}      contenidocuerpo
                    |FHTML MAYQ;
 
 contenidoencabezado ::=  etiquetas_encabezado fin_encabezado
                         |MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x  {: parser.m1("cuerpo","",x.getLinea(),x.getColumna());:} list_atts MAYQ   contenidocuerpo;
+                        |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x  {: parser.m1("cuerpo","",x.getLinea(),x.getColumna()); :} list_atts MAYQ   contenidocuerpo;
 
 etiquetas_encabezado ::= etiquetas_encabezado MENQ et_encabezado:x  {: last.add(x); :}
                         |MENQ et_encabezado:x     {: last.add(x); :};
@@ -93,11 +121,11 @@ etiquetatitulo::= ITITULO MAYQ  MENQ FTITULO MAYQ       {: RESULT = parser.crear
 
 
 fin_encabezado ::= MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                  |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x list_atts MAYQ   {: parser.m1("cuerpo","",x.getLinea(),x.getColumna());:} contenidocuerpo;
+                  |MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x list_atts MAYQ   {: parser.m1("cuerpo","",x.getLinea(),x.getColumna()); :} contenidocuerpo;
 
 
 contenidocss ::= FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ FHTML MAYQ
-                 FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ ICUERPO  list_atts MAYQ   contenidocuerpo;
+                 FCSS MAYQ MENQ FENCABEZADO MAYQ    MENQ ICUERPO:x  list_atts MAYQ   {: parser.m1("cuerpo","",x.getLinea(),x.getColumna()); :} contenidocuerpo;
    
 contenidocuerpo ::= etiquetas_cuerpo MENQ FCUERPO MAYQ MENQ FHTML MAYQ
                     |MENQ FCUERPO MAYQ MENQ FHTML MAYQ;
@@ -106,47 +134,47 @@ etiquetas_cuerpo ::= etiquetas_cuerpo MENQ et_cuerpo
                      |MENQ et_cuerpo;
 
 
-et_cuerpo ::=  IPANEL   list_atts    MAYQ        contenidopanel
-              |ITEXTO   list_atts    MAYQ        MENQ FTEXTO      MAYQ
-              |IIMAGEN  list_atts    MAYQ        MENQ FIMAGEN     MAYQ
-              |IBOTON   list_atts    MAYQ        MENQ FBOTON      MAYQ
-              |IENLACE  list_atts    MAYQ        MENQ FENLACE     MAYQ
-              |ITABLA   list_atts    MAYQ        contenidotabla
-              |ITEXTO_A list_atts    MAYQ        MENQ FTEXTO_A    MAYQ
-              |ICAJA_TEXTO list_atts MAYQ        MENQ FCAJA_TEXTO MAYQ
-              |ICAJA    list_atts    MAYQ        MENQ FCAJA       MAYQ  
-              |ISPINNER list_atts    MAYQ        MENQ FSPINNER    MAYQ
-              |ISALTOF;
+et_cuerpo ::=  IPANEL:x   list_atts    MAYQ  {:parser.m2("panel","",x.getLinea(),x.getColumna()); :}        contenidopanel     
+              |ITEXTO:x   list_atts    MAYQ  {:parser.m2("texto","",x.getLinea(),x.getColumna());:}         MENQ FTEXTO      MAYQ
+              |IIMAGEN:x  list_atts    MAYQ  {:parser.m2("imagen","",x.getLinea(),x.getColumna());:}        MENQ FIMAGEN     MAYQ
+              |IBOTON:x   list_atts    MAYQ  {:parser.m2("boton","",x.getLinea(),x.getColumna());:}         MENQ FBOTON      MAYQ
+              |IENLACE:x  list_atts    MAYQ  {:parser.m2("enlace","",x.getLinea(),x.getColumna());:}        MENQ FENLACE     MAYQ
+              |ITABLA:y   list_atts    MAYQ  contenidotabla:x {: x.linea=y.getLinea(); x.columna=y.getColumna(); parser.Tadd(x); :}
+              |ITEXTO_A:x list_atts    MAYQ  {:parser.m2("texto_a","",x.getLinea(),x.getColumna());:}       MENQ FTEXTO_A    MAYQ
+              |ICAJA_TEXTO:x list_atts MAYQ  {:parser.m2("caja_texto","",x.getLinea(),x.getColumna());:}    MENQ FCAJA_TEXTO MAYQ
+              |ICAJA:x    list_atts    MAYQ  {:parser.m2("caja","",x.getLinea(),x.getColumna());:}          MENQ FCAJA       MAYQ  
+              |ISPINNER:x list_atts    MAYQ  {:parser.m2("spinner","",x.getLinea(),x.getColumna());:}       MENQ FSPINNER    MAYQ
+              |ISALTOF:x               MAYQ  {:parser.m2("salto","",x.getLinea(),x.getColumna());:};
 
-contenidotabla ::= etiquetastabla     MENQ     FTABLA      MAYQ
-                   |MENQ     FTABLA      MAYQ;
+contenidotabla ::= etiquetastabla:x     MENQ     FTABLA      MAYQ  {: RESULT = x; :}
+                   |MENQ     FTABLA      MAYQ                      {: RESULT = parser.crearNodo("tabla","",0,0); :};
                     
-etiquetastabla ::= etiquetastabla MENQ et_fila
-                  |MENQ et_fila;
+etiquetastabla ::= etiquetastabla:x MENQ et_fila:y {: x.add(y); RESULT = x;  :}
+                  |MENQ et_fila:x  {:  RESULT = parser.crearNodo("tabla","",0,0); RESULT.add(x); :};
 
-et_fila        ::= IFIL_T list_atts MAYQ  contenidofila;
+et_fila        ::= IFIL_T:y list_atts MAYQ  contenidofila:x {: x.linea=y.getLinea(); x.columna=y.getColumna();  RESULT=x; :};
 
-contenidofila   ::= etiquetasfila MENQ FFIL_T MAYQ
-                    |MENQ FFIL_T MAYQ;
+contenidofila   ::= etiquetasfila:x MENQ FFIL_T MAYQ {: RESULT=x; :}
+                    |MENQ FFIL_T MAYQ                {: RESULT = parser.crearNodo("fil_t","",0,0); :};
 
-etiquetasfila  ::= etiquetasfila MENQ et_cb_ct
-                   |MENQ et_cb_ct;
+etiquetasfila  ::= etiquetasfila:x MENQ et_cb_ct:y {: x.add(y); RESULT=x; :}
+                   |MENQ et_cb_ct:x                {: RESULT = parser.crearNodo("fil_t","",0,0); RESULT.add(x); :};
 
-et_cb_ct       ::= ICB list_atts MAYQ contenidocb 
-                  |ICT list_atts MAYQ contenidoct;
+et_cb_ct       ::= ICB:y list_atts MAYQ contenidocb:x  {:x.linea=y.getLinea(); x.columna=y.getColumna();    RESULT = x; :} 
+                  |ICT:y list_atts MAYQ contenidoct:x  {:x.linea=y.getLinea(); x.columna=y.getColumna();    RESULT = x; :};
 
 
-contenidocb    ::= contenidos_celdas MENQ FCB MAYQ
-                  |MENQ FCB MAYQ;
+contenidocb    ::= contenidos_celdas:x MENQ FCB MAYQ   {:  RESULT = x; :}
+                  |MENQ FCB MAYQ                       {:RESULT = parser.crearNodo("cb","",0,0);:};
 
-contenidoct    ::= contenidos_celdas MENQ FCT MAYQ
-                  |MENQ FCT MAYQ;
+contenidoct    ::= contenidos_celdas:x MENQ FCT MAYQ   {:  RESULT = x; :}
+                  |MENQ FCT MAYQ                       {:RESULT = parser.crearNodo("ct","",0,0);:};
 
 
     
 
-contenidopanel ::= etiquetas_cuerpo    MENQ     FPANEL      MAYQ 
-                  |MENQ     FPANEL      MAYQ ;  
+contenidopanel ::= etiquetas_cuerpo    MENQ     FPANEL      MAYQ {: parser.pop(); :}
+                  |MENQ     FPANEL      MAYQ  {: parser.pop(); :};  
 
 
 list_atts ::= {:    RESULT = parser.crearNodo("propiedades","",0,0);   :}
@@ -186,12 +214,13 @@ att_ancho ::= ANCHO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearN
 
 att_alineado  ::= ALINEADO:x IGUAL STRING_LITERAL:y    {: RESULT = parser.crearNodo("alineado",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-contenidos_celdas ::= contenidos_celdas cont_celda
-                    |cont_celda;
+
+contenidos_celdas ::= contenidos_celdas:x cont_celda:y {: x.add(y);  RESULT = x ; :}
+                    |cont_celda:x {: RESULT = parser.crearNodo("ct","",x.linea,x.columna);  RESULT.add(x);  :};
 
 cont_celda        ::= I_D
-                     |IBOTON   list_atts    MAYQ        MENQ FBOTON      MAYQ
-                     |IIMAGEN  list_atts    MAYQ        MENQ FIMAGEN     MAYQ;
+                     |IBOTON:x   list_atts    MAYQ        MENQ FBOTON      MAYQ {: RESULT = parser.crearNodo("boton","",x.getLinea(),x.getColumna());  :}
+                     |IIMAGEN:x  list_atts    MAYQ        MENQ FIMAGEN     MAYQ {: RESULT = parser.crearNodo("imagen","",x.getLinea(),x.getColumna()); :};
 
 
 

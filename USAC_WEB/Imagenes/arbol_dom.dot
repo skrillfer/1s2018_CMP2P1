@@ -1,7 +1,55 @@
 digraph G {
 node[shape=Mrecord]
 1[label="chtml | ",style=bold]
+2[label="encabezado | ",style=bold]
+{1}->{2}
 3[label="cuerpo | ",style=bold]
 {1}->{3}
+6[label="boton | ",style=bold]
+{3}->{6}
+8[label="texto | ",style=bold]
+{3}->{8}
+10[label="imagen | ",style=bold]
+{3}->{10}
+12[label="enlace | ",style=bold]
+{3}->{12}
+14[label="panel | ",style=bold]
+{3}->{14}
+16[label="boton | ",style=bold]
+{14}->{16}
+18[label="texto | ",style=bold]
+{14}->{18}
+20[label="panel | ",style=bold]
+{14}->{20}
+32[label="tabla | ",style=bold]
+{20}->{32}
+25[label="fil_t | ",style=bold]
+{32}->{25}
+24[label="ct | ",style=bold]
+{25}->{24}
+27[label="ct | ",style=bold]
+{25}->{27}
+29[label="ct | ",style=bold]
+{25}->{29}
+31[label="ct | ",style=bold]
+{25}->{31}
+34[label="fil_t | ",style=bold]
+{32}->{34}
+38[label="fil_t | ",style=bold]
+{32}->{38}
+37[label="cb | ",style=bold]
+{38}->{37}
+40[label="cb | ",style=bold]
+{38}->{40}
+41[label="salto | ",style=bold]
+{3}->{41}
+43[label="spinner | ",style=bold]
+{3}->{43}
+45[label="caja | ",style=bold]
+{3}->{45}
+47[label="caja_texto | ",style=bold]
+{3}->{47}
+49[label="texto_a | ",style=bold]
+{3}->{49}
 
 }
