@@ -1,36 +1,22 @@
-<CHTML>
-    <ENCABEZADO><FIN-ENCABEZADO>
-    <CUERPO>
-        <BOTON>         <FIN-BOTON>
-        <TEXTO>         <FIN-TEXTO>
-        <IMAGEN>        <FIN-IMAGEN>
-        <ENLACE>        <FIN-ENLACE>
-        <PANEL>         
-                <BOTON>         <FIN-BOTON>
-                <TEXTO>         <FIN-TEXTO>
-                <PANEL>
-                     <TABLA>
-                        <FIL_T>
-                            <CT> <FIN-CT>
-                            <CT> <FIN-CT>
-                            <CT> <FIN-CT>
-                            <CT> <FIN-CT>
-                        <FIN-FIL_T>         
-                        <FIL_T>
-                        <FIN-FIL_T>
-                        <FIL_T>
-                            <CB> <FIN-CB>
-                            <CB> <FIN-CB>
-                        <FIN-FIL_T>
-                    <FIN-TABLA>
-                <FIN-PANEL>
-      
-        <FIN-PANEL>
-       
-        <SALTO-FIN>
-        <SPINNER>       <FIN-SPINNER>
-        <CAJA>          <FIN-CAJA>
-        <CAJA_TEXTO>          <FIN-CAJA_TEXTO>  
-        <TEXTO_A>  <FIN-TEXTO_A>
-    <FIN-CUERPO>
-<FIN-CHTML>
+DimV var1;
+DimV var2:4*8+3-1^1;
+DimV var3:"!olvida el miedo!";
+DimV var4:48.5;
+DimV var5:'14/23/23';
+
+
+
+
+Funcion metodo1 (x,y,z){
+
+}
+
+
+Funcion metodo2 (x,y,z){
+
+}
+
+
+Funcion metodo3 (x,y,z){
+
+}

@@ -56,33 +56,23 @@ programa ::= raiz:r          {:   root=r;   :};
 
 raiz ::=    Lcontenido_cjs:a {:     RESULT=a;     :}; 
 
-Lcontenido_cjs ::=  Lcontenido_cjs:x contenido_cjs:y{:
-                        x.add(y);    
-                        RESULT=x;
-                    :}
-                    |contenido_cjs:x{:
+ 
+
+Lcontenido_cjs ::= Lcontenido_cjs:r  contenido_cjs:x{:
+                        r.add(x);
+                        RESULT=r;
+                  :}
+                  |contenido_cjs:x{:
                         RESULT = parser.crearNodo("contenido","",0,0);  
                         RESULT.add(x);
-                    :};
-
-contenido_cjs ::= declara_var:r{:
-                        RESULT = r; 
-                  :}
-                  |asignacion:r{:
-                        RESULT = r; 
-                  :}
-                  |declara_vecF1:r{:
-                        RESULT = r; 
-                  :}
-                  |declara_vecF2:r{:
-                        RESULT = r; 
-                  :}
-                  |asigna_vec:r{:
-                        RESULT = r; 
-                  :}
-                  |funcion:r{:
-                        RESULT = r; 
                   :};
+
+contenido_cjs ::= declara_var:r     {:    RESULT = r;     :}
+                  |declara_vecF1:r  {:    RESULT = r;     :}
+                  |declara_vecF2:r  {:    RESULT = r;     :}
+                  |asignacion:r     {:    RESULT = r;     :}
+                  |asigna_vec:r     {:    RESULT = r;     :}
+                  |funcion:r        {:    RESULT = r;     :};
 
 //***********************************DECLARACION DE VARIABLES********************
 
@@ -172,7 +162,7 @@ Mensaje  ::= MENSAJE APAR expr_l CPAR PYC;
 
 
 //*************************Instrucciones****************************************
-instrucciones  ::= {::}
+instrucciones  ::= {:  RESULT = parser.crearNodo("instrucciones","",0,0);  :}
                    |Instrucciones;
 
 Instrucciones  ::= asignacion
@@ -190,19 +180,29 @@ Instrucciones  ::= asignacion
                    |Mensaje;
 
 //************************Metodos y Funciones***********************************
-funcion ::= FUNCION I_D APAR parametros CPAR ALLA instrucciones CLLA;
+funcion ::= FUNCION:w I_D:x APAR parametros:y CPAR ALLA instrucciones:z CLLA 
+           {:
+                RESULT = parser.crearNodo("funcion","",w.getLinea(),w.getColumna()); // se crea la raiz FUNCION
+                RESULT.add(parser.crearNodo("id",x.getCadena(),x.getLinea(),x.getColumna()));// agrego el nombre 
+                RESULT.add(y);//agrego los parametros
+                RESULT.add(z);//agrego las instrucciones
+           :};
 
 
 parametros ::= {:   RESULT = parser.crearNodo("parametros","",0,0);  :}
               |lista_parametros:x{:     RESULT=x;   :};
 
-lista_parametros ::=lista_parametros:x COMA expr_a:y{:
-                        x.add(y);
+lista_parametros ::=lista_parametros:x COMA I_D:y{:
+                        Nodo param = parser.crearNodo("parametro","",y.getLinea(),y.getColumna());
+                        param.add(parser.crearNodo("id",y.getCadena(),y.getLinea(),y.getColumna()));
+                        x.add(param);
                         RESULT=x;
                     :}
-                    |expr_a:x {:
-                        RESULT = parser.crearNodo("parametros","",x.linea,x.columna);
-                        RESULT.add(x);    
+                    |I_D:x {:
+                        RESULT = parser.crearNodo("parametros","",x.getLinea(),x.getColumna());
+                        Nodo param = parser.crearNodo("parametro","",x.getLinea(),x.getColumna());
+                        param.add(parser.crearNodo("id",x.getCadena(),x.getLinea(),x.getColumna()));
+                        RESULT.add(param);    
                     :};
 
 //************************Expresiones Logicas***********************************

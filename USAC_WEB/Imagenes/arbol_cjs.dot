@@ -1,41 +1,119 @@
 digraph G {
 node[shape=Mrecord]
-5[label="contenido | ",style=bold]
-3[label="declara_var | ",style=bold]
-{5}->{3}
-4[label="nombre | v1_dt",style=bold]
-{3}->{4}
-2[label="asigna_var | ",style=bold]
-{3}->{2}
-1[label="datetime | 12/12/12 12:23:32",style=bold]
+4[label="contenido | ",style=bold]
+2[label="declara_var | ",style=bold]
+{4}->{2}
+3[label="nombre | var1",style=bold]
+{2}->{3}
+1[label="asigna_var | ",style=bold]
 {2}->{1}
-14[label="declara_var | ",style=bold]
-{5}->{14}
-15[label="nombre | v2",style=bold]
-{14}->{15}
-13[label="asigna_var | ",style=bold]
+15[label="declara_var | ",style=bold]
+{4}->{15}
+16[label="nombre | var2",style=bold]
+{15}->{16}
+14[label="asigna_var | ",style=bold]
+{15}->{14}
+13[label="MENOS | ",style=bold]
 {14}->{13}
-12[label="MAS | ",style=bold]
-{13}->{12}
-6[label="number | 1994",style=bold]
-{12}->{6}
-11[label="DIV | ",style=bold]
-{12}->{11}
-9[label="POR | ",style=bold]
-{11}->{9}
-7[label="number | 9",style=bold]
+9[label="MAS | ",style=bold]
+{13}->{9}
+7[label="POR | ",style=bold]
 {9}->{7}
-8[label="number | 5",style=bold]
+5[label="number | 4",style=bold]
+{7}->{5}
+6[label="number | 8",style=bold]
+{7}->{6}
+8[label="number | 3",style=bold]
 {9}->{8}
-10[label="number | 5",style=bold]
-{11}->{10}
-18[label="declara_var | ",style=bold]
-{5}->{18}
-19[label="nombre | v3",style=bold]
-{18}->{19}
-17[label="asigna_var | ",style=bold]
+12[label="POT | ",style=bold]
+{13}->{12}
+10[label="number | 1",style=bold]
+{12}->{10}
+11[label="number | 1",style=bold]
+{12}->{11}
+19[label="declara_var | ",style=bold]
+{4}->{19}
+20[label="nombre | var3",style=bold]
+{19}->{20}
+18[label="asigna_var | ",style=bold]
+{19}->{18}
+17[label="string | !olvida el miedo!",style=bold]
 {18}->{17}
-16[label="string | hola perocirno",style=bold]
-{17}->{16}
+23[label="declara_var | ",style=bold]
+{4}->{23}
+24[label="nombre | var4",style=bold]
+{23}->{24}
+22[label="asigna_var | ",style=bold]
+{23}->{22}
+21[label="number | 48.5",style=bold]
+{22}->{21}
+27[label="declara_var | ",style=bold]
+{4}->{27}
+28[label="nombre | var5",style=bold]
+{27}->{28}
+26[label="asigna_var | ",style=bold]
+{27}->{26}
+25[label="date | 14/23/23",style=bold]
+{26}->{25}
+37[label="funcion | ",style=bold]
+{4}->{37}
+38[label="id | metodo1",style=bold]
+{37}->{38}
+29[label="parametros | ",style=bold]
+{37}->{29}
+30[label="parametro | ",style=bold]
+{29}->{30}
+31[label="id | x",style=bold]
+{30}->{31}
+32[label="parametro | ",style=bold]
+{29}->{32}
+33[label="id | y",style=bold]
+{32}->{33}
+34[label="parametro | ",style=bold]
+{29}->{34}
+35[label="id | z",style=bold]
+{34}->{35}
+36[label="instrucciones | ",style=bold]
+{37}->{36}
+47[label="funcion | ",style=bold]
+{4}->{47}
+48[label="id | metodo2",style=bold]
+{47}->{48}
+39[label="parametros | ",style=bold]
+{47}->{39}
+40[label="parametro | ",style=bold]
+{39}->{40}
+41[label="id | x",style=bold]
+{40}->{41}
+42[label="parametro | ",style=bold]
+{39}->{42}
+43[label="id | y",style=bold]
+{42}->{43}
+44[label="parametro | ",style=bold]
+{39}->{44}
+45[label="id | z",style=bold]
+{44}->{45}
+46[label="instrucciones | ",style=bold]
+{47}->{46}
+57[label="funcion | ",style=bold]
+{4}->{57}
+58[label="id | metodo3",style=bold]
+{57}->{58}
+49[label="parametros | ",style=bold]
+{57}->{49}
+50[label="parametro | ",style=bold]
+{49}->{50}
+51[label="id | x",style=bold]
+{50}->{51}
+52[label="parametro | ",style=bold]
+{49}->{52}
+53[label="id | y",style=bold]
+{52}->{53}
+54[label="parametro | ",style=bold]
+{49}->{54}
+55[label="id | z",style=bold]
+{54}->{55}
+56[label="instrucciones | ",style=bold]
+{57}->{56}
 
 }

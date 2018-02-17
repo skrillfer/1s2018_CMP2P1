@@ -23,28 +23,18 @@ public class Metodo {
     public boolean estadoTerminar = false;
     public boolean estadoContinuar = false;
     
-     public Metodo() {
+    public Metodo() {
 
     }
 
     public Metodo(Nodo raiz) {
-        if (raiz.hijos.size() == 1) {
-            //si es metodo inicio o datos
-            this.tipo = "vacio";
-            this.nombre = raiz.valor;
-            this.sentencias = raiz.hijos.get(0);
-            this.id = nombre;
-            this.visibilidad = "privado";
-            this.parametros = new ArrayList();
-        } else {
-            //si es un metodo o funcion 
-            this.tipo = raiz.hijos.get(0).valor;
-            this.nombre = raiz.valor;
-            this.visibilidad = raiz.hijos.get(1).valor;
-            this.parametros = raiz.hijos.get(2).hijos;
-            this.sentencias = raiz.hijos.get(3);
+            
+            this.tipo = "";
+            this.nombre = raiz.hijos.get(0).valor;
+            this.parametros = raiz.hijos.get(1).hijos;
+            this.sentencias = raiz.hijos.get(2);
             this.id = getId();
-        }
+        
     }
     
      private String getId() {
@@ -53,8 +43,9 @@ public class Metodo {
             if (parametro.nombre.equals("parametro")) {
                 id += parametro.hijos.get(0).valor;
             } else {
+                
                 //si el parametro es un vector
-                id += parametro.hijos.get(0).valor + parametro.hijos.get(1).hijos.size();
+                //id += parametro.hijos.get(0).valor + parametro.hijos.get(1).hijos.size();
             }
         }
         return id;

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import Estructuras.*;
 import Arboles_Generados.*;
+import CJS_Compilador.CJS;
 /**
  *
  * @author fernando
@@ -25,7 +26,7 @@ public class USAC_WEB {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        new USAC_WEB().CompilarCHTML();
+        new USAC_WEB().CompilarCJS();
     }
     
     public void CompilarCJS() throws FileNotFoundException{
@@ -39,7 +40,12 @@ public class USAC_WEB {
             Nodo raiz = parser.getRoot();
             Arbol_CJS genTcjs = new Arbol_CJS();
             genTcjs.generacion_arbolCJS(raiz);
-        
+            
+            CJS cj_s= new CJS();
+            cj_s.ejecucionCJS(raiz);
+            
+            //---------------------------Se le pasa la raiz a la clase CJS
+            
             //        Arma arma = new Arma(null, Destruir, null)
         } catch (Exception e) {
             // System.out.println(e.getMessage());

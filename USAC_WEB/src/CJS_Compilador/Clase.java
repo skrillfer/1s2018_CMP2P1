@@ -43,21 +43,21 @@ public class Clase {
         pilaTablas = new Stack<>();
      
         //----------------------------------------------------------------------
-        this.nombre = raiz.valor;
-        this.visibilidad = raiz.hijos.get(0).valor;
-        this.metodos = getMetodos(raiz.hijos.get(1));
-        this.atributos = getAtributos(raiz.hijos.get(1));
+        //this.nombre = raiz.valor;
+        //this.visibilidad = raiz.hijos.get(0).valor;
+        this.metodos = getMetodos(raiz);
+        this.atributos = getAtributos(raiz);
         //----------------------------------------------------------------------
     } 
 
      private ArrayList<Metodo> getMetodos(Nodo raiz) {
-        ArrayList<Metodo> metodos = new ArrayList<>();
+        ArrayList<Metodo> metodos = new ArrayList<>();//una lista de METODOS
         for (Nodo hijo : raiz.hijos) {
-            if (hijo.nombre.equalsIgnoreCase("metodo")) {
+            if (hijo.nombre.equalsIgnoreCase("funcion")) {
                 Metodo metodo = new Metodo(hijo);
                 if (!existeMetodo(metodo.id, hijo)) {
                     metodos.add(metodo);
-                    SimboloG simbolo = new SimboloG(metodo.tipo, metodo.nombre, "metodo");
+                    SimboloG simbolo = new SimboloG("funcion", metodo.nombre, "metodo");
                     simbolo.rol = "Metodo";
                     simbolo.ambito = nombre;
                     //Graphik.reporteSimbolos.add(simbolo);
@@ -80,7 +80,7 @@ public class Clase {
     private ArrayList<Nodo> getAtributos(Nodo raiz) {
         ArrayList<Nodo> atributos = new ArrayList<>();
         for (Nodo hijo : raiz.hijos) {
-            if (!( hijo.nombre.equalsIgnoreCase("metodo"))) {
+            if ( hijo.nombre.equalsIgnoreCase("declara_var") || hijo.nombre.equalsIgnoreCase("declara_vecF1") || hijo.nombre.equalsIgnoreCase("declara_vecF2")) {
                 atributos.add(hijo);
             }
         }
@@ -88,11 +88,10 @@ public class Clase {
     }
 
     public void ejecutar() {
-        /*Compilador.pilaClases.push(Compilador.claseActual);
-        Compilador.claseActual = this;
+        
         for (Nodo atributo : atributos) {
             new Declaracion(atributo, global, tabla);
         }
-        Compilador.claseActual = Compilador.pilaClases.pop();*/
+        
     }
 }
