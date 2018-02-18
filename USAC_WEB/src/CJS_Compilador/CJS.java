@@ -22,7 +22,7 @@ public class CJS {
         Clase n_clase = new Clase(raiz);
         n_clase.ejecutar();
         
-        System.out.println("sss");
+        System.out.println("");
         
     }
 }

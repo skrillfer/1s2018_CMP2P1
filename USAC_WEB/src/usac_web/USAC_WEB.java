@@ -26,7 +26,10 @@ public class USAC_WEB {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        new USAC_WEB().CompilarCJS();
+        //new USAC_WEB().CompilarCJS();
+       Double r1=0.0;
+       int r2=0;
+        System.out.println(Math.pow(r1, r2));
     }
     
     public void CompilarCJS() throws FileNotFoundException{

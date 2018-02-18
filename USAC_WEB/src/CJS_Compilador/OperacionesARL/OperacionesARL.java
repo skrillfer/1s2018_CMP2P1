@@ -11,7 +11,14 @@ import CJS_Compilador.*;
  * @author fernando
  */
 public class OperacionesARL {
+    protected TablaSimboloG tabla;
+    protected TablaSimboloG global;
     
+    public OperacionesARL(TablaSimboloG global, TablaSimboloG local) {
+        this.tabla = local;
+        this.global = global;
+    }
+
     public ResultadoG ejecutar(Nodo nodo){
         ResultadoG result=null;
         switch(nodo.nombre){
@@ -51,43 +58,51 @@ public class OperacionesARL {
             case "MAS":
                 ResultadoG r1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r2 = ejecutar(nodo.hijos.get(1));
+                ResultadoG r_r = operacionesAritmeticas(r1, r2, "MAS");
+                System.out.println("valor: "+r_r.valor+ "\nTipo: "+r_r.tipo);
                 break;    
             case "number":
-                result=new ResultadoG("number", nodo.valor);
+                result=new ResultadoG("number", Double.parseDouble(nodo.valor));
                 break;
             case "string":
-                result=new ResultadoG("string", nodo.valor);
+                result = new ResultadoG("string", nodo.valor + "");
                 break;
             case "date":
-                result=new ResultadoG("date", nodo.valor);
+                result=new ResultadoG("date", nodo.valor + "");
                 break;
             case "datetime":
-                result=new ResultadoG("datetime", nodo.valor);
+                result=new ResultadoG("datetime", nodo.valor +"");
                 break;
             case "boolean":
-                result=new ResultadoG("boolean", nodo.valor);
+                if(nodo.valor.equalsIgnoreCase("true")){
+                    result=new ResultadoG("boolean", true);
+                }else{
+                    result=new ResultadoG("boolean", false);
+                }
                 break;
         }
         return result;
     }
     public ResultadoG operacionesAritmeticas(ResultadoG r1, ResultadoG r2, String op){
         ResultadoG result = null;
+        Object valor = new Object();
         if(op.equals("MAS")){
             switch (r1.tipo) {
                 case "number":
                     switch (r2.tipo) {
                         case "boolean":
-                            result = new ResultadoG("number", ( (double)r1.valor) + ((double) r2.valor) );
+                            valor = (Double)r1.valor + getBoolValor(r2.valor);
+                            result = new ResultadoG("number", valor );
                             break;
                         case "number":
-                            result = new ResultadoG("number", ( (double)r1.valor) + ((double) r2.valor) );
+                            valor = (Double)r1.valor + (Double)r2.valor;
+                            result = new ResultadoG("number", valor );
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
+                            valor = (Double)r1.valor + (String)r2.valor;
+                            result = new ResultadoG("string", valor );
                             break;
                         case "date":
-                            System.out.println("error");
-                            break;
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -96,17 +111,18 @@ public class OperacionesARL {
                 case "string":
                     switch (r2.tipo) {
                         case "boolean":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
+                            valor = (String)r1.valor + (r2.valor+"");
+                            result = new ResultadoG("string", valor );
                             break;
                         case "number":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
+                            valor = (String)r1.valor + (Double)r2.valor;
+                            result = new ResultadoG("string", valor);
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
+                            valor = (String)r1.valor + (String)r2.valor;
+                            result = new ResultadoG("string", valor);
                             break;
                         case "date":
-                            System.out.println("error");
-                            break;
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -121,11 +137,10 @@ public class OperacionesARL {
                             System.out.println("error");
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
+                            valor = (String)r1.valor + (String)r2.valor;
+                            result = new ResultadoG("string", valor);
                             break;
                         case "date":
-                            System.out.println("error");
-                            break;
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -140,11 +155,10 @@ public class OperacionesARL {
                             System.out.println("error");
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
+                            valor = (String)r1.valor + (String)r2.valor;
+                            result = new ResultadoG("string", valor);
                             break;
                         case "date":
-                            System.out.println("error");
-                            break;
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -153,17 +167,22 @@ public class OperacionesARL {
                 case "boolean":
                     switch (r2.tipo) {
                         case "boolean":
-                            result = new ResultadoG("boolean", (boolean) (( (boolean)r1.valor) || ((boolean) r2.valor)) );
+                            valor=getBoolValor(r1.valor) + getBoolValor(r2.valor);
+                            if((int)valor==2 || (int)valor ==1){
+                                result = new ResultadoG("boolean", true);
+                            }else{
+                                result = new ResultadoG("boolean", false);
+                            }
                             break;
                         case "number":
-                            result = new ResultadoG("number", ( (double)r1.valor) + ((double) r2.valor) );
+                            valor = getBoolValor(r1.valor) + (Double) r2.valor;
+                            result = new ResultadoG("number", valor);
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
+                            valor = (r1.valor+"") + (String)r2.valor;
+                            result = new ResultadoG("string", valor );
                             break;
                         case "date":
-                            System.out.println("error");
-                            break;
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -175,17 +194,17 @@ public class OperacionesARL {
                 case "number":
                     switch (r2.tipo) {
                         case "boolean":
-                            result = new ResultadoG("number", ( (double)r1.valor) + ((double) r2.valor) );
+                            valor = (Double)r1.valor - getBoolValor(r2.valor);
+                            result = new ResultadoG("number", valor );
                             break;
                         case "number":
-                            result = new ResultadoG("number", ( (double)r1.valor) + ((double) r2.valor) );
+                            valor = (Double)r1.valor - (Double)r2.valor;
+                            result = new ResultadoG("number", valor );
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
-                            break;
-                        case "date":
                             System.out.println("error");
                             break;
+                        case "date":
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -194,17 +213,9 @@ public class OperacionesARL {
                 case "string":
                     switch (r2.tipo) {
                         case "boolean":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
-                            break;
                         case "number":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
-                            break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
-                            break;
                         case "date":
-                            System.out.println("error");
-                            break;
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -213,17 +224,9 @@ public class OperacionesARL {
                 case "date":
                     switch (r2.tipo) {
                         case "boolean":
-                            System.out.println("error");
-                            break;
                         case "number":
-                            System.out.println("error");
-                            break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
-                            break;
                         case "date":
-                            System.out.println("error");
-                            break;
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -232,17 +235,76 @@ public class OperacionesARL {
                 case "datetime":
                     switch (r2.tipo) {
                         case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
                             System.out.println("error");
                             break;
+                    }
+                    break;
+                case "boolean":
+                    switch (r2.tipo) {
                         case "number":
-                            System.out.println("error");
+                            valor = getBoolValor(r1.valor) - (Double) r2.valor;
+                            result = new ResultadoG("number", valor);
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
-                            break;
+                        case "boolean":
                         case "date":
+                        case "datetime":
                             System.out.println("error");
                             break;
+                    }
+                    break;
+            }
+        }else if (op.equals("POR")){
+            switch (r1.tipo) {
+                case "number":
+                    switch (r2.tipo) {
+                        case "boolean":
+                            valor = (Double)r1.valor * getBoolValor(r2.valor);
+                            result = new ResultadoG("number", valor );
+                            break;
+                        case "number":
+                            valor = (Double)r1.valor * (Double)r2.valor;
+                            result = new ResultadoG("number", valor );
+                            break;
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "date":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "datetime":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -251,17 +313,170 @@ public class OperacionesARL {
                 case "boolean":
                     switch (r2.tipo) {
                         case "boolean":
-                            result = new ResultadoG("boolean", (boolean) (( (boolean)r1.valor) || ((boolean) r2.valor)) );
+                            valor=getBoolValor(r1.valor) + getBoolValor(r2.valor);
+                            if((int)valor==2 ){
+                                result = new ResultadoG("boolean", true);
+                            }else{
+                                result = new ResultadoG("boolean", false);
+                            }
                             break;
                         case "number":
-                            result = new ResultadoG("number", ( (double)r1.valor) + ((double) r2.valor) );
+                            valor = getBoolValor(r1.valor) * (Double) r2.valor;
+                            result = new ResultadoG("number", valor);
                             break;
                         case "string":
-                            result = new ResultadoG("string", ( (String)r1.valor) + ((String) r2.valor) );
-                            break;
                         case "date":
+                        case "datetime":
                             System.out.println("error");
                             break;
+                    }
+                    break;
+            }
+        }else if (op.equals("DIV")){
+            switch (r1.tipo) {
+                case "number":
+                    switch (r2.tipo) {
+                        case "boolean":
+                            try {
+                                valor = (Double)r1.valor / getBoolValor(r2.valor);
+                            } catch (Exception e) {
+                                System.out.println("error no se puede dividir un numero entre 0");
+                                return new ResultadoG("-1",valor);
+                            }
+                            
+                            result = new ResultadoG("number", valor );
+                            break;
+                        case "number":
+                            try {
+                                valor = (Double)r1.valor / (Double)r2.valor;
+                            } catch (Exception e) {
+                                System.out.println("error no se puede dividir un numero entre 0");
+                                return new ResultadoG("-1",valor);
+                            }
+                            
+                            result = new ResultadoG("number", valor );
+                            break;
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "date":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "datetime":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch (r2.tipo) {
+                        case "number":
+                            try {
+                                valor = getBoolValor(r1.valor) / (Double) r2.valor;
+                            } catch (Exception e) {
+                                System.out.println("error no se puede dividir un numero entre 0");
+                                return new ResultadoG("-1",valor);
+                            }
+                            result = new ResultadoG("number", valor);
+                            break;
+                        case "string":
+                        case "boolean":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+            }
+        }else if (op.equals("POT")){
+            switch (r1.tipo) {
+                case "number":
+                    switch (r2.tipo) {
+                        case "boolean":
+                            valor = Math.pow((Double)r1.valor,(getBoolValor(r2.valor)));
+                            result = new ResultadoG("number", valor );
+                            break;
+                        case "number":
+                            valor = Math.pow((Double)r1.valor , (Double)r2.valor);
+                            result = new ResultadoG("number", valor );
+                            break;
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "date":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "datetime":
+                    switch (r2.tipo) {
+                        case "boolean":
+                        case "number":
+                        case "string":
+                        case "date":
+                        case "datetime":
+                            System.out.println("error");
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch (r2.tipo) {
+                        case "number":
+                            valor = Math.pow(getBoolValor(r1.valor) , (Double) r2.valor);
+                            result = new ResultadoG("number", valor);
+                            break;
+                        case "string":
+                        case "boolean":
+                        case "date":
                         case "datetime":
                             System.out.println("error");
                             break;
@@ -272,4 +487,22 @@ public class OperacionesARL {
         return result;
     }
     
+    public int getBoolValor(Object objeto) {
+        Boolean valor = (Boolean) objeto;
+        if (valor) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    
+    public int getStringValor(Object objeto, Nodo raiz) {
+        String valor = (String) objeto;
+        try {
+            return Integer.parseInt(valor);
+        } catch (Exception e) {
+            //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "No se pudo castear la cadena a tipo Bool");
+            return -1;
+        }
+    }
 }

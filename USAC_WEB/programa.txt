@@ -1,8 +1,5 @@
-DimV var1;
-DimV var2:4*8+3-1^1;
-DimV var3:"!olvida el miedo!";
-DimV var4:48.5;
-DimV var5:'14/23/23';
+DimV var1: "hola -->" + ' false ';
+
 
 
 
