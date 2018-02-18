@@ -27,9 +27,13 @@ public class USAC_WEB {
      */
     public static void main(String[] args) throws FileNotFoundException {
         //new USAC_WEB().CompilarCJS();
-       Double r1=0.0;
-       int r2=0;
-        System.out.println(Math.pow(r1, r2));
+        String cad1="hola mundo";
+        String cad2="hola mundo1";
+        System.out.println(cad1.compareTo(cad2));
+        
+        //-1 si cad1 es menor         cad1 ,cad2
+        //0  si cad1 son iguales      cad1 ,cad2
+        //1  si cad1 es mayor         cad1 ,cad2
     }
     
     public void CompilarCJS() throws FileNotFoundException{

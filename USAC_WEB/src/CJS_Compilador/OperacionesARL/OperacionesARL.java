@@ -83,6 +83,248 @@ public class OperacionesARL {
         }
         return result;
     }
+    
+    public ResultadoG operacionesLogicas(ResultadoG r1, ResultadoG r2, String op){
+        ResultadoG result = null;
+        Object valor = new Object();
+        if(op.equals("AND")){
+            if(r1.tipo.equals(r2.tipo) && r1.tipo.equals("boolean")){
+                valor =  getBoolValor(r1.valor) + getBoolValor(r2.valor);
+                result = new ResultadoG("boolean", false);
+                if((int)valor==2){
+                    result = new ResultadoG("boolean", true);
+                }
+            }else{
+                return new ResultadoG("-1", valor);
+            }
+        }else if(op.equals("OR")){
+            if(r1.tipo.equals(r2.tipo) && r1.tipo.equals("boolean")){
+                valor =  getBoolValor(r1.valor) + getBoolValor(r2.valor);
+                result = new ResultadoG("boolean", false);
+                if((int)valor==1 || (int)valor==2){
+                    result = new ResultadoG("boolean", true);
+                }
+            }else{
+                return new ResultadoG("-1", valor);
+            }
+        }else if(op.equals("NOT")){
+            if(r1.tipo.equals(r2.tipo) && r1.tipo.equals("boolean")){
+                valor =  getBoolValor(r1.valor);
+                result = new ResultadoG("boolean", true);
+                if((int)valor==1 ){
+                    result = new ResultadoG("boolean", false);
+                }
+            }else{
+                return new ResultadoG("-1", valor);
+            }
+        }
+        return result;
+    }
+    
+    
+    public ResultadoG operacionesRelacionales(ResultadoG r1, ResultadoG r2, String op){
+        ResultadoG result = null;
+        if(op.equals("MENQ")){
+            switch(r1.tipo){
+                case "number":
+                    switch(r2.tipo){
+                        case "number":
+                            result = new ResultadoG("boolean", false);
+                            if((Double)r1.valor < (Double)r2.valor){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch(r2.tipo){
+                        case "string":
+                            result = new ResultadoG("boolean", false);
+                            if( ((String)r1.valor).compareTo((String)r2.valor) < 0 ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch(r2.tipo){
+                        case "boolean":
+                            result = new ResultadoG("boolean", false);
+                            if(  getBoolValor(r1.valor) < getBoolValor(r2.valor) ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }else if(op.equals("MENIQ")){
+            switch(r1.tipo){
+                case "number":
+                    switch(r2.tipo){
+                        case "number":
+                            result = new ResultadoG("boolean", false);
+                            if((Double)r1.valor <= (Double)r2.valor){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch(r2.tipo){
+                        case "string":
+                            result = new ResultadoG("boolean", false);
+                            if( ((String)r1.valor).compareTo((String)r2.valor) <= 0 ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch(r2.tipo){
+                        case "boolean":
+                            result = new ResultadoG("boolean", false);
+                            if(  getBoolValor(r1.valor) <= getBoolValor(r2.valor) ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }else if(op.equals("MAYQ")){
+            switch(r1.tipo){
+                case "number":
+                    switch(r2.tipo){
+                        case "number":
+                            result = new ResultadoG("boolean", false);
+                            if((Double)r1.valor > (Double)r2.valor){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch(r2.tipo){
+                        case "string":
+                            result = new ResultadoG("boolean", false);
+                            if( ((String)r1.valor).compareTo((String)r2.valor) > 0 ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch(r2.tipo){
+                        case "boolean":
+                            result = new ResultadoG("boolean", false);
+                            if(  getBoolValor(r1.valor) > getBoolValor(r2.valor) ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }else if(op.equals("MAYIQ")){
+            switch(r1.tipo){
+                case "number":
+                    switch(r2.tipo){
+                        case "number":
+                            result = new ResultadoG("boolean", false);
+                            if((Double)r1.valor >= (Double)r2.valor){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch(r2.tipo){
+                        case "string":
+                            result = new ResultadoG("boolean", false);
+                            if( ((String)r1.valor).compareTo((String)r2.valor) >= 0 ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch(r2.tipo){
+                        case "boolean":
+                            result = new ResultadoG("boolean", false);
+                            if(  getBoolValor(r1.valor) >= getBoolValor(r2.valor) ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }else if(op.equals("IG_IG")){
+            switch(r1.tipo){
+                case "number":
+                    switch(r2.tipo){
+                        case "number":
+                            result = new ResultadoG("boolean", false);
+                            if((Double)r1.valor == (Double)r2.valor){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch(r2.tipo){
+                        case "string":
+                            result = new ResultadoG("boolean", false);
+                            if( ((String)r1.valor).compareTo((String)r2.valor) == 0 ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch(r2.tipo){
+                        case "boolean":
+                            result = new ResultadoG("boolean", false);
+                            if(  getBoolValor(r1.valor) == getBoolValor(r2.valor) ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }else if(op.equals("DIF")){
+            switch(r1.tipo){
+                case "number":
+                    switch(r2.tipo){
+                        case "number":
+                            result = new ResultadoG("boolean", false);
+                            if((Double)r1.valor != (Double)r2.valor){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "string":
+                    switch(r2.tipo){
+                        case "string":
+                            result = new ResultadoG("boolean", false);
+                            if( ((String)r1.valor).compareTo((String)r2.valor) != 0 ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+                case "boolean":
+                    switch(r2.tipo){
+                        case "boolean":
+                            result = new ResultadoG("boolean", false);
+                            if(  getBoolValor(r1.valor) != getBoolValor(r2.valor) ){
+                                result = new ResultadoG("boolean", true);
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+        return result;
+    }
     public ResultadoG operacionesAritmeticas(ResultadoG r1, ResultadoG r2, String op){
         ResultadoG result = null;
         Object valor = new Object();
