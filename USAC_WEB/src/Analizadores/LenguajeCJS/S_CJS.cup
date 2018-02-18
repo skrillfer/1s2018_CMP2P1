@@ -34,8 +34,8 @@ APAR,CPAR,ALLA,CLLA,ACORCH,CCORCH,CONTEO,ATEXTO,SI,SINO,SELECCIONA,CASO,DEFECTO,
 DETENER,IMPRIMIR,FUNCION,RETORNAR,MENSAJE,DOCUMENTO,OBTENER,OBSERVADOR,SETELEMENTO,STRING_LITERAL,
 DIMV,NUM,DECIMAL,I_D,PTO,BOOLEAN_LITERAL,DATE_LITERAL,DATETIME_LITERAL,COMS;
 
-non terminal Nodo programa,raiz,declara_var,asigna_var,asignacion,declara_vecF1,declara_vecF2,
-asigna_vec,lista_valores,funcion_conteo,funcion_acadena,valor,Si,opcional,Sino,Selecciona,
+non terminal Nodo programa,raiz,declara_var,asigna_var,asignacionGlb,declara_vecF1,declara_vecF2,
+asigna_vecGlbF1,asigna_vecGlbF2,lista_valores,funcion_conteo,funcion_acadena,valor,Si,opcional,Sino,Selecciona,
 lista_casos,caso_defecto,Para,dec_for,operador,instrucciones,Mientras,Detener,Imprimir,Retornar,
 Mensaje,Instrucciones,funcion,parametros,lista_parametros,expr_l,expr_r,expr_a,simplificada,dato,
 Lcontenido_cjs,contenido_cjs;
@@ -67,12 +67,13 @@ Lcontenido_cjs ::= Lcontenido_cjs:r  contenido_cjs:x{:
                         RESULT.add(x);
                   :};
 
-contenido_cjs ::= declara_var:r     {:    RESULT = r;     :}
-                  |declara_vecF1:r  {:    RESULT = r;     :}
-                  |declara_vecF2:r  {:    RESULT = r;     :}
-                  |asignacion:r     {:    RESULT = r;     :}
-                  |asigna_vec:r     {:    RESULT = r;     :}
-                  |funcion:r        {:    RESULT = r;     :};
+contenido_cjs ::= declara_var:r         {:    RESULT = r;     :}
+                  |declara_vecF1:r      {:    RESULT = r;     :}
+                  |declara_vecF2:r      {:    RESULT = r;     :}
+                  |asignacionGlb:r      {:    RESULT = r;     :}
+                  |asigna_vecGlbF1:r    {:    RESULT = r;     :}
+                  |asigna_vecGlbF2:r    {:    RESULT = r;     :}
+                  |funcion:r            {:    RESULT = r;     :};
 
 //***********************************DECLARACION DE VARIABLES********************
 
@@ -89,18 +90,44 @@ asigna_var  ::={:   RESULT = parser.crearNodo("asigna_var","",0,0);    :}
                     RESULT.add(a);   
                 :};
 //***********************************ASIGNACION ********************************
-asignacion   ::= I_D:a DSPTS expr_l:b PYC {:
+asignacionGlb   ::= I_D:a DSPTS expr_l:b PYC {:
                     RESULT = parser.crearNodo("asignacion","",a.getLinea(),a.getColumna());
                     RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
                     RESULT.add(b);    
                 :};
 
 //***********************************DECLARACION DE VECTORES********************
-declara_vecF1   ::= DIMV I_D DSPTS ALLA lista_valores CLLA PYC;  // se crea el vector con valores
+declara_vecF1   ::= DIMV:a I_D:b DSPTS ALLA lista_valores:c CLLA PYC{:// se crea el vector con valores
+                    RESULT = parser.crearNodo("declara_vecF1","",a.getLinea(),a.getColumna());
+                    RESULT.add(parser.crearNodo("nombre",b.getCadena(),b.getLinea(),b.getColumna()));   
+                    RESULT.add(c);
+                 :};  
 
-declara_vecF2   ::= DIMV I_D ALLA NUM CLLA PYC;// se declara el tamano del vector unidimensional
+declara_vecF2   ::= DIMV:a I_D:b ALLA expr_a:c CLLA PYC{:// se declara el tamano del vector unidimensional
+                    RESULT = parser.crearNodo("declara_vecF2","",a.getLinea(),a.getColumna());
+                    RESULT.add(parser.crearNodo("nombre",b.getCadena(),b.getLinea(),b.getColumna()));
+                    Nodo dim=parser.crearNodo("dimensiones","",c.linea,c.columna);
+                    dim.add(c);
+                    RESULT.add(dim);
+                    
+                 :};
 
-asigna_vec      ::= I_D DSPTS ALLA lista_valores CLLA PYC;
+asigna_vecGlbF1  ::= I_D:a DSPTS ALLA lista_valores:c CLLA PYC{:
+                       RESULT = parser.crearNodo("asigna_vecGlbF1","",a.getLinea(),a.getColumna());
+                       RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
+                       Nodo dim=parser.crearNodo("dimensiones","",c.linea,c.columna);
+                       dim.add(c);
+                       RESULT.add(dim);
+                    :};
+
+asigna_vecGlbF2 ::= I_D:a ALLA expr_a:b CLLA DSPTS expr_a:X {:
+                       RESULT = parser.crearNodo("asigna_vecGlbF2","",a.getLinea(),a.getColumna());
+                       RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
+                       Nodo dim=parser.crearNodo("dimensiones","",b.linea,b.columna);
+                       dim.add(b);
+                       RESULT.add(dim);
+                       RESULT.add(X);
+                    :}; 
 
 funcion_conteo  ::= I_D PTO CONTEO PYC;   // DEVUELVE VALOR
 
@@ -108,8 +135,14 @@ funcion_acadena ::= I_D PTO ATEXTO PYC;  // DEVUELVE VALOR
 
 //****************************LISTA DE VALOREs**********************************
 
-lista_valores ::= lista_valores COMA expr_l
-                |expr_l;
+lista_valores ::= lista_valores:Y COMA expr_a:X{:
+                    Y.add(X);
+                    RESULT=Y;
+                :}
+                |expr_a:X{:
+                    RESULT = parser.crearNodo("valores","",X.linea,X.columna);
+                    RESULT.add(X);
+                :};
 
 valor       ::= dato:a {:
                     RESULT = a;
@@ -165,10 +198,9 @@ Mensaje  ::= MENSAJE APAR expr_l CPAR PYC;
 instrucciones  ::= {:  RESULT = parser.crearNodo("instrucciones","",0,0);  :}
                    |Instrucciones;
 
-Instrucciones  ::= asignacion
-                   |declara_vecF1
-                   |declara_vecF2
-                   |asigna_vec
+Instrucciones  ::= 
+                   declara_vecF1   //asignacion FALTA PERO LOCAL y asigna_vec
+                   |declara_vecF2 
                    |declara_var
                    |Si
                    |Selecciona
@@ -274,7 +306,7 @@ expr_a ::= expr_a:b MAS:a expr_a:c    {:
                                       :}
           |APAR expr_l:r CPAR     {:  RESULT=r;    :}
           |dato:r                 {:  RESULT=r;    :}
-          //|acceso
+          //|acceso !! FALTA ACCEDER A METODOS Y A POSICIONES DE VECTORES
           |simplificada;
 
 

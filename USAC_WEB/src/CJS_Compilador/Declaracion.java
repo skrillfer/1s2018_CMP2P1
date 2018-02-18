@@ -30,6 +30,12 @@ public class Declaracion extends Compilador{
             case "declara_var":
                 declara_var();
                 break;
+            case "declara_vecF1":
+                declara_vecF1();
+                break;
+            case "declara_vecF2":
+                declara_vecF2();
+                break;
             /*case "atributoVarDA"://atributo tipo entero,cadena... declarado y asignado
                 return atributoVarDA();
             case "atributoVarD"://atributo tipo entero,cadena... declarado
@@ -72,30 +78,57 @@ public class Declaracion extends Compilador{
     
     public void declara_var(){
         String tipo = "";//el tipo de la  variable depende del valor que tenga
-        String nombre= raiz.hijos.get(0).valor;
-        Nodo exp = raiz.hijos.get(1).hijos.get(0);
+        String nombre= raiz.hijos.get(0).valor;//se obtiene el nombre de la variable a declarar
         
-        ResultadoG resultado = opL.ejecutar(exp);
-    /*
-         String tipo = raiz.hijos.get(0).valor;
-        String nombre = raiz.hijos.get(1).valor;
-        String visibilidad = raiz.hijos.get(1).hijos.get(0).valor;
         
-        Nodo exp = raiz.hijos.get(2);
-
-        ResultadoG resultado = opL.operar(exp);
-        Casteo casteo = new Casteo();
-        resultado = casteo.castear(raiz, tipo, resultado);
-        if (resultado != null) {
-            SimboloG simbolo = new SimboloG(tipo, nombre, visibilidad, resultado.valor);
-            simbolo.inicializado = true;
+        if(raiz.hijos.get(1).hijos.size()>0){
+            Nodo exp = raiz.hijos.get(1).hijos.get(0);//se obtiene el nodo de la expresion
+            //----------ejecuto la parte de la expresion
+            ResultadoG resultado = opL.ejecutar(exp);
+            if(resultado!=null ){
+                // la variable toma el tipo del valor que le es asignado, de ahi en adelante no cambia
+                tipo=resultado.tipo;
+                SimboloG simbolo = new SimboloG(tipo, nombre, "", resultado.valor);
+                simbolo.inicializado = true;
+                if (!global.setSimbolo(simbolo)) {
+                    System.out.println("Agregado el simbolo correctamente");
+                    //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+                }
+            }
+        }else{
+            SimboloG simbolo = new SimboloG(tipo, nombre, "", null);
             if (!global.setSimbolo(simbolo)) {
-                Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+                //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
             }
         }
-        return null;
-    */
     }
+    
+    // el vector se crea con valores declarados
+    public void declara_vecF1(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo="";
+        Arreglo arreglo = new Arreglo(raiz, global, tabla);
+        if (arreglo.estado) {
+            SimboloG simbolo = new SimboloG(tipo, nombre, "", arreglo);
+            simbolo.inicializado = true;
+            if (!global.setSimbolo(simbolo)) {
+                //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+            }
+        }
+    }
+    // el vector se crea con una dimension establecida
+    public void declara_vecF2(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo = "";
+        Arreglo arreglo = new Arreglo(raiz,tabla,global,0);
+        SimboloG simbolo = new SimboloG(tipo,nombre,arreglo);
+        simbolo.inicializado = true;
+        
+        if (!tabla.setSimbolo(simbolo)) {
+            //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+        }
+    }
+    
     @Override
     public Metodo ejecutar(Nodo raiz) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

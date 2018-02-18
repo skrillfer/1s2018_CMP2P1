@@ -26,14 +26,8 @@ public class USAC_WEB {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        //new USAC_WEB().CompilarCJS();
-        String cad1="hola mundo";
-        String cad2="hola mundo1";
-        System.out.println(cad1.compareTo(cad2));
+        new USAC_WEB().CompilarCJS();
         
-        //-1 si cad1 es menor         cad1 ,cad2
-        //0  si cad1 son iguales      cad1 ,cad2
-        //1  si cad1 es mayor         cad1 ,cad2
     }
     
     public void CompilarCJS() throws FileNotFoundException{

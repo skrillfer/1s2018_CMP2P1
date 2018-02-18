@@ -1,4 +1,7 @@
-DimV var1: "hola -->" + ' false ';
+DimV vect1{14};
+DimV vectI:{87,8+9,100};
+
+vectI : {}
 
 
 

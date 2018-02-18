@@ -43,7 +43,7 @@ public class Clase {
         pilaTablas = new Stack<>();
      
         //----------------------------------------------------------------------
-        //this.nombre = raiz.valor;
+        this.nombre = raiz.valor;
         //this.visibilidad = raiz.hijos.get(0).valor;
         this.metodos = getMetodos(raiz);
         this.atributos = getAtributos(raiz);

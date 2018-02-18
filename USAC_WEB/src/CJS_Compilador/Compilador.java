@@ -12,6 +12,15 @@ import CJS_Compilador.OperacionesARL.OperacionesARL;
  * @author fernando
  */
 public abstract class Compilador {
+    //--------------------------------------------------------------------------
+    
+    public static Clase claseActual;
+    public static Stack<Clase> pilaClases;
+    public static Stack<Metodo> pilaMetodos;
+    public static Metodo metodoActual;
+    public static Stack<TablaSimboloG> pilaTablas;
+    //--------------------------------------------------------------------------
+    
     protected Nodo raiz;
     public static int nivelCiclo = 0;
     public static Stack<Integer> pilaNivelCiclo;
