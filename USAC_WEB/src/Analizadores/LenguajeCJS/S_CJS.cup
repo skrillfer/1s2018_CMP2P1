@@ -38,7 +38,7 @@ non terminal Nodo programa,raiz,declara_var,asigna_var,asignacionGlb,declara_vec
 asigna_vecGlbF1,asigna_vecGlbF2,lista_valores,funcion_conteo,funcion_acadena,valor,Si,opcional,Sino,Selecciona,
 lista_casos,caso_defecto,Para,dec_for,operador,instrucciones,Mientras,Detener,Imprimir,Retornar,
 Mensaje,Instrucciones,funcion,parametros,lista_parametros,expr_l,expr_r,expr_a,simplificada,dato,
-Lcontenido_cjs,contenido_cjs;
+Lcontenido_cjs,contenido_cjs,f_conteoG,f_acadenaG,sentencia,cont_selecciona;
 
 precedence left MAS, MENOS;
 precedence left POR, DIV,MOD;
@@ -73,7 +73,9 @@ contenido_cjs ::= declara_var:r         {:    RESULT = r;     :}
                   |asignacionGlb:r      {:    RESULT = r;     :}
                   |asigna_vecGlbF1:r    {:    RESULT = r;     :}
                   |asigna_vecGlbF2:r    {:    RESULT = r;     :}
-                  |funcion:r            {:    RESULT = r;     :};
+                  |funcion:r            {:    RESULT = r;     :}
+                  /*|f_conteoG            {:    RESULT = r; RESULT.nombre="funcion_ConteoG"  :}
+                  |f_acadenaG           {:    RESULT = r; RESULT.nombre="funcion_aTextoG"  :}*/;
 
 //***********************************DECLARACION DE VARIABLES********************
 
@@ -91,7 +93,7 @@ asigna_var  ::={:   RESULT = parser.crearNodo("asigna_var","",0,0);    :}
                 :};
 //***********************************ASIGNACION ********************************
 asignacionGlb   ::= I_D:a DSPTS expr_l:b PYC {:
-                    RESULT = parser.crearNodo("asignacion","",a.getLinea(),a.getColumna());
+                    RESULT = parser.crearNodo("asignacionGlb","",a.getLinea(),a.getColumna());
                     RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
                     RESULT.add(b);    
                 :};
@@ -111,27 +113,31 @@ declara_vecF2   ::= DIMV:a I_D:b ALLA expr_a:c CLLA PYC{:// se declara el tamano
                     RESULT.add(dim);
                     
                  :};
-
+  
 asigna_vecGlbF1  ::= I_D:a DSPTS ALLA lista_valores:c CLLA PYC{:
                        RESULT = parser.crearNodo("asigna_vecGlbF1","",a.getLinea(),a.getColumna());
                        RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
-                       Nodo dim=parser.crearNodo("dimensiones","",c.linea,c.columna);
-                       dim.add(c);
-                       RESULT.add(dim);
+                       RESULT.add(c);
                     :};
 
-asigna_vecGlbF2 ::= I_D:a ALLA expr_a:b CLLA DSPTS expr_a:X {:
+asigna_vecGlbF2 ::= I_D:a ALLA expr_a:b CLLA DSPTS  expr_a:X PYC {:
                        RESULT = parser.crearNodo("asigna_vecGlbF2","",a.getLinea(),a.getColumna());
                        RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
-                       Nodo dim=parser.crearNodo("dimensiones","",b.linea,b.columna);
+                       Nodo dim=parser.crearNodo("indice","",b.linea,b.columna);
                        dim.add(b);
                        RESULT.add(dim);
                        RESULT.add(X);
                     :}; 
 
-funcion_conteo  ::= I_D PTO CONTEO PYC;   // DEVUELVE VALOR
+funcion_conteo  ::= I_D:a PTO CONTEO  {:
+                       RESULT = parser.crearNodo("funcion_Conteo","",a.getLinea(),a.getColumna());
+                       RESULT.add(parser.crearNodo("id",a.getCadena(),a.getLinea(),a.getColumna()));
+                    :};   // DEVUELVE VALOR
 
-funcion_acadena ::= I_D PTO ATEXTO PYC;  // DEVUELVE VALOR
+funcion_acadena ::= I_D:a PTO ATEXTO APAR CPAR{:
+                       RESULT = parser.crearNodo("funcion_aTexto","",a.getLinea(),a.getColumna());
+                       RESULT.add(parser.crearNodo("id",a.getCadena(),a.getLinea(),a.getColumna()));
+                    :};  // DEVUELVE VALOR
 
 //****************************LISTA DE VALOREs**********************************
 
@@ -150,67 +156,130 @@ valor       ::= dato:a {:
 
 //****************************SI-SINO*******************************************
 
-Si     ::= SI APAR expr_l CPAR ALLA instrucciones CLLA opcional;
+Si     ::= SI:w APAR expr_l:X CPAR ALLA instrucciones:Y CLLA opcional:Z
+          {:
+            RESULT = parser.crearNodo("si","",w.getLinea(),w.getColumna());
+            RESULT.add(X);// se agrega la expresion
+            RESULT.add(Y);// se agrega el conjunto de instrucciones
+            RESULT.add(Z);// se agrega el SINO (opcional)
 
-opcional ::= {::}
-             |Sino;
+          :};
 
-Sino   ::= SINO ALLA instrucciones CLLA;
+opcional ::= {: RESULT = parser.crearNodo("sentencias","",0,0);  :}
+             |Sino:X {: RESULT=X;  :}; 
+
+Sino   ::= SINO ALLA instrucciones:X CLLA {:
+            RESULT=X; // se agrega el conjunto de instrucciones
+            :};
 
 //**************************Selecciona *****************************************
 
-Selecciona ::= SELECCIONA APAR expr_a CPAR ALLA lista_casos CLLA;
+Selecciona ::= SELECCIONA:w APAR expr_l:X CPAR ALLA cont_selecciona:Y CLLA
+            {:
+                RESULT = parser.crearNodo("selecciona","",w.getLinea(),w.getColumna());
+                RESULT.add(X);// se agrega la EXPRESION
+                RESULT.add(Y);// se agrega la lista de CASOS
+            :};
 
-lista_casos ::=lista_casos caso_defecto
-               |caso_defecto;
+cont_selecciona ::= {: RESULT = parser.crearNodo("casos","",0,0); :}
+                    |lista_casos:X{: RESULT= X; :};
+
+
+lista_casos ::=lista_casos:R caso_defecto:X{:
+                R.add(X);
+                RESULT = R;
+            :}
+               |caso_defecto:X{:
+                RESULT = parser.crearNodo("casos","",X.linea,X.columna);
+                RESULT.add(X);
+            :};
               
 
-caso_defecto  ::= CASO valor DSPTS instrucciones
-                |DEFECTO     DSPTS instrucciones;
+caso_defecto  ::= CASO:w expr_a:X DSPTS instrucciones:Y {:
+                    RESULT = parser.crearNodo("caso","",w.getLinea(),w.getColumna());
+                    RESULT.add(X);// se agrega la EXPR
+                    RESULT.add(Y);// se agregan las instrucciones
+                :}
+                |DEFECTO:w        DSPTS instrucciones:Y {:
+                    RESULT = parser.crearNodo("defecto","",w.getLinea(),w.getColumna());
+                    RESULT.add(Y);// se agregan las instrucciones
+                :};
 
 //**************************Ciclo Para******************************************
-Para     ::=   PARA APAR dec_for PYC expr_l PYC operador CPAR ALLA instrucciones CLLA; 
+Para     ::=   PARA:w APAR dec_for:X PYC expr_l:Y PYC operador:Z CPAR ALLA instrucciones:O CLLA {:
+                    RESULT = parser.crearNodo("para","",w.getLinea(),w.getColumna());
+                    RESULT.add(X);// se agrega la declaracion FOR
+                    RESULT.add(Y);// se agrega la CONDICION
+                    RESULT.add(Z);// se agrega el OPERADOR
+                    RESULT.add(O);// se agregan las instrucciones
+
+               :}; 
 
 
-dec_for   ::=  I_D  DSPTS valor;
+dec_for   ::=  I_D:w  DSPTS expr_l:X{:
+                    RESULT = parser.crearNodo("dec_for","",w.getLinea(),w.getColumna());
+                    RESULT.add(parser.crearNodo("id",w.getCadena(),w.getLinea(),w.getColumna()));// se agrega el ID
+                    RESULT.add(X);// se agrega el valor de la variable del for
+               :};
 
 
-operador  ::= ADD | SUB;
+operador  ::= ADD:w {:    RESULT = parser.crearNodo("operador","add",w.getLinea(),w.getColumna()); :} 
+             |SUB:w {:    RESULT = parser.crearNodo("operador","sub",w.getLinea(),w.getColumna()); :};
 
 
 //*************************Ciclo Mientras***************************************
-Mientras ::= MIENTRAS APAR expr_l CPAR ALLA instrucciones CLLA;
+Mientras ::= MIENTRAS:w APAR expr_l:X CPAR ALLA instrucciones:Y CLLA{:
+                    RESULT = parser.crearNodo("mientras","",w.getLinea(),w.getColumna());
+                    RESULT.add(X);// se agrega la CONDICION
+                    RESULT.add(Y);// se agregan las instrucciones
+            :};
+
 
 //*************************Funcion Detener**************************************
-Detener  ::= DETENER PYC;
+Detener  ::= DETENER:w PYC {:RESULT = parser.crearNodo("detener","",w.getLinea(),w.getColumna());:};
 
 //*************************Funcion Imprimir ************************************
-Imprimir ::= IMPRIMIR APAR expr_l CPAR PYC;
+Imprimir ::= IMPRIMIR:w APAR expr_l:X CPAR PYC{:
+                RESULT = parser.crearNodo("imprimir","",w.getLinea(),w.getColumna());
+                RESULT.add(X);// se agrega la expresion a IMPRIMIR en la consola de salida
+            :};
 
 //*************************Funcion Retornar ************************************
-Retornar ::= RETORNAR expr_l PYC;
+Retornar ::= RETORNAR:w expr_l:X PYC{:
+                RESULT = parser.crearNodo("retornar","",w.getLinea(),w.getColumna());
+                RESULT.add(X);// se agrega la expresion a retornar
+            :};
 
 //*************************Funcion Mensaje *************************************
-Mensaje  ::= MENSAJE APAR expr_l CPAR PYC;
+Mensaje  ::= MENSAJE:w APAR expr_l:X CPAR PYC{:
+                RESULT = parser.crearNodo("mensaje","",w.getLinea(),w.getColumna());
+                RESULT.add(X);// se agrega la expresion a MENSAJEAR
+            :};
 
 
 //*************************Instrucciones****************************************
-instrucciones  ::= {:  RESULT = parser.crearNodo("instrucciones","",0,0);  :}
-                   |Instrucciones;
+instrucciones  ::= {:  RESULT = parser.crearNodo("sentencias","",0,0);  :}
+                   |Instrucciones:X {: RESULT = X; :};
 
-Instrucciones  ::= 
-                   declara_vecF1   //asignacion FALTA PERO LOCAL y asigna_vec
-                   |declara_vecF2 
-                   |declara_var
-                   |Si
-                   |Selecciona
-                   |Mientras
-                   |Para
-                   |Detener
-                   |Imprimir
-                   |Retornar
-                   |Mensaje;
+Instrucciones ::= Instrucciones:R sentencia:H {:  R.add(H); RESULT = R;  :}
+                 |sentencia:H {: RESULT = parser.crearNodo("sentencias","",H.linea,H.columna);  RESULT.add(H); :};
 
+
+sentencia      ::= declara_vecF1:X      {: X.nombre="declara_vecF1_L"; RESULT= X;   :} 
+                   |declara_vecF2:X     {: X.nombre="declara_vecF2_L"; RESULT= X;   :}
+                   |declara_var:X       {: X.nombre="declara_var_L"; RESULT= X;     :}
+                   |asigna_vecGlbF1:X   {: X.nombre="asigna_vecLocalF1"; RESULT= X;     :}
+                   |asigna_vecGlbF2:X   {: X.nombre="asigna_vecLocalF2"; RESULT= X;     :}
+                   |asignacionGlb:X     {: X.nombre="asignacionLocal"; RESULT= X;   :}
+                   |Si:X                {: RESULT = X; :}
+                   |Selecciona:X        {: RESULT = X; :}
+                   |Mientras:X          {: RESULT = X; :}
+                   |Para:X              {: RESULT = X; :}
+                   |Detener:X           {: RESULT = X; :}
+                   |Imprimir:X          {: RESULT = X; :}
+                   |Retornar:X          {: RESULT = X; :}
+                   |Mensaje:X           {: RESULT = X; :};
+   
 //************************Metodos y Funciones***********************************
 funcion ::= FUNCION:w I_D:x APAR parametros:y CPAR ALLA instrucciones:z CLLA 
            {:
@@ -313,7 +382,8 @@ expr_a ::= expr_a:b MAS:a expr_a:c    {:
 simplificada ::= expr_a ADD
                 |expr_a SUB;
           
-dato ::= STRING_LITERAL:a {:
+dato ::= I_D:a                          {: RESULT = parser.crearNodo("id",a.getCadena(),a.getLinea(),a.getColumna());    :}
+        |STRING_LITERAL:a {:
                             String cad = a.getCadena(); cad= cad.substring(1,cad.length()-1);
                             RESULT = parser.crearNodo("string",cad,a.getLinea(),a.getColumna()); 
                           :}
@@ -321,4 +391,6 @@ dato ::= STRING_LITERAL:a {:
         |DECIMAL:a                      {: RESULT = parser.crearNodo("number",a.getCadena(),a.getLinea(),a.getColumna());    :}
         |COMS BOOLEAN_LITERAL:a  COMS   {: RESULT = parser.crearNodo("boolean",a.getCadena(),a.getLinea(),a.getColumna());   :}
         |COMS DATE_LITERAL:a     COMS   {: RESULT = parser.crearNodo("date",a.getCadena(),a.getLinea(),a.getColumna());      :}
-        |COMS DATETIME_LITERAL:a COMS   {: RESULT = parser.crearNodo("datetime",a.getCadena(),a.getLinea(),a.getColumna());  :};
+        |COMS DATETIME_LITERAL:a COMS   {: RESULT = parser.crearNodo("datetime",a.getCadena(),a.getLinea(),a.getColumna());  :}
+        |funcion_conteo:a               {: RESULT = a;  :}
+        |funcion_acadena:a              {: RESULT = a;  :};

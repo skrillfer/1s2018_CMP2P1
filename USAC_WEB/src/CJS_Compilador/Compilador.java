@@ -31,12 +31,24 @@ public abstract class Compilador {
     
     public abstract Metodo ejecutar(Nodo raiz);
     
-    public void ejecutarSentencias(Nodo Sentencias){
+    public Metodo ejecutarSentencias(Nodo Sentencias){
         for (Nodo sentencia : Sentencias.hijos) {
             switch(sentencia.nombre){
-                case "declara_var":
+                case "declara_var_L":
+                case "declara_vecF1_L":
+                case "declara_vecF2_L":
+                case "asignacionLocal":
+                    new Declaracion(sentencia, global, tabla);
+                    break;
+                case "si":
                     
+                    break;
+                case "selecciona":
+                    break;
+                case "mientras":
+                    break;
             }
         }
+        return metodoActual;
     }
 }

@@ -26,7 +26,7 @@ public class Declaracion extends Compilador{
     
     public Object declarar() {
         switch (raiz.nombre) {
-            
+            //********************  AMBITO GLOBAL ******************************
             case "declara_var":
                 declara_var();
                 break;
@@ -35,7 +35,35 @@ public class Declaracion extends Compilador{
                 break;
             case "declara_vecF2":
                 declara_vecF2();
+                break;    
+            case "asigna_vecGlbF1":
+                asigna_vecGlbF1();
                 break;
+            case "asigna_vecGlbF2":
+                asigna_vecGlbF2();
+                break;
+            case "asignacionGlb":
+                asignacionGlb();
+                break;
+            //********************   AMBITO LOCAL ******************************    
+            case "declara_var_L":  
+                declara_var_L();
+                break;
+            case "declara_vecF1_L":
+                declara_vecF1_L();
+                break;
+            case "declara_vecF2_L":
+                declara_vecF2_L();
+                break;
+            case "asigna_vecLocalF1":
+                asignacionLocal();
+                break;
+            case "asigna_vecLocalF2":
+
+                break;
+            case "asignacionLocal":
+                break;
+                        
             /*case "atributoVarDA"://atributo tipo entero,cadena... declarado y asignado
                 return atributoVarDA();
             case "atributoVarD"://atributo tipo entero,cadena... declarado
@@ -124,8 +152,141 @@ public class Declaracion extends Compilador{
         SimboloG simbolo = new SimboloG(tipo,nombre,arreglo);
         simbolo.inicializado = true;
         
+        if (!global.setSimbolo(simbolo)) {
+            //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+        }
+    }
+    
+    public void asigna_vecGlbF1(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo="";
+        
+        SimboloG sim = global.getSimbolo(nombre, CJS.claseActual);
+        if(sim.esArreglo){
+            
+            Arreglo arreglo = (Arreglo)sim.valor;
+            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones);
+            //************como es de una sola dimension
+            // si la cantidad de datos es menor o igual al tamanio unidimensional
+            if(arr1.getDatos().size()<=arreglo.getDatos().size()){
+
+                for (int i = 0; i < arr1.getDatos().size(); i++) {
+                    arreglo.getDatos().set(i, arr1.getDatos().get(i));
+                }
+                
+            }else{
+                System.out.println("cantidad de valores a agregar es mayor a el tamano del vector");
+            }
+            
+            
+            System.out.println("");
+        }
+    }
+    
+    public void asigna_vecGlbF2(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo="";
+        
+        SimboloG sim = global.getSimbolo(nombre, CJS.claseActual);// SE OBTIENE EL ARRGELO COMO TAL
+       
+        ResultadoG valor =opL.ejecutar(raiz.hijos.get(2));// se obitene el nodo que contiene EXPR  se ejecuta
+        
+        if(sim.esArreglo){
+            Arreglo arreglo = (Arreglo)sim.valor;
+            
+            if(valor!=null){
+                arreglo.setValor(raiz.hijos.get(1).hijos.get(0),valor);// envio el (Nodo)indice y el (ResultadoG)valor
+            }
+            
+            
+        }
+    }
+    
+    public void asignacionGlb(){
+        String nombre = raiz.hijos.get(0).valor;
+        SimboloG sim = global.getSimbolo(nombre, CJS.claseActual);
+        ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
+        if(sim != null){
+            //* por lo del tipo de la variable DUDA1
+            sim.inicializado=true;
+            if(sim.esArreglo == false && resultado!=null){
+                sim.tipo=resultado.tipo;
+                sim.valor=resultado.valor;
+            }
+        }else{
+            System.out.println("variable no existe");
+        }
+    }
+   
+    
+    /***********************    AMBITO LOCAL                    ***************/
+    
+    public void declara_var_L(){
+        String tipo = "";//el tipo de la  variable depende del valor que tenga
+        String nombre= raiz.hijos.get(0).valor;//se obtiene el nombre de la variable a declarar
+        
+        
+        if(raiz.hijos.get(1).hijos.size()>0){
+            Nodo exp = raiz.hijos.get(1).hijos.get(0);//se obtiene el nodo de la expresion
+            //----------ejecuto la parte de la expresion
+            ResultadoG resultado = opL.ejecutar(exp);
+            if(resultado!=null ){
+                // la variable toma el tipo del valor que le es asignado, de ahi en adelante no cambia
+                tipo=resultado.tipo;
+                SimboloG simbolo = new SimboloG(tipo, nombre, "", resultado.valor);
+                simbolo.inicializado = true;
+                if (!tabla.setSimbolo(simbolo)) {
+                    System.out.println("Agregado el simbolo correctamente");
+                    //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+                }
+            }
+        }else{
+            SimboloG simbolo = new SimboloG(tipo, nombre, "", null);
+            if (!tabla.setSimbolo(simbolo)) {
+                //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+            }
+        }
+    }
+    
+    public void declara_vecF1_L(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo="";
+        Arreglo arreglo = new Arreglo(raiz, global, tabla);
+        if (arreglo.estado) {
+            SimboloG simbolo = new SimboloG(tipo, nombre, "", arreglo);
+            simbolo.inicializado = true;
+            if (!tabla.setSimbolo(simbolo)) {
+                //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+            }
+        }
+    }
+    
+    
+    public void declara_vecF2_L(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo = "";
+        Arreglo arreglo = new Arreglo(raiz,tabla,global,0);
+        SimboloG simbolo = new SimboloG(tipo,nombre,arreglo);
+        simbolo.inicializado = true;
+        
         if (!tabla.setSimbolo(simbolo)) {
             //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+        }
+    }
+    
+    public void asignacionLocal(){
+        String nombre = raiz.hijos.get(0).valor;
+        SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
+        ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
+        if(sim != null){
+            //* por lo del tipo de la variable DUDA1
+            sim.inicializado=true;
+            if(sim.esArreglo == false && resultado!=null){
+                sim.tipo=resultado.tipo;
+                sim.valor=resultado.valor;
+            }
+        }else{
+            System.out.println("variable no existe");
         }
     }
     

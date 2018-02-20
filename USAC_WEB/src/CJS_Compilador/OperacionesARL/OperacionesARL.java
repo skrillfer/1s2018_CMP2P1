@@ -22,44 +22,95 @@ public class OperacionesARL {
     public ResultadoG ejecutar(Nodo nodo){
         ResultadoG result=null;
         switch(nodo.nombre){
+            /***********          EXPRESIONES LOGICAS                    ******/    
             case "AND":
+                ResultadoG r_and1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_and2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_and1, r_and2, "AND");
+                imprimirResultado(result);
                 break;
             case "OR":
+                ResultadoG r_or1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_or2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_or1, r_or2, "OR");
+                imprimirResultado(result);
                 break;
             case "NOT":
+                ResultadoG r_not1 = ejecutar(nodo.hijos.get(0));
+                result = operacionesAritmeticas(r_not1, null, "NOT");
+                imprimirResultado(result);
                 break;
+            /***********          EXPRESIONES RELACIONALES               ******/
             case "MENQ":
+                ResultadoG r_mm1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_mm2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_mm1, r_mm2, "MENQ");
+                imprimirResultado(result);
                 break;
             case "MENIQ":
+                ResultadoG r_mmi1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_mmi2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_mmi1, r_mmi2, "MENIQ");
+                imprimirResultado(result);
                 break;
             case "MAYQ":
+                ResultadoG r_my1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_my2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_my1, r_my2, "MAYIQ");
+                imprimirResultado(result);
                 break;
             case "MAYIQ":
+                ResultadoG r_myi1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_myi2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_myi1, r_myi2, "MAYIQ");
+                imprimirResultado(result);
                 break;
             case "IG_IG":
+                ResultadoG r_ig1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_ig2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_ig1, r_ig2, "IG_IG");
+                imprimirResultado(result);
                 break;
             case "DIF":
+                ResultadoG r_df1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_df2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_df1, r_df2, "DIF");
+                imprimirResultado(result);
                 break;
+            /***********          EXPRESIONES ARITMETICAS                ******/        
             case "ADD":
                 break;
             case "SUB":
                 break;
             case "POT":
+                ResultadoG r_pt1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_pt2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_pt1, r_pt2, "POT");
+                imprimirResultado(result);
                 break;
             case "DIV":
+                ResultadoG r_d1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_d2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_d1, r_d2, "DIV");
+                imprimirResultado(result);
                 break;
             case "POR":
+                ResultadoG r_p1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_p2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_p1, r_p2, "POR");
+                imprimirResultado(result);
                 break;
             case "MENOS":
-                ResultadoG r_1 = ejecutar(nodo.hijos.get(0));
-                ResultadoG r_2 = ejecutar(nodo.hijos.get(1));
-                
+                ResultadoG r_m1 = ejecutar(nodo.hijos.get(0));
+                ResultadoG r_m2 = ejecutar(nodo.hijos.get(1));
+                result = operacionesAritmeticas(r_m1, r_m2, "MENOS");
+                imprimirResultado(result);
                 break; 
             case "MAS":
                 ResultadoG r1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r2 = ejecutar(nodo.hijos.get(1));
-                ResultadoG r_r = operacionesAritmeticas(r1, r2, "MAS");
-                System.out.println("valor: "+r_r.valor+ "\nTipo: "+r_r.tipo);
+                result = operacionesAritmeticas(r1, r2, "MAS");
+                imprimirResultado(result);
                 break;    
             case "number":
                 result=new ResultadoG("number", Double.parseDouble(nodo.valor));
@@ -80,10 +131,44 @@ public class OperacionesARL {
                     result=new ResultadoG("boolean", false);
                 }
                 break;
+            case "funcion_Conteo":
+                ResultadoG res=acceso(nodo.hijos.get(0));
+                if(res.simbolo.esArreglo){
+                    Double i1= ((Arreglo)res.simbolo.valor).funcion_Conteo();
+                    
+                    result=new ResultadoG("number", i1);
+                }else{
+                    System.out.println("funcion conteo solo aplica con Vectores");
+                }
+                break;
+            case "funcion_aTexto":
+                ResultadoG res1=acceso(nodo.hijos.get(0));
+                if(res1.simbolo.esArreglo){
+                    String i1= ((Arreglo)res1.simbolo.valor).funcion_aTexto();
+                    result=new ResultadoG("string", i1);
+                }else{
+                    System.out.println("funcion aTexto solo aplica con Vectores");
+                }
+                acceso(nodo.hijos.get(0));
+                break;
+            case "id":
+                ResultadoG res0=acceso(nodo);
+                if(res0!=null){
+                    result=res0;
+                }else{
+                    System.out.println("no existe la variable");
+                }
+                
+                break;
         }
         return result;
     }
     
+    public void imprimirResultado(ResultadoG res){
+        System.out.println("____________________________________________________");
+        System.out.println("Resultado: " + res.valor + "\n Tipo: "+res.tipo);
+        
+    }
     public ResultadoG operacionesLogicas(ResultadoG r1, ResultadoG r2, String op){
         ResultadoG result = null;
         Object valor = new Object();
@@ -746,5 +831,52 @@ public class OperacionesARL {
             //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "No se pudo castear la cadena a tipo Bool");
             return -1;
         }
+    }
+    
+    
+    public ResultadoG acceso(Nodo raiz){
+        Clase aux = CJS.claseActual;
+        TablaSimboloG tablaAux = tabla;
+        ResultadoG retorno = new ResultadoG("-1", null);
+        //----------------------------------------------------------------------
+        String nombre;
+        SimboloG simbolo;
+        switch(raiz.nombre){
+            case "id":
+                nombre = raiz.valor;
+                simbolo = tabla.getSimbolo(nombre, aux);
+                if(simbolo != null){
+                    if(simbolo.inicializado){
+                        switch(simbolo.tipo){
+                            case "boolean":
+                            case "number":
+                            case "string":
+                            case "date":
+                            case "datetime":
+                                retorno.valor = simbolo.valor;
+                                retorno.tipo  = simbolo.tipo;
+                                retorno.simbolo = simbolo;
+                                break;
+                        }
+                        if(simbolo.esArreglo){
+                            retorno.valor = simbolo.valor;
+                            retorno.tipo  = simbolo.tipo;
+                            retorno.simbolo = simbolo;
+                        }
+                    }else{
+                        retorno.tipo = "-1";
+                        retorno.valor = null;
+                        //Inicio.reporteError.agregar("Semantico", acceso.linea, acceso.columna, "La variable " + nombre + " no ha sido inicializada");
+                        return retorno;
+                    }
+                }else {
+                    retorno.tipo = "-1";
+                    retorno.valor = null;
+                    //Inicio.reporteError.agregar("Semantico", acceso.linea, acceso.columna, "La variable " + nombre + " no existe en el ambito donde fue invocada");
+                    return retorno;
+                }
+                break;
+        }
+        return retorno;
     }
 }

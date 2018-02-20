@@ -24,6 +24,7 @@ public class SimboloG {
         if (valor != null) {
             if (valor.getClass().getSimpleName().equalsIgnoreCase("arreglo")) {
                 esArreglo = true;
+                System.out.println("es un arreglo");
             }
         }
         this.nombre = nombre;

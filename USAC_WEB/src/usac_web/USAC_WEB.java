@@ -43,7 +43,7 @@ public class USAC_WEB {
             genTcjs.generacion_arbolCJS(raiz);
             
             CJS cj_s= new CJS();
-            cj_s.ejecucionCJS(raiz);
+            cj_s.ejecucionCJS(raiz, "metodo1");
             
             //---------------------------Se le pasa la raiz a la clase CJS
             

@@ -43,4 +43,25 @@ public class TablaSimboloG {
             return false;//no se agrego a la global
         }
     }
+    
+     public SimboloG getSimbolo(String nombre, Clase claseActual) {
+        SimboloG buscado = null;
+        TablaSimboloG principal = claseActual.global;
+        nombre = nombre.toLowerCase();
+        if (existe(nombre)) {
+            
+            return tabla.get(nombre);
+        } else{//si no existe en el ambito LOCAL se busca en el ambito GLOBAL
+            if (principal.existe(nombre)) {
+                return principal.tabla.get(nombre);
+            }
+        }
+        return buscado;
+    }
+     
+    public void cambiarAmbito(TablaSimboloG actual) {
+        for (SimboloG simbolo : actual.tabla.values()) {
+            tabla.put(simbolo.nombre, simbolo);
+        }
+    }
 }

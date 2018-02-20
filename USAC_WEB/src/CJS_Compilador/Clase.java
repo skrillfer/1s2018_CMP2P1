@@ -20,8 +20,6 @@ public class Clase {
     public TablaSimboloG tabla;
     public String nombre;
     public String visibilidad;
-    public Clase herencia;
-    public String nombreHereda;
     public ArrayList<Metodo> metodos;
     public ArrayList<Nodo> atributos;
     
@@ -80,7 +78,9 @@ public class Clase {
     private ArrayList<Nodo> getAtributos(Nodo raiz) {
         ArrayList<Nodo> atributos = new ArrayList<>();
         for (Nodo hijo : raiz.hijos) {
-            if ( hijo.nombre.equalsIgnoreCase("declara_var") || hijo.nombre.equalsIgnoreCase("declara_vecF1") || hijo.nombre.equalsIgnoreCase("declara_vecF2")) {
+            if ( hijo.nombre.equalsIgnoreCase("declara_var")  || hijo.nombre.equalsIgnoreCase("declara_vecF1") 
+              || hijo.nombre.equalsIgnoreCase("declara_vecF2") || hijo.nombre.equalsIgnoreCase("asigna_vecGlbF1")
+              || hijo.nombre.equalsIgnoreCase("asigna_vecGlbF2") || hijo.nombre.equalsIgnoreCase("asignacionGlb")    ) {
                 atributos.add(hijo);
             }
         }

@@ -1,22 +1,17 @@
-DimV vect1{14};
-DimV vectI:{87,8+9,100};
-
-vectI : {}
-
 
 
 
 
 Funcion metodo1 (x,y,z){
+    DimV num1:100;
+    DimV num2:200;
+    DimV msg1:" mensaje1";
+    DimV msg2:" mensaje2";
+    
+    Mientras(x>2){
+    }
 
 }
 
 
-Funcion metodo2 (x,y,z){
 
-}
-
-
-Funcion metodo3 (x,y,z){
-
-}
