@@ -26,61 +26,67 @@ public class OperacionesARL {
             case "AND":
                 ResultadoG r_and1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_and2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_and1, r_and2, "AND");
+                result = operacionesLogicas(r_and1, r_and2, "AND");
                 imprimirResultado(result);
                 break;
             case "OR":
                 ResultadoG r_or1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_or2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_or1, r_or2, "OR");
+                result = operacionesLogicas(r_or1, r_or2, "OR");
                 imprimirResultado(result);
                 break;
             case "NOT":
                 ResultadoG r_not1 = ejecutar(nodo.hijos.get(0));
-                result = operacionesAritmeticas(r_not1, null, "NOT");
+                result = operacionesLogicas(r_not1, null, "NOT");
                 imprimirResultado(result);
                 break;
             /***********          EXPRESIONES RELACIONALES               ******/
             case "MENQ":
                 ResultadoG r_mm1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_mm2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_mm1, r_mm2, "MENQ");
+                result = operacionesRelacionales(r_mm1, r_mm2, "MENQ");
                 imprimirResultado(result);
                 break;
             case "MENIQ":
                 ResultadoG r_mmi1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_mmi2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_mmi1, r_mmi2, "MENIQ");
+                result = operacionesRelacionales(r_mmi1, r_mmi2, "MENIQ");
                 imprimirResultado(result);
                 break;
             case "MAYQ":
                 ResultadoG r_my1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_my2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_my1, r_my2, "MAYIQ");
+                result = operacionesRelacionales(r_my1, r_my2, "MAYQ");
                 imprimirResultado(result);
                 break;
             case "MAYIQ":
                 ResultadoG r_myi1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_myi2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_myi1, r_myi2, "MAYIQ");
+                result = operacionesRelacionales(r_myi1, r_myi2, "MAYIQ");
                 imprimirResultado(result);
                 break;
             case "IG_IG":
                 ResultadoG r_ig1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_ig2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_ig1, r_ig2, "IG_IG");
+                result = operacionesRelacionales(r_ig1, r_ig2, "IG_IG");
                 imprimirResultado(result);
                 break;
             case "DIF":
                 ResultadoG r_df1 = ejecutar(nodo.hijos.get(0));
                 ResultadoG r_df2 = ejecutar(nodo.hijos.get(1));
-                result = operacionesAritmeticas(r_df1, r_df2, "DIF");
+                result = operacionesRelacionales(r_df1, r_df2, "DIF");
                 imprimirResultado(result);
                 break;
             /***********          EXPRESIONES ARITMETICAS                ******/        
             case "ADD":
+                ResultadoG r_add1 = ejecutar(nodo.hijos.get(0));
+                result = operacionesSimplificadas(r_add1, "ADD");
+                imprimirResultado(result);
                 break;
             case "SUB":
+                ResultadoG r_sub1 = ejecutar(nodo.hijos.get(0));
+                result = operacionesSimplificadas(r_sub1, "SUB");
+                imprimirResultado(result);
                 break;
             case "POT":
                 ResultadoG r_pt1 = ejecutar(nodo.hijos.get(0));
@@ -158,15 +164,34 @@ public class OperacionesARL {
                 }else{
                     System.out.println("no existe la variable");
                 }
-                
+                break;
+            case "llamadaFuncion":
+                ResultadoG callR = acceso(nodo);
+                if(callR!=null){
+                    result = callR;
+                }
+                break;
+            case "unitario":
+                ResultadoG resu=ejecutar(nodo.hijos.get(0));
+                if(resu!=null){
+                    try {
+                        if(resu.tipo.equals("number")){
+                            resu.valor = (Double)resu.valor *-1.0;
+                            result = resu;
+                        }
+                    } catch (Exception e) {}
+                }else{
+                    System.out.println("no existe la variable");
+                }
                 break;
         }
         return result;
     }
     
     public void imprimirResultado(ResultadoG res){
-        System.out.println("____________________________________________________");
-        System.out.println("Resultado: " + res.valor + "\n Tipo: "+res.tipo);
+        //System.out.println("____________________________________________________");
+        //System.out.println("Resultado: " + res.valor + "\n Tipo: "+res.tipo);
+        //System.out.println("____________________________________________________");
         
     }
     public ResultadoG operacionesLogicas(ResultadoG r1, ResultadoG r2, String op){
@@ -215,7 +240,7 @@ public class OperacionesARL {
                     switch(r2.tipo){
                         case "number":
                             result = new ResultadoG("boolean", false);
-                            if((Double)r1.valor < (Double)r2.valor){
+                            if((double)r1.valor < (double)r2.valor){
                                 result = new ResultadoG("boolean", true);
                             }
                             break;
@@ -248,7 +273,7 @@ public class OperacionesARL {
                     switch(r2.tipo){
                         case "number":
                             result = new ResultadoG("boolean", false);
-                            if((Double)r1.valor <= (Double)r2.valor){
+                            if((double)r1.valor <= (double)r2.valor){
                                 result = new ResultadoG("boolean", true);
                             }
                             break;
@@ -281,7 +306,7 @@ public class OperacionesARL {
                     switch(r2.tipo){
                         case "number":
                             result = new ResultadoG("boolean", false);
-                            if((Double)r1.valor > (Double)r2.valor){
+                            if((double)r1.valor > (double)r2.valor){
                                 result = new ResultadoG("boolean", true);
                             }
                             break;
@@ -314,7 +339,7 @@ public class OperacionesARL {
                     switch(r2.tipo){
                         case "number":
                             result = new ResultadoG("boolean", false);
-                            if((Double)r1.valor >= (Double)r2.valor){
+                            if((double)r1.valor >= (double)r2.valor){
                                 result = new ResultadoG("boolean", true);
                             }
                             break;
@@ -347,7 +372,10 @@ public class OperacionesARL {
                     switch(r2.tipo){
                         case "number":
                             result = new ResultadoG("boolean", false);
-                            if((Double)r1.valor == (Double)r2.valor){
+                            //System.out.println("[cIG] Valor de r1:"+(Double)r1.valor);
+                            //System.out.println("[cIG] Valor de r2:"+(Double)r2.valor);
+                            if((double)r1.valor == (double)r2.valor){
+                                //System.out.println("son iguales :)");
                                 result = new ResultadoG("boolean", true);
                             }
                             break;
@@ -380,7 +408,7 @@ public class OperacionesARL {
                     switch(r2.tipo){
                         case "number":
                             result = new ResultadoG("boolean", false);
-                            if((Double)r1.valor != (Double)r2.valor){
+                            if((double)r1.valor != (double)r2.valor){
                                 result = new ResultadoG("boolean", true);
                             }
                             break;
@@ -411,6 +439,10 @@ public class OperacionesARL {
         return result;
     }
     public ResultadoG operacionesAritmeticas(ResultadoG r1, ResultadoG r2, String op){
+        if(verNulabilidad(r1, r2)){
+            return null;
+        }
+        
         ResultadoG result = null;
         Object valor = new Object();
         if(op.equals("MAS")){
@@ -814,6 +846,25 @@ public class OperacionesARL {
         return result;
     }
     
+    public ResultadoG operacionesSimplificadas(ResultadoG r1, String op){
+        if(verNulabilidad(r1, r1)){
+            return null;
+        }
+        ResultadoG resultado=null;
+        Object valor = new Object();
+        if(op.equals("ADD")){
+            if(r1.tipo.equals("number")){
+                valor = (Double)r1.valor + 1;
+                resultado = new ResultadoG("number", valor);
+            }
+        }else if(op.equals("SUB")){
+            if(r1.tipo.equals("number")){
+                valor = (Double)r1.valor - 1;
+                resultado = new ResultadoG("number", valor);
+            }
+        }
+        return resultado;
+    }
     public int getBoolValor(Object objeto) {
         Boolean valor = (Boolean) objeto;
         if (valor) {
@@ -839,6 +890,7 @@ public class OperacionesARL {
         TablaSimboloG tablaAux = tabla;
         ResultadoG retorno = new ResultadoG("-1", null);
         //----------------------------------------------------------------------
+        int nivel = 0;
         String nombre;
         SimboloG simbolo;
         switch(raiz.nombre){
@@ -876,7 +928,32 @@ public class OperacionesARL {
                     return retorno;
                 }
                 break;
+                
+            case "llamadaFuncion":
+                LlamadaMetodo llamada = new LlamadaMetodo(aux, nivel);
+                Metodo metodo = llamada.ejecutar(raiz);
+                if (metodo != null) {
+                    if (metodo.retorno != null) {
+                            retorno = metodo.retorno;
+                            metodo.estadoRetorno = false;
+                    }
+                } else {
+                    retorno.tipo = "-1";
+                    retorno.valor = null;
+                }
+                break;
         }
+        tabla = tablaAux;
         return retorno;
+    }
+    
+    
+    
+    public boolean verNulabilidad(ResultadoG r1, ResultadoG r2){
+        if(r1 != null && r2!=null){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

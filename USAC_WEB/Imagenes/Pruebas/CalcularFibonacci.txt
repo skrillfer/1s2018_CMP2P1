@@ -1,7 +1,5 @@
 
 
-
-
 Funcion metodo1 (){
     
     DimV num1:12;
@@ -34,5 +32,4 @@ Funcion fibonacci(n){
        Retornar -1; 
     }
 }
-
 

@@ -41,7 +41,7 @@ public class Metodo {
         String id = nombre;
         for (Nodo parametro : parametros) {
             if (parametro.nombre.equals("parametro")) {
-                id += parametro.hijos.get(0).valor;
+                id += "_1p";
             } else {
                 
                 //si el parametro es un vector

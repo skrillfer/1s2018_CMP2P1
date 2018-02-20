@@ -37,7 +37,7 @@ public class CJS extends Compilador{
         global = claseActual.global;
         tabla = claseActual.tabla;
         if(metodoActual!=null){
-//            ejecutarSentencias(metodoActual.sentencias);// se ejecutan las sentencias del metodo que inicia la compilacion
+            ejecutarSentencias(metodoActual.sentencias);// se ejecutan las sentencias del metodo que inicia la compilacion
         }
         
         

@@ -27,7 +27,6 @@ public class USAC_WEB {
      */
     public static void main(String[] args) throws FileNotFoundException {
         new USAC_WEB().CompilarCJS();
-        
     }
     
     public void CompilarCJS() throws FileNotFoundException{

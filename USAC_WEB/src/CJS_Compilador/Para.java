@@ -75,7 +75,8 @@ public class Para extends Compilador {
                 condicion = opL.ejecutar(expCondicion);
             }
         }
-
+        
+        tabla = pilaTablas.pop();
         return metodoActual;
     }
 

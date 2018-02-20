@@ -16,12 +16,49 @@ public class Declaracion extends Compilador{
     TablaSimboloG tabla;
     TablaSimboloG global;
 
+    //* cuando DECLARO PARAMETROS USO ESTE CONSTRUCTOR
+    public Declaracion(Nodo raiz, ResultadoG resultado, TablaSimboloG global, TablaSimboloG tabla) {
+        this.raiz = raiz;
+        this.global = global;
+        this.tabla = tabla;
+        declararParametro(resultado);
+    }
+    
+    //* cuando hago una declaracion simple USO este CONSTRUCTOR
     public Declaracion(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla) {
         this.raiz = raiz;
         this.global = global;//tabla de variables locales
         this.tabla = tabla;//tabla de variables globales
         opL = new OperacionesARL(global, tabla);
         declarar();
+    }
+    
+    private SimboloG declararParametro(ResultadoG resultado) {
+
+        switch (raiz.nombre) {
+            case "parametro":
+                return parametro(resultado);
+            case "parametroAr":
+                //return parametroAr(resultado);
+        }
+
+        return null;
+    }
+    
+    private SimboloG parametro(ResultadoG resultado) {
+        String nombre = raiz.hijos.get(0).valor;
+        
+        if (resultado != null) {
+            String tipo = resultado.tipo;
+            SimboloG simbolo = new SimboloG(tipo, nombre, resultado.valor);
+            simbolo.inicializado = true;
+            if (!tabla.setSimbolo(simbolo)) {
+                //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+            }
+        } else {
+
+        }
+        return null;
     }
     
     public Object declarar() {
@@ -62,6 +99,7 @@ public class Declaracion extends Compilador{
 
                 break;
             case "asignacionLocal":
+                asignacionLocal();
                 break;
                         
             /*case "atributoVarDA"://atributo tipo entero,cadena... declarado y asignado
@@ -220,7 +258,21 @@ public class Declaracion extends Compilador{
    
     
     /***********************    AMBITO LOCAL                    ***************/
-    
+      public void asignacionLocal(){
+        String nombre = raiz.hijos.get(0).valor;
+        SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
+        ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
+        if(sim != null){
+            //* por lo del tipo de la variable DUDA1
+            sim.inicializado=true;
+            if(sim.esArreglo == false && resultado!=null){
+                sim.tipo=resultado.tipo;
+                sim.valor=resultado.valor;
+            }
+        }else{
+            System.out.println("variable Local no existe");
+        }
+    }
     public void declara_var_L(){
         String tipo = "";//el tipo de la  variable depende del valor que tenga
         String nombre= raiz.hijos.get(0).valor;//se obtiene el nombre de la variable a declarar
@@ -274,21 +326,7 @@ public class Declaracion extends Compilador{
         }
     }
     
-    public void asignacionLocal(){
-        String nombre = raiz.hijos.get(0).valor;
-        SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
-        ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
-        if(sim != null){
-            //* por lo del tipo de la variable DUDA1
-            sim.inicializado=true;
-            if(sim.esArreglo == false && resultado!=null){
-                sim.tipo=resultado.tipo;
-                sim.valor=resultado.valor;
-            }
-        }else{
-            System.out.println("variable no existe");
-        }
-    }
+  
     
     @Override
     public Metodo ejecutar(Nodo raiz) {

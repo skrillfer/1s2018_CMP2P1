@@ -46,7 +46,7 @@ public LinkedList<Erro_r> retornarErrores(){
 
 LineTerminator = \r|\n|\r\n|\n\r|\t
 WhiteSpace = {LineTerminator} | [ \t\f]|\t
-Numero = [:digit:][[:digit:]]* 
+Numero =  [:digit:][[:digit:]]* 
 Decimal = ([:digit:][[:digit:]]*)? ([.][:digit:][[:digit:]]*)?
 
 Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*

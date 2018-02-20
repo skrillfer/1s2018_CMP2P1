@@ -1,79 +1,189 @@
 digraph G {
 node[shape=Mrecord]
-38[label="contenido | ",style=bold]
-36[label="funcion | ",style=bold]
-{38}->{36}
-37[label="id | metodo1",style=bold]
-{36}->{37}
-1[label="parametros | ",style=bold]
-{36}->{1}
-2[label="parametro | ",style=bold]
-{1}->{2}
-3[label="id | x",style=bold]
-{2}->{3}
-4[label="parametro | ",style=bold]
-{1}->{4}
-5[label="id | y",style=bold]
-{4}->{5}
-6[label="parametro | ",style=bold]
-{1}->{6}
-7[label="id | z",style=bold]
-{6}->{7}
-12[label="sentencias | ",style=bold]
-{36}->{12}
-10[label="declara_var_L | ",style=bold]
-{12}->{10}
-11[label="nombre | num1",style=bold]
-{10}->{11}
-9[label="asigna_var | ",style=bold]
-{10}->{9}
-8[label="number | 100",style=bold]
-{9}->{8}
-15[label="declara_var_L | ",style=bold]
-{12}->{15}
-16[label="nombre | num2",style=bold]
-{15}->{16}
-14[label="asigna_var | ",style=bold]
-{15}->{14}
-13[label="number | 200",style=bold]
-{14}->{13}
-19[label="declara_var_L | ",style=bold]
-{12}->{19}
-20[label="nombre | msg1",style=bold]
-{19}->{20}
-18[label="asigna_var | ",style=bold]
-{19}->{18}
-17[label="string |  mensaje1",style=bold]
-{18}->{17}
-23[label="declara_var_L | ",style=bold]
-{12}->{23}
-24[label="nombre | msg2",style=bold]
-{23}->{24}
-22[label="asigna_var | ",style=bold]
-{23}->{22}
-21[label="string |  mensaje2",style=bold]
-{22}->{21}
-35[label="para | ",style=bold]
-{12}->{35}
-28[label="dec_for | ",style=bold]
-{35}->{28}
-29[label="id | var1",style=bold]
+30[label="contenido | ",style=bold]
+28[label="funcion | ",style=bold]
+{30}->{28}
+29[label="id | metodo1",style=bold]
 {28}->{29}
-27[label="MAS | ",style=bold]
-{28}->{27}
-25[label="number | 4",style=bold]
-{27}->{25}
-26[label="number | 4",style=bold]
+1[label="parametros | ",style=bold]
+{28}->{1}
+6[label="sentencias | ",style=bold]
+{28}->{6}
+4[label="declara_var_L | ",style=bold]
+{6}->{4}
+5[label="nombre | num1",style=bold]
+{4}->{5}
+3[label="asigna_var | ",style=bold]
+{4}->{3}
+2[label="number | 12",style=bold]
+{3}->{2}
+9[label="declara_var_L | ",style=bold]
+{6}->{9}
+10[label="nombre | num2",style=bold]
+{9}->{10}
+8[label="asigna_var | ",style=bold]
+{9}->{8}
+7[label="number | 10",style=bold]
+{8}->{7}
+13[label="declara_var_L | ",style=bold]
+{6}->{13}
+14[label="nombre | msg1",style=bold]
+{13}->{14}
+12[label="asigna_var | ",style=bold]
+{13}->{12}
+11[label="string | mensaje1!!",style=bold]
+{12}->{11}
+17[label="declara_var_L | ",style=bold]
+{6}->{17}
+18[label="nombre | msg2",style=bold]
+{17}->{18}
+16[label="asigna_var | ",style=bold]
+{17}->{16}
+15[label="string | mensaje2!!",style=bold]
+{16}->{15}
+20[label="imprimir | ",style=bold]
+{6}->{20}
+19[label="string | Calculadora Fibonacci",style=bold]
+{20}->{19}
+27[label="imprimir | ",style=bold]
+{6}->{27}
+26[label="MAS | ",style=bold]
 {27}->{26}
-32[label="MAYQ | ",style=bold]
-{35}->{32}
-30[label="id | a",style=bold]
-{32}->{30}
-31[label="number | 0",style=bold]
-{32}->{31}
-33[label="operador | add",style=bold]
-{35}->{33}
-34[label="sentencias | ",style=bold]
+21[label="string | Resultado:",style=bold]
+{26}->{21}
+24[label="llamadaFuncion | ",style=bold]
+{26}->{24}
+25[label="id | fibonacci",style=bold]
+{24}->{25}
+23[label="envios | ",style=bold]
+{24}->{23}
+22[label="id | num1",style=bold]
+{23}->{22}
+41[label="funcion | ",style=bold]
+{30}->{41}
+42[label="id | prueba",style=bold]
+{41}->{42}
+31[label="parametros | ",style=bold]
+{41}->{31}
+32[label="parametro | ",style=bold]
+{31}->{32}
+33[label="id | x",style=bold]
+{32}->{33}
+38[label="sentencias | ",style=bold]
+{41}->{38}
+36[label="asignacionLocal | ",style=bold]
+{38}->{36}
+37[label="nombre | x",style=bold]
+{36}->{37}
+35[label="unitario | ",style=bold]
+{36}->{35}
+34[label="id | x",style=bold]
 {35}->{34}
+40[label="retornar | ",style=bold]
+{38}->{40}
+39[label="id | x",style=bold]
+{40}->{39}
+92[label="funcion | ",style=bold]
+{30}->{92}
+93[label="id | fibonacci",style=bold]
+{92}->{93}
+43[label="parametros | ",style=bold]
+{92}->{43}
+44[label="parametro | ",style=bold]
+{43}->{44}
+45[label="id | n",style=bold]
+{44}->{45}
+50[label="sentencias | ",style=bold]
+{92}->{50}
+49[label="imprimir | ",style=bold]
+{50}->{49}
+48[label="MAS | ",style=bold]
+{49}->{48}
+46[label="string |  !@valor de n_ es :",style=bold]
+{48}->{46}
+47[label="id | n",style=bold]
+{48}->{47}
+70[label="si | ",style=bold]
+{50}->{70}
+53[label="MAYQ | ",style=bold]
+{70}->{53}
+51[label="id | n",style=bold]
+{53}->{51}
+52[label="number | 1",style=bold]
+{53}->{52}
+68[label="sentencias | ",style=bold]
+{70}->{68}
+67[label="retornar | ",style=bold]
+{68}->{67}
+66[label="MAS | ",style=bold]
+{67}->{66}
+58[label="llamadaFuncion | ",style=bold]
+{66}->{58}
+59[label="id | fibonacci",style=bold]
+{58}->{59}
+57[label="envios | ",style=bold]
+{58}->{57}
+56[label="MENOS | ",style=bold]
+{57}->{56}
+54[label="id | n",style=bold]
+{56}->{54}
+55[label="number | 1",style=bold]
+{56}->{55}
+64[label="llamadaFuncion | ",style=bold]
+{66}->{64}
+65[label="id | fibonacci",style=bold]
+{64}->{65}
+63[label="envios | ",style=bold]
+{64}->{63}
+62[label="MENOS | ",style=bold]
+{63}->{62}
+60[label="id | n",style=bold]
+{62}->{60}
+61[label="number | 2",style=bold]
+{62}->{61}
+69[label="sentencias | ",style=bold]
+{70}->{69}
+78[label="si | ",style=bold]
+{50}->{78}
+73[label="IG_IG | ",style=bold]
+{78}->{73}
+71[label="id | n",style=bold]
+{73}->{71}
+72[label="number | 1",style=bold]
+{73}->{72}
+76[label="sentencias | ",style=bold]
+{78}->{76}
+75[label="retornar | ",style=bold]
+{76}->{75}
+74[label="number | 1",style=bold]
+{75}->{74}
+77[label="sentencias | ",style=bold]
+{78}->{77}
+91[label="si | ",style=bold]
+{50}->{91}
+81[label="IG_IG | ",style=bold]
+{91}->{81}
+79[label="id | n",style=bold]
+{81}->{79}
+80[label="number | 0",style=bold]
+{81}->{80}
+84[label="sentencias | ",style=bold]
+{91}->{84}
+83[label="retornar | ",style=bold]
+{84}->{83}
+82[label="number | 0",style=bold]
+{83}->{82}
+87[label="sentencias | ",style=bold]
+{91}->{87}
+86[label="imprimir | ",style=bold]
+{87}->{86}
+85[label="string | Debes ingresar un tamaño mayor o igual a 1",style=bold]
+{86}->{85}
+90[label="retornar | ",style=bold]
+{87}->{90}
+89[label="unitario | ",style=bold]
+{90}->{89}
+88[label="number | 1",style=bold]
+{89}->{88}
 
 }

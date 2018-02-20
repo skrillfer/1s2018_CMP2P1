@@ -36,7 +36,7 @@ public class TablaSimboloG {
             }
             simbolo.rol = "Variable";
             //Graphik.reporteSimbolos.add(simbolo);
-            System.out.println("AMBITO-> "+simbolo.ambito);
+            //System.out.println("AMBITO-> "+simbolo.ambito);
 
             return true;//se agrego correctamente
         } else {

@@ -40,12 +40,51 @@ public abstract class Compilador {
                 case "asignacionLocal":
                     new Declaracion(sentencia, global, tabla);
                     break;
+                case "llamadaFuncion":
+                    opL = new OperacionesARL(global, tabla);
+                    opL.acceso(sentencia);
+                    break;    
+                case "retornar":
+                    Retornar retorno = new Retornar();
+                    //System.out.println("[ignore]estoy entrando aretornars");
+                    metodoActual = retorno.ejecutar(sentencia);
+                    //System.out.println(metodoActual.retorno.valor);
+                    return metodoActual;
                 case "si":
-                    
+                    Si si = new Si();
+                    metodoActual = si.ejecutar(sentencia);
+                    if (metodoActual.estadoRetorno) {
+                        return metodoActual;
+                    }
+                    if (metodoActual.estadoTerminar) {
+                        //metodoActual.estadoTerminar=false;
+                        return metodoActual;
+                    }
+
+                    if (metodoActual.estadoContinuar) {
+                        return metodoActual;
+                    }
                     break;
                 case "selecciona":
                     break;
                 case "mientras":
+                    Mientras mientras = new Mientras();
+                    nivelCiclo++;
+                    metodoActual = mientras.ejecutar(sentencia);
+                    if (metodoActual.estadoRetorno) {
+                        nivelCiclo--;
+                        return metodoActual;
+                    }
+                    nivelCiclo--;
+                    break;
+                case "imprimir":
+                    opL = new OperacionesARL(global,tabla);
+                    ResultadoG rs = opL.ejecutar(sentencia.hijos.get(0));
+                    try {
+                        System.out.println(rs.valor);
+                    } catch (Exception e) {
+                    }
+                    
                     break;
             }
         }
