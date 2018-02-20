@@ -1,12 +1,12 @@
 digraph G {
 node[shape=Mrecord]
-32[label="contenido | ",style=bold]
-30[label="funcion | ",style=bold]
-{32}->{30}
-31[label="id | metodo1",style=bold]
-{30}->{31}
+38[label="contenido | ",style=bold]
+36[label="funcion | ",style=bold]
+{38}->{36}
+37[label="id | metodo1",style=bold]
+{36}->{37}
 1[label="parametros | ",style=bold]
-{30}->{1}
+{36}->{1}
 2[label="parametro | ",style=bold]
 {1}->{2}
 3[label="id | x",style=bold]
@@ -20,7 +20,7 @@ node[shape=Mrecord]
 7[label="id | z",style=bold]
 {6}->{7}
 12[label="sentencias | ",style=bold]
-{30}->{12}
+{36}->{12}
 10[label="declara_var_L | ",style=bold]
 {12}->{10}
 11[label="nombre | num1",style=bold]
@@ -53,15 +53,27 @@ node[shape=Mrecord]
 {23}->{22}
 21[label="string |  mensaje2",style=bold]
 {22}->{21}
-29[label="mientras | ",style=bold]
-{12}->{29}
-27[label="MAYQ | ",style=bold]
-{29}->{27}
-25[label="id | x",style=bold]
+35[label="para | ",style=bold]
+{12}->{35}
+28[label="dec_for | ",style=bold]
+{35}->{28}
+29[label="id | var1",style=bold]
+{28}->{29}
+27[label="MAS | ",style=bold]
+{28}->{27}
+25[label="number | 4",style=bold]
 {27}->{25}
-26[label="number | 2",style=bold]
+26[label="number | 4",style=bold]
 {27}->{26}
-28[label="sentencias | ",style=bold]
-{29}->{28}
+32[label="MAYQ | ",style=bold]
+{35}->{32}
+30[label="id | a",style=bold]
+{32}->{30}
+31[label="number | 0",style=bold]
+{32}->{31}
+33[label="operador | add",style=bold]
+{35}->{33}
+34[label="sentencias | ",style=bold]
+{35}->{34}
 
 }
