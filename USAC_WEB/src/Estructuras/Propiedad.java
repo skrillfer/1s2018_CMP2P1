@@ -10,9 +10,11 @@ package Estructuras;
  * @author fernando
  */
 public class Propiedad {
+    
     public String nombre;
     public String valor;
 
+    
     public Propiedad() {
         this.nombre="";
         this.valor="";

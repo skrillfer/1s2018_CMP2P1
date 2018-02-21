@@ -52,9 +52,11 @@ public class USAC_WEB {
         }
     }
     
-    public void CompilarCHTML() throws FileNotFoundException{
-        //escribir("programa.txt","100");
-        AL_HTML lex = new AL_HTML(new FileReader("programa.txt"));//se le pasa al analizador lexico lo que se escribio
+    public NodoDOM CompilarCHTML(String texto) throws FileNotFoundException{
+        NodoDOM retorno=null;
+        
+        escribir("tmpchtml.txt",texto);
+        AL_HTML lex = new AL_HTML(new FileReader("tmpchtml.txt"));//se le pasa al analizador lexico lo que se escribio
         AS_HTML parser = new AS_HTML(lex);
 
         try {
@@ -62,10 +64,11 @@ public class USAC_WEB {
             NodoDOM raiz = parser.getRoot();
             Arbol_DOM gen_arbol = new Arbol_DOM();
             gen_arbol.generacion_arbolCJS(raiz);
-            //        Arma arma = new Arma(null, Destruir, null)
+            retorno=raiz;
         } catch (Exception e) {
-            // System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
+        return retorno;
     }
     public void escribir(String direccion,String texto) {
         //metodo que guarda lo que esta escrito en un archivo de texto

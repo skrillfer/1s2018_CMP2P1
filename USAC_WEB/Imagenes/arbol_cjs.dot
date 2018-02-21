@@ -15,7 +15,7 @@ node[shape=Mrecord]
 {4}->{5}
 3[label="asigna_var | ",style=bold]
 {4}->{3}
-2[label="number | 12",style=bold]
+2[label="number | 3",style=bold]
 {3}->{2}
 9[label="declara_var_L | ",style=bold]
 {6}->{9}

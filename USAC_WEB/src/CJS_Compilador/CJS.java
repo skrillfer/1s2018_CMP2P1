@@ -26,7 +26,7 @@ public class CJS extends Compilador{
         claseActual=n_clase;
         global=n_clase.global;
         tabla = n_clase.tabla;
-        //n_clase.ejecutar(); //se ejecutan las declaraciones globales 
+        n_clase.ejecutar(); //se ejecutan las declaraciones globales 
         
         pilaNivelCiclo = new Stack<>();
         pilaClases = new Stack<>();

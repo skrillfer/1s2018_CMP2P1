@@ -33,12 +33,14 @@ parser code {:
 
 
     //este metodo crear un nuevo nodo y simplemente se lo agrega a la raiz actual sin cambiarla
-    public void m2(String nombre,String valor,int linea,int columna){
+    public void m2(String nombre,String valor,int linea,int columna,NodoDOM lst_attr){
         NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
         action_obj.Index++;
         action_obj.tmpN.add(nuevo);
         action_obj.last=nuevo;
 
+        if(lst_attr!=null){agregarPropiedades(lst_attr,nuevo.propiedades);}
+ 
         if(nombre.equals("panel")){
             if(action_obj.pilaPanel.isEmpty()){
                 action_obj.gCuerpo=action_obj.tmpN;
@@ -72,6 +74,14 @@ parser code {:
     public NodoDOM getRoot(){
         return action_obj.root;
     }
+    
+    public ArrayList<Propiedad> agregarPropiedades(NodoDOM lista_attr,ArrayList<Propiedad> propiedades){        
+
+        for (NodoDOM atributo: lista_attr.hijos) {
+            propiedades.add(new Propiedad(atributo.nombre.toLowerCase(), atributo.valor));
+        }
+        return propiedades;
+    }
 :}
 
 terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,INT,DOUBLE,STRING,CHAR,BOOLEAN,PYC,
@@ -100,7 +110,7 @@ programa ::= raiz;
 
 raiz ::= MENQ  IHTML:x MAYQ   MENQ {: root = parser.crearNodo("chtml","",x.getLinea(),x.getColumna());  tmpN=root; :} contenidohtml;
 
-contenidohtml ::=  IENCABEZADO:x            MAYQ  {:parser.m2("encabezado","",x.getLinea(),x.getColumna());:}  contenidoencabezado
+contenidohtml ::=  IENCABEZADO:x            MAYQ  {:parser.m2("encabezado","",x.getLinea(),x.getColumna(),null);:}  contenidoencabezado
                    |ICUERPO:x   list_atts   MAYQ  {:parser.m1("cuerpo","",x.getLinea(),x.getColumna());  :}      contenidocuerpo
                    |FHTML MAYQ;
 
@@ -134,17 +144,17 @@ etiquetas_cuerpo ::= etiquetas_cuerpo MENQ et_cuerpo
                      |MENQ et_cuerpo;
 
 
-et_cuerpo ::=  IPANEL:x   list_atts    MAYQ  {:parser.m2("panel","",x.getLinea(),x.getColumna()); :}        contenidopanel     
-              |ITEXTO:x   list_atts    MAYQ  {:parser.m2("texto","",x.getLinea(),x.getColumna());:}         MENQ FTEXTO      MAYQ
-              |IIMAGEN:x  list_atts    MAYQ  {:parser.m2("imagen","",x.getLinea(),x.getColumna());:}        MENQ FIMAGEN     MAYQ
-              |IBOTON:x   list_atts    MAYQ  {:parser.m2("boton","",x.getLinea(),x.getColumna());:}         MENQ FBOTON      MAYQ
-              |IENLACE:x  list_atts    MAYQ  {:parser.m2("enlace","",x.getLinea(),x.getColumna());:}        MENQ FENLACE     MAYQ
-              |ITABLA:y   list_atts    MAYQ  contenidotabla:x {: x.linea=y.getLinea(); x.columna=y.getColumna(); parser.Tadd(x); :}
-              |ITEXTO_A:x list_atts    MAYQ  {:parser.m2("texto_a","",x.getLinea(),x.getColumna());:}       MENQ FTEXTO_A    MAYQ
-              |ICAJA_TEXTO:x list_atts MAYQ  {:parser.m2("caja_texto","",x.getLinea(),x.getColumna());:}    MENQ FCAJA_TEXTO MAYQ
-              |ICAJA:x    list_atts    MAYQ  {:parser.m2("caja","",x.getLinea(),x.getColumna());:}          MENQ FCAJA       MAYQ  
-              |ISPINNER:x list_atts    MAYQ  {:parser.m2("spinner","",x.getLinea(),x.getColumna());:}       MENQ FSPINNER    MAYQ
-              |ISALTOF:x               MAYQ  {:parser.m2("salto","",x.getLinea(),x.getColumna());:};
+et_cuerpo ::=  IPANEL:x   list_atts:LT    MAYQ  {:parser.m2("panel","",x.getLinea(),x.getColumna(),LT); :}        contenidopanel     
+              |ITEXTO:x   list_atts:LT    MAYQ  {:parser.m2("texto","",x.getLinea(),x.getColumna(),LT);:}         MENQ FTEXTO      MAYQ
+              |IIMAGEN:x  list_atts:LT    MAYQ  {:parser.m2("imagen","",x.getLinea(),x.getColumna(),LT);:}        MENQ FIMAGEN     MAYQ
+              |IBOTON:x   list_atts:LT    MAYQ  {:parser.m2("boton","",x.getLinea(),x.getColumna(),LT);:}         MENQ FBOTON      MAYQ
+              |IENLACE:x  list_atts:LT    MAYQ  {:parser.m2("enlace","",x.getLinea(),x.getColumna(),LT);:}        MENQ FENLACE     MAYQ
+              |ITABLA:y   list_atts:LT    MAYQ  contenidotabla:x {: x.linea=y.getLinea(); x.columna=y.getColumna(); parser.Tadd(x); :}
+              |ITEXTO_A:x list_atts:LT    MAYQ  {:parser.m2("texto_a","",x.getLinea(),x.getColumna(),LT);:}       MENQ FTEXTO_A    MAYQ
+              |ICAJA_TEXTO:x list_atts:LT MAYQ  {:parser.m2("caja_texto","",x.getLinea(),x.getColumna(),LT);:}    MENQ FCAJA_TEXTO MAYQ
+              |ICAJA:x    list_atts:LT    MAYQ  {:parser.m2("caja","",x.getLinea(),x.getColumna(),LT);:}          MENQ FCAJA       MAYQ  
+              |ISPINNER:x list_atts:LT    MAYQ  {:parser.m2("spinner","",x.getLinea(),x.getColumna(),LT);:}       MENQ FSPINNER    MAYQ
+              |ISALTOF:x               MAYQ  {:parser.m2("salto","",x.getLinea(),x.getColumna(),null);:};
 
 contenidotabla ::= etiquetastabla:x     MENQ     FTABLA      MAYQ  {: RESULT = x; :}
                    |MENQ     FTABLA      MAYQ                      {: RESULT = parser.crearNodo("tabla","",0,0); :};
@@ -208,11 +218,11 @@ att_id    ::= ID:x IGUAL STRING_LITERAL:y              {: RESULT = parser.crearN
 
 att_grupo ::= GRUPO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("grupo",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
-att_alto  ::= ALTO:x IGUAL STRING_LITERAL:y            {: RESULT = parser.crearNodo("alto",y.getCadena(),x.getLinea(),x.getColumna()); :};
+att_alto  ::= ALTO:x IGUAL STRING_LITERAL:y            {: RESULT = parser.crearNodo("alto",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna()); :};
 
-att_ancho ::= ANCHO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("ancho",y.getCadena(),x.getLinea(),x.getColumna()); :};
+att_ancho ::= ANCHO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("ancho",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna()); :};
 
-att_alineado  ::= ALINEADO:x IGUAL STRING_LITERAL:y    {: RESULT = parser.crearNodo("alineado",y.getCadena(),x.getLinea(),x.getColumna()); :};
+att_alineado  ::= ALINEADO:x IGUAL STRING_LITERAL:y    {: RESULT = parser.crearNodo("alineado",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna()); :};
 
 
 contenidos_celdas ::= contenidos_celdas:x cont_celda:y {: x.add(y);  RESULT = x ; :}

@@ -30,6 +30,10 @@ public class NodoDOM {
         this.index = index;
         this.hijos = new ArrayList<>();
         this.propiedades = new ArrayList<>();
+        //este valor debe ir en blanco pero cuestiones de practicidad...
+        propiedades.add(new Propiedad("$text","btn1"));
+
+
     }
 
     public NodoDOM() {

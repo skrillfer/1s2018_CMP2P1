@@ -1,0 +1,36 @@
+<CHTML>
+    <ENCABEZADO><FIN-ENCABEZADO>
+    <CUERPO>
+        <BOTON>         <FIN-BOTON>
+        <TEXTO>         <FIN-TEXTO>
+        <IMAGEN>        <FIN-IMAGEN>
+        <ENLACE>        <FIN-ENLACE>
+        <PANEL>         
+                <BOTON>         <FIN-BOTON>
+                <TEXTO>         <FIN-TEXTO>
+                <PANEL>
+                     <TABLA>
+                        <FIL_T>
+                            <CT> <FIN-CT>
+                            <CT> <FIN-CT>
+                            <CT> <FIN-CT>
+                            <CT> <FIN-CT>
+                        <FIN-FIL_T>         
+                        <FIL_T>
+                        <FIN-FIL_T>
+                        <FIL_T>
+                            <CB> <FIN-CB>
+                            <CB> <FIN-CB>
+                        <FIN-FIL_T>
+                    <FIN-TABLA>
+                <FIN-PANEL>
+      
+        <FIN-PANEL>
+       
+        <SALTO-FIN>
+        <SPINNER>       <FIN-SPINNER>
+        <CAJA>          <FIN-CAJA>
+        <CAJA_TEXTO>          <FIN-CAJA_TEXTO>  
+        <TEXTO_A>  <FIN-TEXTO_A>
+    <FIN-CUERPO>
+<FIN-CHTML>

@@ -4,7 +4,7 @@
 
 Funcion metodo1 (){
     
-    DimV num1:12;
+    DimV num1:3;
     DimV num2:10;
     DimV msg1:"mensaje1!!";
     DimV msg2:"mensaje2!!";
