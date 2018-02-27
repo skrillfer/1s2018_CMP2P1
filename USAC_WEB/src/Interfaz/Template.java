@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -34,6 +36,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.text.DefaultCaret;
 import usac_web.USAC_WEB;
 
@@ -42,7 +46,12 @@ import usac_web.USAC_WEB;
  * @author fernando
  */
 public class Template extends JPanel implements ActionListener{
-    public Colores meta_colores = new Colores();
+    //**************************************************************************
+    //**************************************************************************
+    static Hashtable<String,String> lista_cjs= new Hashtable<>(); 
+    static Hashtable<String,String> lista_ccss= new Hashtable<>(); 
+    //**************************************************************************
+    static public Colores meta_colores = new Colores();
     //______________________________ PILA DE PAGINAS____________________________
     ArrayList<JPanel> listaPaginas = new ArrayList<>();
     //__________________________________________________________________________
@@ -150,10 +159,11 @@ public class Template extends JPanel implements ActionListener{
         add(plus);
         add(favoritos);
          */
+        panel_P.setBorder(new EtchedBorder(EtchedBorder.RAISED));
         panel_P.setPreferredSize(new Dimension(1000, 600));
         //panel_P.setPreferredSize(this.getPreferredSize().getSize());
 
-        panel_P.setBackground(Color.red);
+        //panel_P.setBackground(Color.red);
         add(barraPrincipal);
         add(panel_P);
         //panel_P.setMaximumSize(new Dimension(this.getParent().getWidth(), 0));
@@ -168,7 +178,7 @@ public class Template extends JPanel implements ActionListener{
             //1. compilar el archivo CHTML
            NodoDOM dom=new USAC_WEB().CompilarCHTML(leerArchivo(path));
            if(dom!=null){
-               GENERADOR_VISTA(dom);
+               GENERADOR_VISTA(dom,panel_P);
            }
            
             System.out.println("");
@@ -211,16 +221,40 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public void GENERADOR_VISTA(NodoDOM raiz) throws URISyntaxException{
+    public void GENERADOR_VISTA(NodoDOM raiz,JPanel panel_P) throws URISyntaxException{
+         
         for (NodoDOM hijo : raiz.hijos) {
             switch(hijo.nombre){
                 case "encabezado":
+                    GENERADOR_VISTA(hijo,panel_P);
                     break;
                 case "titulo":
+                    setTitulo(hijo.propiedades.get("$text").valor.trim());
+                    break;
+                case "cjs":
+                    addCjs(hijo.propiedades.get("ruta").valor.trim());
+                    break;
+                case "ccss":
+                    addCcss(hijo.propiedades.get("ruta").valor.trim());
                     break;
                 case "cuerpo":
                     System.out.println("entre a cuerpo");
-                    GENERADOR_VISTA(hijo);
+                    setPropiedadesCuerpo(hijo.propiedades);
+                    GENERADOR_VISTA(hijo,panel_P);
+                    break;
+                case "panel":
+                    
+                    //pila_panels.push(panel_P);
+                    JPanel nuevopanel = new PanelGenerico(hijo.propiedades);
+                    panel_P.add(nuevopanel);
+                    updateUI();
+                    GENERADOR_VISTA(hijo,nuevopanel);
+                    //panel_P=pila_panels.pop();
+                    break;
+                case "texto":
+                    JLabel texxto = new TextoGenerico(hijo.propiedades);
+                    panel_P.add(texxto);
+                    updateUI();
                     break;
                 case "boton":                    
                     JButton btn=new BotonGenerico(hijo.propiedades);
@@ -270,5 +304,57 @@ public class Template extends JPanel implements ActionListener{
                     break;
             }
         }
+    }
+    
+    public void setPropiedadesCuerpo(Hashtable<String,Propiedad> propiedades){
+        try {
+            String fondo = propiedades.get("fondo").valor.trim();
+            Color color= meta_colores.obtenerColor(fondo);
+            if(color!=null){
+                panel_P.setBackground(color);
+            }
+            updateUI();
+        } catch (Exception e) {}
+        
+        try {
+            panel_P.setPreferredSize(new Dimension(getPreferredSize().width, Integer.valueOf(propiedades.get("alto").valor)));
+        } catch (Exception e) {System.out.println(e.getMessage());}
+        //******************************************************************Seteando ANCHO
+        try {
+            panel_P.setPreferredSize(new Dimension(Integer.valueOf(propiedades.get("ancho").valor), getPreferredSize().height));
+        } catch (Exception e) {System.out.println(e.getMessage());}
+        updateUI();
+
+    }
+    
+    public void setTitulo(String nombre){
+        try {
+            if(VentanaPrincipal.controlTab1.getComponentCount()>0){
+               VentanaPrincipal.controlTab1.setTitleAt(VentanaPrincipal.controlTab1.getSelectedIndex(),nombre);
+            }
+        } catch (Exception e) {}
+    }
+    
+    
+    public void addCjs(String ruta){
+        try {
+            if(!lista_cjs.containsKey(ruta)){
+                lista_cjs.put(ruta, ruta);
+                System.out.println("se agrego cjss:"+ruta);
+            }else{
+                System.out.println("ya existe cjs:"+ruta);
+            }
+        } catch (Exception e) {}
+    }
+    
+    public void addCcss(String ruta){
+        try {
+            if(!lista_ccss.containsKey(ruta)){
+                lista_ccss.put(ruta, ruta);
+                System.out.println("se agrego ccss:"+ruta);
+            }else{
+                System.out.println("ya existe ccss:"+ruta);
+            }
+        } catch (Exception e) {}
     }
 }

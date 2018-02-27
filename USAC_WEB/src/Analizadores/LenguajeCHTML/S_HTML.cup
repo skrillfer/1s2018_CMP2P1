@@ -119,27 +119,79 @@ IPANEL,FPANEL,ITEXTO,FTEXTO,IIMAGEN,FIMAGEN,IBOTON,FBOTON,
 IENLACE,FENLACE,ITABLA,FTABLA,ITEXTO_A,FTEXTO_A,ICAJA_TEXTO,
 FCAJA_TEXTO,ICAJA,FCAJA,ISPINNER,FSPINNER,ISALTOF,ICHTML,FCHTML,ICUERPO,FCUERPO,
 IFIL_T,IFIL_T2,FFIL_T,FFIL_T2,ICB,ICB2,ICT2,FCB,FTABLA2,ICT,FCT,TBOTON,TIMAGEN,FCB2,
-FCT2,IOPCION,IOPCION2,FOPCION,FCAJA2;
+FCT2,IOPCION,IOPCION2,FOPCION,FCAJA2,FCUERPO2,TPANEL,TTEXTO,TENLACE,TTEXTO_A,TCAJA_TEXTO,
+TCAJA,TSPINNER,TSALTOF,TTABLA,FPANEL2,ICJS,FCJS,ICCSS,FCCSS,IENCA,FENCA,ITITULO,FTITULO;
 
 non terminal NodoDOM programa,raiz,atributo,
 list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,
 valor_alineado,contenidotabla,etiquetastabla,contenidofila,etiquetasfila,et_cb_ct,contenidoct,contenidocb,
-et_fila1,et_fila2,cont_celda, contenidos_celdas,et_cuerpo,etiquetas_cuerpo,contenidocuerpo,contenido_tabla,
+et_fila1,et_fila2,cont_celda, contenidos_celdas,et_cuerpo1,et_cuerpo2,etiquetas_cuerpo,contenidocuerpo,contenido_tabla,
 contenido_fila,lista_cb_ct,etcb_ct1,etcb_ct2,contenido_cb,contenido_ct,btn_img,contenido_caja,lista_opciones,
-opcion1,opcion2,att_fondo;
+opcion1,opcion2,att_fondo,contenido_panel,contenido_html,contenido_enca,etiquetas_cjs_ccss,et_cjs_ccss,etiqueta_cuerpo;
 
 
 
 start with programa;
 
   
-programa ::= ICHTML ICUERPO contenidocuerpo:r {: 
-                                                RESULT = parser.crearNodo("chtml","",0,0,""); 
-                                                RESULT.add(r);
-                                                root=RESULT; 
+programa ::= ICHTML:f contenido_html:r {: root = parser.crearNodo("chtml","",f.getLinea(),f.getColumna(),"");  root.hijos=r.hijos; :};
+
+
+
+
+
+contenido_html ::=  IENCA:f   contenido_enca:h  FENCA etiqueta_cuerpo:c{:
+                        RESULT = parser.crearNodo("chtml","",0,0,"");
+                        NodoDOM encab=parser.crearNodo("encabezado","",f.getLinea(),f.getColumna(),"");
+                        encab.hijos=h.hijos;
+                        RESULT.add(encab);
+                        RESULT.add(c);
+                    :} 
+                   |IENCA:f   contenido_enca:h  FENCA FCHTML{:
+                        RESULT = parser.crearNodo("chtml","",0,0,"");
+                        NodoDOM encab=parser.crearNodo("encabezado","",f.getLinea(),f.getColumna(),"");
+                        encab.hijos=h.hijos;
+                        RESULT.add(encab);
+                   :}
+                   |etiqueta_cuerpo:c{:
+                        RESULT = parser.crearNodo("chtml","",0,0,"");
+                        RESULT.add(c);
+                   :};
+
+
+contenido_enca ::=  {: RESULT = parser.crearNodo("encabezado","",0,0,"");  :}
+                    |etiquetas_cjs_ccss:r {:
+                        RESULT=r;
+                    :};
+
+etiquetas_cjs_ccss ::= etiquetas_cjs_ccss:r et_cjs_ccss:h{:
+                        r.add(h);
+                        RESULT=r;
+                    :}
+                    |et_cjs_ccss:r {:
+                        RESULT = parser.crearNodo("encabezado","",0,0,""); 
+                        RESULT.add(r);
+                    :};
+
+et_cjs_ccss ::= ICJS:f  list_atts:LT EXPLICIT:P FCJS  {:
+                    RESULT = parser.crearNodo("cjs","",f.getLinea(),f.getColumna(),LT,P.getCadena());
+                :}
+               |ICCSS:f   list_atts:LT EXPLICIT:P FCCSS {:
+                    RESULT = parser.crearNodo("ccss","",f.getLinea(),f.getColumna(),LT,P.getCadena());
+                :}
+               |ITITULO:f list_atts:LT EXPLICIT:P   FTITULO{:
+                    RESULT = parser.crearNodo("titulo","",f.getLinea(),f.getColumna(),LT,P.getCadena());
+                :};
+
+
+etiqueta_cuerpo ::=ICUERPO:f list_atts:LT EXPLICIT:P contenidocuerpo:r {: 
+                                                RESULT = parser.crearNodo("cuerpo","",f.getLinea(),f.getColumna(),LT,P.getCadena()); 
+                                                RESULT.hijos=r.hijos;
                                               :};
 
-contenidocuerpo ::= etiquetas_cuerpo:h  FCUERPO FCHTML{:
+
+
+contenidocuerpo ::= etiquetas_cuerpo:h  FCUERPO2 FCHTML{:
                         RESULT = parser.crearNodo("cuerpo","",0,0,"");
                         RESULT.hijos=h.hijos;    
                     :}
@@ -148,16 +200,17 @@ contenidocuerpo ::= etiquetas_cuerpo:h  FCUERPO FCHTML{:
                         
                     :};
 
-etiquetas_cuerpo ::= etiquetas_cuerpo:r  et_cuerpo:h {:
+etiquetas_cuerpo ::= etiquetas_cuerpo:r  et_cuerpo2:h {:
                         r.add(h);
                         RESULT = r;
                     :} 
-                     | et_cuerpo:h {:
+                     | et_cuerpo1:h {:
                         RESULT =  parser.crearNodo("","",0,0,"");
                         RESULT.add(h);    
                      :};
 
-et_cuerpo ::= ITEXTO:x        list_atts:LT  EXPLICIT:P   FTEXTO        {: RESULT = parser.crearNodo("texto","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+et_cuerpo2 ::= IPANEL:x        list_atts:LT  EXPLICIT:P  contenido_panel:r        {: RESULT = parser.crearNodo("panel","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos;  :}
+             |ITEXTO:x        list_atts:LT  EXPLICIT:P   FTEXTO        {: RESULT = parser.crearNodo("texto","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
              |IIMAGEN:x       list_atts:LT  EXPLICIT:P   FIMAGEN       {: RESULT = parser.crearNodo("imagen","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
              |IBOTON:x        list_atts:LT  EXPLICIT:P   FBOTON        {: RESULT = parser.crearNodo("boton","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
              |IENLACE:x       list_atts:LT  EXPLICIT:P   FENLACE       {: RESULT = parser.crearNodo("enlace","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
@@ -170,6 +223,22 @@ et_cuerpo ::= ITEXTO:x        list_atts:LT  EXPLICIT:P   FTEXTO        {: RESULT
                   RESULT = rz;
             :};
 
+et_cuerpo1 ::= TPANEL:x        list_atts:LT  EXPLICIT:P   contenido_panel:r        {: RESULT = parser.crearNodo("panel","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos; :}
+              |TTEXTO:x        list_atts:LT  EXPLICIT:P   FTEXTO        {: RESULT = parser.crearNodo("texto","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+              |TIMAGEN:x       list_atts:LT  EXPLICIT:P   FIMAGEN       {: RESULT = parser.crearNodo("imagen","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+              |TBOTON:x        list_atts:LT  EXPLICIT:P   FBOTON        {: RESULT = parser.crearNodo("boton","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+              |TENLACE:x       list_atts:LT  EXPLICIT:P   FENLACE       {: RESULT = parser.crearNodo("enlace","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+              |TTEXTO_A:x      list_atts:LT  EXPLICIT:P   FTEXTO_A      {: RESULT = parser.crearNodo("texto_a","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :} 
+              |TCAJA_TEXTO:x   list_atts:LT  EXPLICIT:P   FCAJA_TEXTO   {: RESULT = parser.crearNodo("caja_texto","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+              |TCAJA:x         list_atts:LT  EXPLICIT:P   contenido_caja:r         {: RESULT = parser.crearNodo("caja","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos;  :}
+              |TSPINNER:x      list_atts:LT  EXPLICIT:P   FSPINNER      {: RESULT = parser.crearNodo("spinner","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+              |TSALTOF:x       {: RESULT = parser.crearNodo("salto","",x.getLinea(),x.getColumna(),"");  :}
+              |TTABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:
+                  RESULT = rz;
+            :};
+
+contenido_panel ::= FPANEL {: RESULT = parser.crearNodo("cajaT","",0,0,""); :}
+                   |etiquetas_cuerpo:r  FPANEL2 {: RESULT=r; :};
 
 contenido_caja ::= FCAJA {: RESULT = parser.crearNodo("cajaT","",0,0,"");   :}
                   |lista_opciones:r FCAJA2 {:

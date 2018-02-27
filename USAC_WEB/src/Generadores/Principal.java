@@ -9,8 +9,6 @@ import Analizadores.LenguajeCHTML.AL_HTML;
 import Analizadores.LenguajeCHTML.AS_HTML;
 import Arboles_Generados.Arbol_DOM;
 import Estructuras.NodoDOM;
-import Interfaz.ButtonColumnContainer;
-import Interfaz.ConnTableModel;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -69,6 +67,8 @@ public class Principal {
             Arbol_DOM gen_arbol = new Arbol_DOM();
             if (raiz != null) {
                 gen_arbol.generacion_arbolCJS(raiz);
+            }else{
+                System.out.println("raiz e nula");
             }
             retorno = raiz;
         } catch (Exception e) {

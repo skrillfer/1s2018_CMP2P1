@@ -1,20 +1,57 @@
 <//- comentario1 y me la pelan -//>
 <//- comentario2 y  -//>
 <CHTML>
-<CUERPO>
-<BOTON> <FIN-BOTON>
-<ENLACE> <FIN-ENLACE>
-<IMAGEN ruta="/home/fernando/Escritorio/descarga1.jpg"; alto="10"; ancho="10"; click="metodo12()";> "/home/fernando/Escritorio/descarga.jpg"<FIN-IMAGEN>
+<ENCABEZADO>
+<TITULO>USAC-WEB <FIN-TITULO>
 
 
-<CAJA fondo="blue";> 
-    <OPCION valor="fernando"; fondo="red";>1<FIN-OPCION>
-    <OPCION valor="ramirez";>2<FIN-OPCION>
-<FIN-CAJA>
+<CJS ruta ="/mi.cjs";> <FIN-CJS>
 
-<CAJA> 
-<FIN-CAJA>
 
+<CCSS ruta ="/mi.ccss";> <FIN-CCSS>
+
+
+<FIN-ENCABEZADO>
+<CUERPO fondo="blue";>
+<BOTON> boton1 <FIN-BOTON>
+<PANEL fondo="green"; alto="150"; ancho="150"; alineado="centrado";>
+    panel centrado
+    <BOTON> boton2 <FIN-BOTON>
+    <BOTON> boton3 <FIN-BOTON>
+    <BOTON> boton4 <FIN-BOTON>
+    <BOTON> boton21 <FIN-BOTON>
+    <BOTON> boton31 <FIN-BOTON>
+    <BOTON> boton41 <FIN-BOTON>
+<FIN-PANEL>
+
+<PANEL fondo="orange"; alto="150"; ancho="150"; alineado="izquierda";>
+    panel izquierda
+    <BOTON> boton2 <FIN-BOTON>
+    <BOTON> boton3 <FIN-BOTON>
+    <BOTON> boton4 <FIN-BOTON>
+    <BOTON> boton21 <FIN-BOTON>
+    <BOTON> boton31 <FIN-BOTON>
+    <BOTON> boton41 <FIN-BOTON>
+<FIN-PANEL>
+
+<PANEL fondo="orange"; alto="150"; ancho="150"; alineado="derecha";>
+    panel derecha
+    <BOTON> boton2 <FIN-BOTON>
+    <BOTON> boton3 <FIN-BOTON>
+    <BOTON> boton4 <FIN-BOTON>
+    <BOTON> boton21 <FIN-BOTON>
+    <BOTON> boton31 <FIN-BOTON>
+    <BOTON> boton41 <FIN-BOTON>
+<FIN-PANEL>
+
+<TEXTO fondo="white"; alineado="centrado";> Machine learning una tendencia tecnologica:
+Es una subdisciplina de la inteligencia artificial, todo surge a partir de la gran maquina de turin
+creaada por Alan Turing, llamada la madre de todos los metodos, ya que cualquier poblema puede resumirse
+a un metodo de la maquina de turing.
+<FIN-TEXTO>
+
+<IMAGEN ruta="/home/fernando/Escritorio/descarga.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
+<IMAGEN ruta="/home/fernando/Escritorio/descarg1a.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
 <FIN-CUERPO>
 <FIN-CHTML>
 

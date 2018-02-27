@@ -118,15 +118,34 @@ Comentario1 = "<//-" "-"* [^-] ~"-//>" | "<//-" "-"* "-//>"
 <YYINITIAL> "<CHTML>" {return new Symbol(sym.ICHTML, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "<FIN-CHTML>" {return new Symbol(sym.FCHTML, new token(yycolumn, yyline, yytext()));}
 
-<YYINITIAL> "<CUERPO>" {return new Symbol(sym.ICUERPO, new token(yycolumn, yyline, yytext()));}
-<YYINITIAL> "<FIN-CUERPO>" {return new Symbol(sym.FCUERPO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "<ENCABEZADO>" {return new Symbol(sym.IENCA, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "<FIN-ENCABEZADO>" {return new Symbol(sym.FENCA, new token(yycolumn, yyline, yytext()));}
 
+<YYINITIAL> "<TITULO" {return new Symbol(sym.ITITULO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "FIN-TITULO>" {return new Symbol(sym.FTITULO, new token(yycolumn, yyline, yytext()));}
+
+<YYINITIAL> "<CJS" {return new Symbol(sym.ICJS, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "FIN-CJS>" {return new Symbol(sym.FCJS, new token(yycolumn, yyline, yytext()));}
+
+<YYINITIAL> "<CCSS" {return new Symbol(sym.ICCSS, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "FIN-CCSS>" {return new Symbol(sym.FCCSS, new token(yycolumn, yyline, yytext()));}
+
+
+<YYINITIAL> "<CUERPO" {return new Symbol(sym.ICUERPO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "FIN-CUERPO>" {return new Symbol(sym.FCUERPO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "<FIN-CUERPO>" {return new Symbol(sym.FCUERPO2, new token(yycolumn, yyline, yytext()));}
 
 
 <YYINITIAL> "<PANEL" {return new Symbol(sym.IPANEL, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "PANEL" {return new Symbol(sym.TPANEL, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> "FIN-PANEL>" {return new Symbol(sym.FPANEL, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "<FIN-PANEL>" {return new Symbol(sym.FPANEL2, new token(yycolumn, yyline, yytext()));}
+
 
 <YYINITIAL> "<TEXTO" {return new Symbol(sym.ITEXTO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "TEXTO" {return new Symbol(sym.TTEXTO, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> "FIN-TEXTO>" {return new Symbol(sym.FTEXTO, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<IMAGEN" {return new Symbol(sym.IIMAGEN, new token(yycolumn, yyline, yytext()));}
@@ -140,9 +159,13 @@ Comentario1 = "<//-" "-"* [^-] ~"-//>" | "<//-" "-"* "-//>"
 <YYINITIAL> "FIN-BOTON>" {return new Symbol(sym.FBOTON, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<ENLACE" {return new Symbol(sym.IENLACE, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "ENLACE" {return new Symbol(sym.TENLACE, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> "FIN-ENLACE>" {return new Symbol(sym.FENLACE, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<TABLA" {return new Symbol(sym.ITABLA, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "TABLA" {return new Symbol(sym.TTABLA, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> "FIN-TABLA>" {return new Symbol(sym.FTABLA, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<FIN-TABLA>" {return new Symbol(sym.FTABLA2, new token(yycolumn, yyline, yytext()));}
@@ -168,12 +191,17 @@ Comentario1 = "<//-" "-"* [^-] ~"-//>" | "<//-" "-"* "-//>"
 <YYINITIAL> "<FIN-CT>" {return new Symbol(sym.FCT2, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<TEXTO_A" {return new Symbol(sym.ITEXTO_A, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "TEXTO_A" {return new Symbol(sym.TTEXTO_A, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> "FIN-TEXTO_A>" {return new Symbol(sym.FTEXTO_A, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<CAJA_TEXTO" {return new Symbol(sym.ICAJA_TEXTO, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "CAJA_TEXTO" {return new Symbol(sym.TCAJA_TEXTO, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "FIN-CAJA_TEXTO>" {return new Symbol(sym.FCAJA_TEXTO, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<CAJA" {return new Symbol(sym.ICAJA, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "CAJA" {return new Symbol(sym.TCAJA, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> "FIN-CAJA>" {return new Symbol(sym.FCAJA, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "<FIN-CAJA>" {return new Symbol(sym.FCAJA2, new token(yycolumn, yyline, yytext()));}
 
@@ -183,9 +211,12 @@ Comentario1 = "<//-" "-"* [^-] ~"-//>" | "<//-" "-"* "-//>"
 <YYINITIAL> "FIN-OPCION>" {return new Symbol(sym.FOPCION, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<SPINNER" {return new Symbol(sym.ISPINNER, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "SPINNER" {return new Symbol(sym.TSPINNER, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> "FIN-SPINNER>" {return new Symbol(sym.FSPINNER, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "<SALTO-FIN>" {return new Symbol(sym.ISALTOF, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> "SALTO-FIN>" {return new Symbol(sym.TSALTOF, new token(yycolumn, yyline, yytext()));}
 
 /*_____________________________________________________________________________________________________*/
 

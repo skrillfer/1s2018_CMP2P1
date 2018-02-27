@@ -5,41 +5,35 @@
  */
 package Interfaz;
 
-import Estructuras.*;
+import Estructuras.Propiedad;
 import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
 /**
  *
  * @author fernando
  */
-public class PanelGenerico extends JPanel{
-    Hashtable<String,Propiedad> propiedades;
+public class TextoGenerico extends JLabel{
+    Hashtable <String,Propiedad> propiedades;
 
-    public PanelGenerico(Hashtable<String,Propiedad> propiedades) {
-        this.propiedades=propiedades;
+    public TextoGenerico(Hashtable<String, Propiedad> propiedades) {
+        super("", SwingConstants.CENTER);
+        this.propiedades = propiedades;
         setPropiedades();
     }
-    
-    
     public void setPropiedades(){
-        
-        setBorder(new EtchedBorder(EtchedBorder.RAISED));
         setId();
+
         setTexto();
-        setAncho();
-        setAlto();
         setFondo();
         setAlineado();
+        setBorder(new EtchedBorder(EtchedBorder.RAISED));
     }
-    
-    
     
     public void setId(){
         try {
@@ -50,7 +44,9 @@ public class PanelGenerico extends JPanel{
     
     public void setTexto(){
         try {
-                setToolTipText(propiedades.get("$text").valor.trim());
+                String texto="<html><p>"+propiedades.get("$text").valor.replaceAll("\n", "<br/>")+"</p></html>";
+                setText(texto);
+                //setHorizontalAlignment(HEIGHT);
             }catch(Exception ex){}
         updateUI();
     }
@@ -58,7 +54,7 @@ public class PanelGenerico extends JPanel{
     public void setAncho(){
          try {
                 setPreferredSize(new Dimension(Integer.valueOf(propiedades.get("ancho").valor.trim()), getPreferredSize().height));
-            } catch (Exception e) {System.out.println(e.getMessage());}
+            } catch (Exception e) {setPreferredSize(new Dimension(getPreferredSize().width,getPreferredSize().height));}
         updateUI();
     }
     public void setAlto(){
@@ -73,7 +69,9 @@ public class PanelGenerico extends JPanel{
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
             if(color!=null){
-                setBackground(color);
+                setForeground(color);
+                
+                //setBackground(color);
             }
         } catch (Exception e) {}
         updateUI();
@@ -84,18 +82,18 @@ public class PanelGenerico extends JPanel{
             String alineado = propiedades.get("alineado").valor.trim();
             switch(alineado){
                 case "izquierda":
-                    setLayout(new FlowLayout(FlowLayout.LEFT));
-                    //setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+                    setHorizontalAlignment(SwingConstants.LEFT);
                     break;
                 case "derecha":
-                    setLayout(new FlowLayout(FlowLayout.RIGHT));
-                    //setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    setHorizontalAlignment(SwingConstants.RIGHT);
                     break;
                 case "centrado":
-                    setLayout(new FlowLayout(FlowLayout.CENTER));
+                    System.out.println("centrado");
+                    setHorizontalAlignment(SwingConstants.CENTER);
                     break;
             }
         } catch (Exception e) {}
         updateUI();
     }
+    
 }

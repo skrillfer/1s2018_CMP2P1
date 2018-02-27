@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Hashtable;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -22,7 +23,7 @@ import javax.swing.JTabbedPane;
 public class VentanaPrincipal extends JFrame implements ActionListener,ComponentListener{
     //***********CONTROL TABS***************//
     JPanel panelTabControl = new JPanel();
-    JTabbedPane controlTab1 = new JTabbedPane();
+    static public JTabbedPane controlTab1 = new JTabbedPane();
     
    
     Template temp1 = new Template();
@@ -69,7 +70,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
         //pagina.populateContentPane(this.getContentPane());
         
         //pagina.setBounds(10, 10, 800, 300);
-        controlTab1.add(pagina, tabname);
+        
+        controlTab1.add(tabname, pagina);
         controlTab1.setSelectedComponent(pagina);
     }
     
@@ -95,7 +97,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
                 
                 
                 JPanel pp=(JPanel)t.getComponent(1);
-                pp.setBackground(Color.yellow);
+                //pp.setBackground(Color.yellow);
                 pp.setPreferredSize(new Dimension(width, height-50));
                 
         }

@@ -6,6 +6,8 @@
 package Interfaz;
 
 import Estructuras.Propiedad;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -31,20 +33,28 @@ public  class ImagenGenerica extends JLabel implements MouseListener{
     }
     
     public void setPropiedades(){
-        System.out.println(propiedades.get("ruta").valor.trim());
+        setId();
+        setClick();
+        setAlto();
+        setAncho();
+        setTexto();
+        setFondo();
+        renderizarImagen();
         
-        try {
-            click= propiedades.get("click").valor.trim();
-        } catch (Exception e) {}
         
-        try {
-            alto=Integer.valueOf(propiedades.get("alto").valor);
-        } catch (Exception e) {}
- 
-        try {
-            ancho=Integer.valueOf(propiedades.get("ancho").valor);
-        } catch (Exception e) {}
         
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println(click);
+                // aqui se busca el motodo al cual hace click
+            }
+        });
+        
+        
+    }
+    
+    public void renderizarImagen(){
         ImageIcon img=null;
         String ruta=getRutaTexto(propiedades.get("$text").valor.trim());
         File f = new File(ruta);
@@ -61,15 +71,50 @@ public  class ImagenGenerica extends JLabel implements MouseListener{
             img = new ImageIcon(propiedades.get("ruta").valor.trim());
         }
         setIcon(img);
+    }
+    
+    public void setAlto(){
+        try {
+            alto=Integer.valueOf(propiedades.get("alto").valor);
+        } catch (Exception e) {}
+    }
+    
+    public void setAncho(){
+        try {
+            ancho=Integer.valueOf(propiedades.get("ancho").valor);
+        } catch (Exception e) {}
+    }
+    
+    public void setClick(){
+        try {
+            click= propiedades.get("click").valor.trim();
+        } catch (Exception e) {}
         
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println(click);
-                // aqui se busca el motodo al cual hace click
+    }
+    public void setId(){
+        try {
+                setName(propiedades.get("id").valor.trim());
+            }catch(Exception ex){}
+        updateUI();
+    }
+    
+    public void setTexto(){
+        try {
+                setToolTipText(propiedades.get("$text").valor.trim());
+            }catch(Exception ex){}
+        updateUI();
+    }
+    
+   
+    public void setFondo(){
+        try {
+            String fondo = propiedades.get("fondo").valor.trim();
+            Color color=Template.meta_colores.obtenerColor(fondo);
+            if(color!=null){
+                setBackground(color);
             }
-        });
-        
+        } catch (Exception e) {}
+        updateUI();
     }
     
     public String getRutaTexto(String ruta){
