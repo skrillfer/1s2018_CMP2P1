@@ -14,7 +14,7 @@ import java.io.File;
 public class LexHTML {
     public static void main(String[] args) {
         JFlex.Main.generate(new File(
-                "src"+File.separator+"Analizadores"
+                "src"+File.separator+"Analizadores"+File.separator+"LenguajeCHTML"
                 + File.separator + "Lex_HTML.flex"));
     }
 

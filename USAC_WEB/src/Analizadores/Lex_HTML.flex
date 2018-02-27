@@ -28,7 +28,7 @@ public LinkedList<Simbolo> retornarTablaSimbolos(){
 }*/
 
 public LinkedList<Erro_r> retornarErrores(){       
-	return AnalizadorLexico.listaErrores;
+	return null;//AnalizadorLexico.listaErrores;
 }
 
 %}
@@ -58,9 +58,26 @@ cadena = [\"] [^(\")]* [\"]
 comentario_a = "<//-" ~ "-//>"
 
 
+
 %%
 
 /* OPERADORES Y SIGNOS */
+/*
+<STRING> {
+      \"                             { yybegin(YYINITIAL); 
+                                       return Symbol(sym.STRING_LITERAL,new token(yycolumn, yyline, string.toString()) 
+                                       ); }
+      [^\n\r\"\\]+                   { string.append( yytext() ); }
+      \\t                            { string.append('\t'); }
+      \\n                            { string.append('\n'); }
+
+      \\r                            { string.append('\r'); }
+      \\\"                           { string.append('\"'); }
+      \\                             { string.append('\\'); }
+    }
+*/
+<YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
+
 
 
 <YYINITIAL> "+" {return new Symbol(sym.MAS, new token(yycolumn, yyline, yytext()));}
@@ -73,23 +90,15 @@ comentario_a = "<//-" ~ "-//>"
 
 <YYINITIAL> ";" {return new Symbol(sym.PYC, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "=" {return new Symbol(sym.IGUAL, new token(yycolumn, yyline, yytext()));}
-<YYINITIAL> "(" {return new Symbol(sym.APAR, new token(yycolumn, yyline, yytext()));}
-<YYINITIAL> ")" {return new Symbol(sym.CPAR, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "{" {return new Symbol(sym.ALLA, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "}" {return new Symbol(sym.CLLA, new token(yycolumn, yyline, yytext()));}
 
 
+<YYINITIAL> [>]([^]*)[<] {return new Symbol(sym.MGA, new token(yycolumn, yyline, yytext()));}
+
 <YYINITIAL> {comentario_a} {}
 
-/*<YYINITIAL> "<!"    {yybegin(COMENTARIO);}
 
-<COMENTARIO> [\n]		{System.out.println ("Una linea de comentario");}
-<COMENTARIO> "*"		{}
-<COMENTARIO> [^"!>"]            {}
-<COMENTARIO> "!>"		{yybegin(YYINITIAL);}
-*/
-
-<YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 /* PALABRAS RESERVADAS */
 //*************************************ELEMENTOS*************************************************************
@@ -197,4 +206,4 @@ comentario_a = "<//-" ~ "-//>"
 
 {LineTerminator} {/* ignorar */}
 {WhiteSpace} {/* ignorar */}
-. {adderror(yyline,yycolumn,yytext());}
+. {System.out.println(yyline+","+yycolumn+"=["+yytext()+"],"+yychar); adderror(yyline,yycolumn,yytext());}

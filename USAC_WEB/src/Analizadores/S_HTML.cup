@@ -17,6 +17,13 @@ action code {:
 :}
 
 parser code {:
+    
+    public void syntax_error(Symbol s){
+        System.err.println("Error en la Línea " + (s.right+1) +" Columna "+(s.left+1)+ ". Identificador "
+        +s.value + " no reconocido." );
+        //Inicio.reporteError.agregar("Sintactico",s.right+1,s.left+1,"Identificador "+s.value+" no reconocido");
+    }
+
     public NodoDOM crearNodo(String nombre,String valor,int linea,int columna){
         NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
         action_obj.Index++;
@@ -75,28 +82,30 @@ parser code {:
         return action_obj.root;
     }
     
-    public ArrayList<Propiedad> agregarPropiedades(NodoDOM lista_attr,ArrayList<Propiedad> propiedades){        
+    public void agregarPropiedades(NodoDOM lista_attr,Hashtable<String,Propiedad> propiedades){        
 
         for (NodoDOM atributo: lista_attr.hijos) {
-            propiedades.add(new Propiedad(atributo.nombre.toLowerCase(), atributo.valor));
+            if(propiedades.containsKey(atributo.nombre.toLowerCase())){
+                propiedades.get(atributo.nombre.toLowerCase()).valor=atributo.valor;
+            }
         }
-        return propiedades;
+        
     }
 :}
 
 terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,INT,DOUBLE,STRING,CHAR,BOOLEAN,PYC,
-IGUAL,VOID,APAR,CPAR,ALLA,CLLA,IHTML,IENCABEZADO,ICUERPO,ITITULO,IPANEL,ITEXTO,IIMAGEN,
+IGUAL,VOID,ALLA,CLLA,IHTML,IENCABEZADO,ICUERPO,ITITULO,IPANEL,ITEXTO,IIMAGEN,
 IBOTON,IENLACE,ITABLA,IFIL_T,ICB,ICT,ITEXTO_A,ICAJA_TEXTO,ICAJA,IOPCION,ISPINNER,ISALTOF,
 FHTML,FENCABEZADO,FCUERPO,FTITULO,FPANEL,FTEXTO,FIMAGEN,FBOTON,FENLACE,FTABLA,FFIL_T,FCB,
 FCT,FTEXTO_A,FCAJA_TEXTO,FCAJA,FOPCION,FSPINNER,MAYQ,MENQ,ICJS,FCJS,ICSS,FCSS,FONDO,RUTA,
-CLICK,VALOR,ID,GRUPO,ALTO,ANCHO,ALINEADO,CCSS,STRING_LITERAL,IZQ,DER,CENT;
+CLICK,VALOR,ID,GRUPO,ALTO,ANCHO,ALINEADO,CCSS,STRING_LITERAL,IZQ,DER,CENT,MGA;
 
 non terminal NodoDOM programa,raiz,contenidohtml,encabezado,contenidoencabezado,cuerpo,
 contenidocuerpo,contenidocjs,contenidocss,etiquetas_encabezado,fin_encabezado,et_encabezado,
 etiquetacss,etiquetacjs,etiquetas_cuerpo,et_cuerpo,etiquetatitulo,contenidopanel,atributo,
 list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,
 valor_alineado,contenidotabla,etiquetastabla,contenidofila,etiquetasfila,et_cb_ct,contenidoct,contenidocb,
-et_fila,cont_celda, contenidos_celdas;
+et_fila,cont_celda, contenidos_celdas,cnt_absoluto;
 
 
 /*
@@ -147,7 +156,7 @@ etiquetas_cuerpo ::= etiquetas_cuerpo MENQ et_cuerpo
 et_cuerpo ::=  IPANEL:x   list_atts:LT    MAYQ  {:parser.m2("panel","",x.getLinea(),x.getColumna(),LT); :}        contenidopanel     
               |ITEXTO:x   list_atts:LT    MAYQ  {:parser.m2("texto","",x.getLinea(),x.getColumna(),LT);:}         MENQ FTEXTO      MAYQ
               |IIMAGEN:x  list_atts:LT    MAYQ  {:parser.m2("imagen","",x.getLinea(),x.getColumna(),LT);:}        MENQ FIMAGEN     MAYQ
-              |IBOTON:x   list_atts:LT    MAYQ  {:parser.m2("boton","",x.getLinea(),x.getColumna(),LT);:}         MENQ FBOTON      MAYQ
+              |IBOTON:x   list_atts:LT    cnt_absoluto  {:parser.m2("boton","",x.getLinea(),x.getColumna(),LT);:}   FBOTON      MAYQ
               |IENLACE:x  list_atts:LT    MAYQ  {:parser.m2("enlace","",x.getLinea(),x.getColumna(),LT);:}        MENQ FENLACE     MAYQ
               |ITABLA:y   list_atts:LT    MAYQ  contenidotabla:x {: x.linea=y.getLinea(); x.columna=y.getColumna(); parser.Tadd(x); :}
               |ITEXTO_A:x list_atts:LT    MAYQ  {:parser.m2("texto_a","",x.getLinea(),x.getColumna(),LT);:}       MENQ FTEXTO_A    MAYQ
@@ -210,7 +219,7 @@ atributo ::= att_ruta:r     {: RESULT = r;   :}
 
 att_ruta  ::= RUTA:x IGUAL STRING_LITERAL:y            {: RESULT = parser.crearNodo("ruta",y.getCadena(),x.getLinea(),x.getColumna()); :}; 
 
-att_click ::= CLICK:x IGUAL STRING_LITERAL:y APAR CPAR {: RESULT = parser.crearNodo("click",y.getCadena(),x.getLinea(),x.getColumna()); :};
+att_click ::= CLICK:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("click",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
 att_valor ::= VALOR:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("valor",y.getCadena(),x.getLinea(),x.getColumna()); :};
 
@@ -234,3 +243,5 @@ cont_celda        ::= I_D
 
 
 
+
+cnt_absoluto ::= MGA:x {: System.out.println(x.getCadena());  :};

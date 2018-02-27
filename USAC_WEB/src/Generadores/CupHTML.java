@@ -15,13 +15,18 @@ public class CupHTML {
         opciones[0]="-destdir";
         opciones[1]="src"
                 +File.separator+
-                "Analizadores";
+                "Analizadores"+
+                 File.separator+
+                "LenguajeCHTML";
+
         opciones[2]="-parser";
         opciones[3]="AS_HTML";
         opciones[4]="src"
                 +File.separator+
                 "Analizadores"
                 +File.separator+
+                "LenguajeCHTML"+
+                 File.separator+
                 "S_HTML.cup";
         try {
             java_cup.Main.main(opciones);

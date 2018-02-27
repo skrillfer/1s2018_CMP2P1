@@ -11,6 +11,7 @@ import Interfaz.OpcionesWeb.VentanaOpciones;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -18,15 +19,22 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.DefaultCaret;
 import usac_web.USAC_WEB;
 
 /**
@@ -34,6 +42,7 @@ import usac_web.USAC_WEB;
  * @author fernando
  */
 public class Template extends JPanel implements ActionListener{
+    public Colores meta_colores = new Colores();
     //______________________________ PILA DE PAGINAS____________________________
     ArrayList<JPanel> listaPaginas = new ArrayList<>();
     //__________________________________________________________________________
@@ -67,7 +76,11 @@ public class Template extends JPanel implements ActionListener{
                     
                     if(!campoURL.getText().isEmpty()){
                         try {
-                            buscarPagina(campoURL.getText());
+                            try {
+                                buscarPagina(campoURL.getText());
+                            } catch (URISyntaxException ex) {
+                                Logger.getLogger(Template.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         } catch (FileNotFoundException ex) {
                             Logger.getLogger(Template.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -147,14 +160,17 @@ public class Template extends JPanel implements ActionListener{
     }
 
     // este metodo busca la pagina ingresada en el campo de texto
-    public void buscarPagina(String path) throws FileNotFoundException {
+    public void buscarPagina(String path) throws FileNotFoundException, URISyntaxException {
         panel_P.removeAll();
         
         File f = new File(path);
         //if (f.exists() && !f.isDirectory()) {
             //1. compilar el archivo CHTML
            NodoDOM dom=new USAC_WEB().CompilarCHTML(leerArchivo(path));
-           GENERADOR_VISTA(dom);
+           if(dom!=null){
+               GENERADOR_VISTA(dom);
+           }
+           
             System.out.println("");
         /*} else {
             System.out.println("no existe");
@@ -182,7 +198,7 @@ public class Template extends JPanel implements ActionListener{
 
     public String leerArchivo(String path){
          try {
-            File file = new File("/home/fernando/A_Entradas/ventas.chtml");
+            File file = new File("/home/fernando/NetBeansProjects/1s2018_CMP2P1/USAC_WEB/last.txt");
             FileInputStream fis = new FileInputStream(file);
             byte[] data = new byte[(int) file.length()];
             fis.read(data);
@@ -195,7 +211,7 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public void GENERADOR_VISTA(NodoDOM raiz){
+    public void GENERADOR_VISTA(NodoDOM raiz) throws URISyntaxException{
         for (NodoDOM hijo : raiz.hijos) {
             switch(hijo.nombre){
                 case "encabezado":
@@ -206,21 +222,52 @@ public class Template extends JPanel implements ActionListener{
                     System.out.println("entre a cuerpo");
                     GENERADOR_VISTA(hijo);
                     break;
-                case "boton":
-                    System.out.println("entre a boton");
-                    //hijo.propiedades.add(new Propiedad("$text", "boton1"));
-                    
+                case "boton":                    
                     JButton btn=new BotonGenerico(hijo.propiedades);
-                    panel_P.add(btn);
-                    
+                    panel_P.add(btn);                    
                     updateUI();
                     
-                    System.out.println(btn.getPreferredSize());
+                    //System.out.println(btn.getPreferredSize());
                     break;
-                case "texto":
+                case "caja_texto":
+                    JTextField txt=new CajaTextoGenerica(hijo.propiedades);
+                    panel_P.add(txt);                    
+                    updateUI();
                     break;
-                    
-                    
+                case "texto_a":
+                    //VER BIEN
+                    JTextPane txt_a=new AreaTextoGenerica(hijo.propiedades);
+                    JScrollPane scroll = new JScrollPane(txt_a,
+                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                    scroll.setName("texto_a-"+txt_a.getName());
+                    panel_P.add(scroll);  
+                    updateUI();
+                    break;
+                case "spinner":
+                    JSpinner sp= new SpinnerGenerico(hijo.propiedades);
+                    panel_P.add(sp);
+                    updateUI();
+                    break;
+                case "enlace":
+                     JLabel enlac = new EnlaceGenerico(hijo.propiedades);
+                     panel_P.add(enlac);
+                     updateUI();
+                     break;
+                case "tabla":
+                     JPanel tabla = new TablaGenerica2(hijo.propiedades, hijo);
+                     panel_P.add(tabla);
+                     updateUI();
+                     break;
+                case "imagen":
+                    JLabel img = new ImagenGenerica(hijo.propiedades);
+                    panel_P.add(img);
+                    updateUI();
+                    break;
+                case "caja":
+                    JComboBox combo = new CajaOpcionesGenerica(hijo.propiedades, hijo.hijos,meta_colores);
+                    panel_P.add(combo);
+                    updateUI();
+                    break;
             }
         }
     }

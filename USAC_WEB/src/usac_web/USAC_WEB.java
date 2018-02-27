@@ -5,8 +5,8 @@
  */
 package usac_web;
 
-import Analizadores.AL_HTML;
-import Analizadores.AS_HTML;
+import Analizadores.LenguajeCHTML.AL_HTML;
+import Analizadores.LenguajeCHTML.AS_HTML;
 import Analizadores.LenguajeCJS.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -63,7 +63,11 @@ public class USAC_WEB {
             parser.parse();
             NodoDOM raiz = parser.getRoot();
             Arbol_DOM gen_arbol = new Arbol_DOM();
-            gen_arbol.generacion_arbolCJS(raiz);
+            if(raiz!=null){
+                System.out.println("***");
+                gen_arbol.generacion_arbolCJS(raiz);
+            }
+            
             retorno=raiz;
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -6,6 +6,7 @@
 package Estructuras;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
  *
@@ -20,7 +21,7 @@ public class NodoDOM {
     public int index;
     public ArrayList<NodoDOM> hijos;
     //-------------Lista de propiedades de este nodo DOM
-    public ArrayList<Propiedad> propiedades;
+    public Hashtable<String,Propiedad> propiedades;
 
     public NodoDOM(String nombre, String valor, int linea, int columna, int index) {
         this.nombre = nombre;
@@ -29,9 +30,11 @@ public class NodoDOM {
         this.columna = columna;
         this.index = index;
         this.hijos = new ArrayList<>();
-        this.propiedades = new ArrayList<>();
+        this.propiedades = new Hashtable<>();
+        
+        llenarHash();
         //este valor debe ir en blanco pero cuestiones de practicidad...
-        propiedades.add(new Propiedad("$text","btn1"));
+        //propiedades.add(new Propiedad("$text","btn1"));
 
 
     }
@@ -46,27 +49,36 @@ public class NodoDOM {
 
     
     public void addP(String nombre, String valor) {
-        this.propiedades.add(new Propiedad(nombre, valor));
+        this.propiedades.put(nombre,new Propiedad(nombre, valor));
     }
 
     //este metodo obtiene el valor de la propiedad
     public String getVP(String nombrePropiedad) {
-        for (int i = 0; i < this.propiedades.size(); i++) {
-            if (this.propiedades.get(i).nombre.equals(nombrePropiedad)) {
-                return this.propiedades.get(i).valor;
-            }
+        if(propiedades.containsKey(nombrePropiedad.toLowerCase())){
+            return propiedades.get(nombrePropiedad.toLowerCase()).valor;
         }
         return "";
     }
 
     //este metodo setea el valor de la propiedad, primero se busca y luego se cambia
     public void setVP(String nombrePropiedad, String valorPropiedad) {
-        for (int i = 0; i < this.propiedades.size(); i++) {
-            if (this.propiedades.get(i).nombre.equals(nombrePropiedad)) {
-                this.propiedades.set(i, new Propiedad(nombrePropiedad, valorPropiedad));
-                break;
-            }
+        if(propiedades.containsKey(nombrePropiedad.toLowerCase())){
+            propiedades.get(nombrePropiedad.toLowerCase()).valor=valorPropiedad;
         }
     }
 
+    public void llenarHash(){
+        //generales
+        addP("$text", "");
+        addP("id", "");
+        addP("grupo", "");
+        addP("alto", "");
+        addP("ancho", "");
+        addP("alineado", "");
+        //particulares
+        addP("fondo", "");
+        addP("ruta", "");
+        addP("click", "");
+        addP("valor", "");//aplica en la etiqueta OPTION
+    }
 }

@@ -1,0 +1,291 @@
+
+package Analizadores.LenguajeCHTML; 
+
+import Estructuras.*;
+import java_cup.runtime.*;
+
+import java.util.*;
+
+
+action code {:
+    //se declaran variables globales etc.
+    public int Index=1;
+    public NodoDOM root;
+    public NodoDOM tmpN ;
+    public NodoDOM last ;
+    public NodoDOM gCuerpo ;
+    public Stack<NodoDOM> pilaPanel = new Stack<>() ; // se guarda el ultimo panel
+:}
+
+parser code {:
+    
+    public void syntax_error(Symbol s){
+        System.err.println("Error en la Línea " + (s.right+1) +" Columna "+(s.left+1)+ ". Identificador "
+        +s.value + " no reconocido." );
+        //Inicio.reporteError.agregar("Sintactico",s.right+1,s.left+1,"Identificador "+s.value+" no reconocido");
+    }
+
+    public NodoDOM crearNodo(String nombre,String valor,int linea,int columna,String explicit){
+        NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        return nuevo;
+    }
+
+    public NodoDOM crearNodo(String nombre,String valor,int linea,int columna,NodoDOM lst_attr,String explicit){
+        NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
+        
+        if(explicit.length()>2){
+            explicit= explicit.substring(1, explicit.length()-1);
+            try {
+                nuevo.propiedades.get("$text").valor=explicit;
+            } catch (Exception e) {}
+        }
+
+        if(lst_attr!=null){agregarPropiedades(lst_attr,nuevo.propiedades);}
+        action_obj.Index++;
+        return nuevo;
+    }
+
+
+    //este metodo crear un nuevo nodo, lo agrega a la raiz actual y luego cambia la raizactual por el nuevo nodo creado
+    public void m1(String nombre,String valor,int linea,int columna){
+        NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        action_obj.tmpN.add(nuevo);
+        action_obj.tmpN=nuevo;         //despues de crear el nuevo nodo se deja en la variable tmpN
+    }
+
+
+    //este metodo crear un nuevo nodo y simplemente se lo agrega a la raiz actual sin cambiarla
+    public void m2(String nombre,String valor,int linea,int columna,NodoDOM lst_attr){
+        NodoDOM nuevo = new NodoDOM(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        action_obj.tmpN.add(nuevo);
+        action_obj.last=nuevo;
+
+       
+
+        if(lst_attr!=null){agregarPropiedades(lst_attr,nuevo.propiedades);}
+ 
+        if(nombre.equals("panel")){
+            if(action_obj.pilaPanel.isEmpty()){
+                action_obj.gCuerpo=action_obj.tmpN;
+            }
+            action_obj.tmpN=nuevo;
+            push(nuevo); // se agrega a la pila de paneles
+        }
+    }
+
+    //este metodo hace tmpN=last
+    public void Tadd(NodoDOM nodo){
+        action_obj.tmpN.add(nodo);
+    }
+
+    //este metodo agrega un panel al la cima de la pila
+    public void push(NodoDOM panel){
+        action_obj.pilaPanel.push(panel);
+    }
+
+    public void pop(){
+        action_obj.pilaPanel.pop();
+        if(action_obj.pilaPanel.isEmpty()){
+            action_obj.tmpN=action_obj.gCuerpo;
+        }else{
+            action_obj.tmpN=action_obj.pilaPanel.pop();
+            action_obj.pilaPanel.push(action_obj.tmpN);
+        }
+    }
+
+    //Este metodo retorna la RAIZ del arbol  generado 
+    public NodoDOM getRoot(){
+        return action_obj.root;
+    }
+    
+    public void agregarPropiedades(NodoDOM lista_attr,Hashtable<String,Propiedad> propiedades){        
+
+        for (NodoDOM atributo: lista_attr.hijos) {
+            if(propiedades.containsKey(atributo.nombre.toLowerCase())){
+                propiedades.get(atributo.nombre.toLowerCase()).valor=atributo.valor;
+            }
+        }
+        
+    }
+:}
+
+terminal token MAS,MENOS,POR,DIV,NUM,DECIMAL,I_D,PYC,
+IGUAL,ALLA,CLLA,FONDO,RUTA,CLICK,VALOR,ID,GRUPO,ALTO,
+ANCHO,ALINEADO,CCSS,STRING_LITERAL,IZQ,DER,CENT,EXPLICIT,
+IPANEL,FPANEL,ITEXTO,FTEXTO,IIMAGEN,FIMAGEN,IBOTON,FBOTON,
+IENLACE,FENLACE,ITABLA,FTABLA,ITEXTO_A,FTEXTO_A,ICAJA_TEXTO,
+FCAJA_TEXTO,ICAJA,FCAJA,ISPINNER,FSPINNER,ISALTOF,ICHTML,FCHTML,ICUERPO,FCUERPO,
+IFIL_T,IFIL_T2,FFIL_T,FFIL_T2,ICB,ICB2,ICT2,FCB,FTABLA2,ICT,FCT,TBOTON,TIMAGEN,FCB2,
+FCT2,IOPCION,IOPCION2,FOPCION,FCAJA2;
+
+non terminal NodoDOM programa,raiz,atributo,
+list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,
+valor_alineado,contenidotabla,etiquetastabla,contenidofila,etiquetasfila,et_cb_ct,contenidoct,contenidocb,
+et_fila1,et_fila2,cont_celda, contenidos_celdas,et_cuerpo,etiquetas_cuerpo,contenidocuerpo,contenido_tabla,
+contenido_fila,lista_cb_ct,etcb_ct1,etcb_ct2,contenido_cb,contenido_ct,btn_img,contenido_caja,lista_opciones,
+opcion1,opcion2,att_fondo;
+
+
+
+start with programa;
+
+  
+programa ::= ICHTML ICUERPO contenidocuerpo:r {: 
+                                                RESULT = parser.crearNodo("chtml","",0,0,""); 
+                                                RESULT.add(r);
+                                                root=RESULT; 
+                                              :};
+
+contenidocuerpo ::= etiquetas_cuerpo:h  FCUERPO FCHTML{:
+                        RESULT = parser.crearNodo("cuerpo","",0,0,"");
+                        RESULT.hijos=h.hijos;    
+                    :}
+                    |FCUERPO   FCHTML {:
+                        RESULT = parser.crearNodo("cuerpo","",0,0,"");
+                        
+                    :};
+
+etiquetas_cuerpo ::= etiquetas_cuerpo:r  et_cuerpo:h {:
+                        r.add(h);
+                        RESULT = r;
+                    :} 
+                     | et_cuerpo:h {:
+                        RESULT =  parser.crearNodo("","",0,0,"");
+                        RESULT.add(h);    
+                     :};
+
+et_cuerpo ::= ITEXTO:x        list_atts:LT  EXPLICIT:P   FTEXTO        {: RESULT = parser.crearNodo("texto","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+             |IIMAGEN:x       list_atts:LT  EXPLICIT:P   FIMAGEN       {: RESULT = parser.crearNodo("imagen","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+             |IBOTON:x        list_atts:LT  EXPLICIT:P   FBOTON        {: RESULT = parser.crearNodo("boton","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+             |IENLACE:x       list_atts:LT  EXPLICIT:P   FENLACE       {: RESULT = parser.crearNodo("enlace","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+             |ITEXTO_A:x      list_atts:LT  EXPLICIT:P   FTEXTO_A      {: RESULT = parser.crearNodo("texto_a","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :} 
+             |ICAJA_TEXTO:x   list_atts:LT  EXPLICIT:P   FCAJA_TEXTO   {: RESULT = parser.crearNodo("caja_texto","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+             |ICAJA:x         list_atts:LT  EXPLICIT:P   contenido_caja:r         {: RESULT = parser.crearNodo("caja","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos;  :}
+             |ISPINNER:x      list_atts:LT  EXPLICIT:P   FSPINNER      {: RESULT = parser.crearNodo("spinner","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
+             |ISALTOF:x       {: RESULT = parser.crearNodo("salto","",x.getLinea(),x.getColumna(),"");  :}
+             |ITABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:
+                  RESULT = rz;
+            :};
+
+
+contenido_caja ::= FCAJA {: RESULT = parser.crearNodo("cajaT","",0,0,"");   :}
+                  |lista_opciones:r FCAJA2 {:
+                        RESULT=r;
+                  :};
+
+lista_opciones ::= lista_opciones:r opcion2:h{:
+                       r.add(h);
+                       RESULT=r;
+                  :}
+                  |opcion1:h{:
+                       RESULT = parser.crearNodo("caja","",0,0,"");
+                       RESULT.add(h);
+                  :};
+
+
+
+opcion1 ::=  IOPCION:f list_atts:LT EXPLICIT:P FOPCION   {: RESULT = parser.crearNodo("opcion","",f.getLinea(),f.getColumna(),LT,P.getCadena()); :};
+
+opcion2 ::= IOPCION2:f list_atts:LT EXPLICIT:P FOPCION    {: RESULT = parser.crearNodo("opcion","",f.getLinea(),f.getColumna(),LT,P.getCadena()); :};
+ 
+
+contenido_tabla ::=  FTABLA {: RESULT = parser.crearNodo("tabla","",0,0,""); :}
+                   |etiquetastabla:x FTABLA2 {:
+                        RESULT = x;
+                  :};
+
+
+etiquetastabla ::= etiquetastabla:x  et_fila2:y {: x.add(y); RESULT = x;  :}
+                  |et_fila1:x  {:  RESULT = parser.crearNodo("tabla","",0,0,""); RESULT.add(x); :};
+
+
+et_fila2 ::= IFIL_T2:f list_atts:LT EXPLICIT:P contenido_fila:h  {: 
+                    RESULT = parser.crearNodo("fila","",f.getLinea(),f.getColumna(),LT,P.getCadena());
+                    RESULT.hijos=h.hijos;
+            :};
+
+et_fila1 ::= IFIL_T:f list_atts:LT EXPLICIT:P contenido_fila:h {: 
+                    RESULT = parser.crearNodo("fila","",f.getLinea(),f.getColumna(),LT,P.getCadena());  
+                    RESULT.hijos=h.hijos;
+            :};
+
+
+contenido_fila ::= FFIL_T {: RESULT = parser.crearNodo("filaT","",0,0,"");   :}
+                  |lista_cb_ct:r  FFIL_T2 {:
+                    RESULT=r;
+                  :};
+
+lista_cb_ct ::= lista_cb_ct:r etcb_ct2:x{:
+                    r.add(x);
+                    RESULT = r; 
+              :} 
+               |etcb_ct1:x {:
+                    RESULT = parser.crearNodo("filaT","",0,0,"");  
+                    RESULT.add(x); 
+              :};
+
+etcb_ct1 ::= ICB:f list_atts:LT EXPLICIT:P  contenido_cb:h   {: RESULT = parser.crearNodo("cb","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :}
+             |ICT:f list_atts:LT EXPLICIT:P contenido_ct:h   {: RESULT = parser.crearNodo("ct","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :};
+
+etcb_ct2 ::= ICB2:f list_atts:LT EXPLICIT:P  contenido_cb:h  {: RESULT = parser.crearNodo("cb","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :}
+             |ICT2:f list_atts:LT EXPLICIT:P contenido_ct:h  {: RESULT = parser.crearNodo("ct","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :};
+
+                    
+contenido_ct ::= FCT              {: RESULT = parser.crearNodo("texto","",0,0,""); :}
+                |btn_img:r FCT2   {: RESULT=r; :};
+
+contenido_cb ::= FCB              {: RESULT = parser.crearNodo("texto","",0,0,""); :}
+                |btn_img:r FCB2   {: RESULT=r; :};
+
+btn_img ::= TBOTON:f  list_atts:LT  EXPLICIT:P FBOTON   {: RESULT = parser.crearNodo("boton","",f.getLinea(),f.getColumna(),LT,P.getCadena());  :}
+           |TIMAGEN:f list_atts:LT  EXPLICIT:P FIMAGEN  {: RESULT = parser.crearNodo("imagen","",f.getLinea(),f.getColumna(),LT,P.getCadena());  :};
+
+
+list_atts ::= {:    RESULT = parser.crearNodo("propiedades","",0,0,"");   :}
+             |list_atts2:x {:   RESULT = x;  :};
+
+list_atts2 ::= list_atts2:x atributo:y PYC {:
+                                x.add(y);
+                                RESULT=x;    
+                            :}
+              |atributo:x PYC {: 
+                                RESULT = parser.crearNodo("propiedades","",0,0,""); 
+                                RESULT.add(x);
+                            :};
+        
+atributo ::= att_ruta:r     {: RESULT = r;   :}
+            |att_click:r    {: RESULT = r;   :}
+            |att_valor:r    {: RESULT = r;   :}
+            |att_id:r       {: RESULT = r;   :}
+            |att_grupo:r    {: RESULT = r;   :}
+            |att_alto:r     {: RESULT = r;   :}
+            |att_ancho:r    {: RESULT = r;   :}
+            |att_alineado:r {: RESULT = r;   :}
+            |att_fondo:r    {: RESULT = r;   :};
+
+att_fondo ::= FONDO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("fondo",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :}; 
+
+att_ruta  ::= RUTA:x IGUAL STRING_LITERAL:y            {: RESULT = parser.crearNodo("ruta",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :}; 
+
+att_click ::= CLICK:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("click",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :};
+
+att_valor ::= VALOR:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("valor",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :};
+
+att_id    ::= ID:x IGUAL STRING_LITERAL:y              {: RESULT = parser.crearNodo("id",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :};
+
+att_grupo ::= GRUPO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("grupo",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :};
+
+att_alto  ::= ALTO:x IGUAL STRING_LITERAL:y            {: RESULT = parser.crearNodo("alto",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :};
+
+att_ancho ::= ANCHO:x IGUAL STRING_LITERAL:y           {: RESULT = parser.crearNodo("ancho",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :};
+
+att_alineado  ::= ALINEADO:x IGUAL STRING_LITERAL:y    {: RESULT = parser.crearNodo("alineado",y.getCadena().substring(1, y.getCadena().length()-1),x.getLinea(),x.getColumna(),""); :};
+
+
+
+
+
+
