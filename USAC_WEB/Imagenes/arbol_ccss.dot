@@ -1,0 +1,169 @@
+digraph G {
+node[shape=Mrecord]
+54[label="ccss | ",style=bold]
+53[label="bloque | Titular_ccss",style=bold]
+{54}->{53}
+5[label="formato | ",style=bold]
+{53}->{5}
+2[label="valores | ",style=bold]
+{5}->{2}
+1[label="mayuscula | ",style=bold]
+{2}->{1}
+3[label="negrilla | ",style=bold]
+{2}->{3}
+4[label="capital-t | ",style=bold]
+{2}->{4}
+7[label="grupo | grupo_areas_1",style=bold]
+{53}->{7}
+12[label="formato | ",style=bold]
+{7}->{12}
+9[label="valores | ",style=bold]
+{12}->{9}
+8[label="mayuscula | ",style=bold]
+{9}->{8}
+10[label="negrilla | ",style=bold]
+{9}->{10}
+11[label="capital-t | ",style=bold]
+{9}->{11}
+15[label="letra | ",style=bold]
+{7}->{15}
+14[label="horizontal | ",style=bold]
+{15}->{14}
+18[label="tamtex | ",style=bold]
+{7}->{18}
+17[label="horizontal | ",style=bold]
+{18}->{17}
+21[label="fondoelemento | ",style=bold]
+{7}->{21}
+20[label="horizontal | ",style=bold]
+{21}->{20}
+23[label="grupo | grupo_areas_2",style=bold]
+{53}->{23}
+28[label="formato | ",style=bold]
+{23}->{28}
+25[label="valores | ",style=bold]
+{28}->{25}
+24[label="mayuscula | ",style=bold]
+{25}->{24}
+26[label="negrilla | ",style=bold]
+{25}->{26}
+27[label="capital-t | ",style=bold]
+{25}->{27}
+31[label="letra | ",style=bold]
+{23}->{31}
+30[label="horizontal | ",style=bold]
+{31}->{30}
+34[label="tamtex | ",style=bold]
+{23}->{34}
+33[label="horizontal | ",style=bold]
+{34}->{33}
+36[label="identificador | identificador_1",style=bold]
+{53}->{36}
+41[label="formato | ",style=bold]
+{36}->{41}
+38[label="valores | ",style=bold]
+{41}->{38}
+37[label="mayuscula | ",style=bold]
+{38}->{37}
+39[label="negrilla | ",style=bold]
+{38}->{39}
+40[label="capital-t | ",style=bold]
+{38}->{40}
+44[label="letra | ",style=bold]
+{36}->{44}
+43[label="horizontal | ",style=bold]
+{44}->{43}
+47[label="tamtex | ",style=bold]
+{36}->{47}
+46[label="horizontal | ",style=bold]
+{47}->{46}
+49[label="identificador | identificador_1",style=bold]
+{53}->{49}
+51[label="tamtex | ",style=bold]
+{49}->{51}
+50[label="horizontal | ",style=bold]
+{51}->{50}
+59[label="formato | ",style=bold]
+{49}->{59}
+56[label="valores | ",style=bold]
+{59}->{56}
+55[label="mayuscula | ",style=bold]
+{56}->{55}
+57[label="negrilla | ",style=bold]
+{56}->{57}
+58[label="capital-t | ",style=bold]
+{56}->{58}
+108[label="bloque | bloque2",style=bold]
+{54}->{108}
+62[label="grupo | grupo_areas_1",style=bold]
+{108}->{62}
+67[label="formato | ",style=bold]
+{62}->{67}
+64[label="valores | ",style=bold]
+{67}->{64}
+63[label="mayuscula | ",style=bold]
+{64}->{63}
+65[label="negrilla | ",style=bold]
+{64}->{65}
+66[label="capital-t | ",style=bold]
+{64}->{66}
+70[label="letra | ",style=bold]
+{62}->{70}
+69[label="horizontal | ",style=bold]
+{70}->{69}
+73[label="tamtex | ",style=bold]
+{62}->{73}
+72[label="horizontal | ",style=bold]
+{73}->{72}
+76[label="fondoelemento | ",style=bold]
+{62}->{76}
+75[label="horizontal | ",style=bold]
+{76}->{75}
+78[label="grupo | grupo_areas_2",style=bold]
+{108}->{78}
+83[label="formato | ",style=bold]
+{78}->{83}
+80[label="valores | ",style=bold]
+{83}->{80}
+79[label="mayuscula | ",style=bold]
+{80}->{79}
+81[label="negrilla | ",style=bold]
+{80}->{81}
+82[label="capital-t | ",style=bold]
+{80}->{82}
+86[label="letra | ",style=bold]
+{78}->{86}
+85[label="horizontal | ",style=bold]
+{86}->{85}
+89[label="tamtex | ",style=bold]
+{78}->{89}
+88[label="horizontal | ",style=bold]
+{89}->{88}
+91[label="identificador | identificador_1",style=bold]
+{108}->{91}
+96[label="formato | ",style=bold]
+{91}->{96}
+93[label="valores | ",style=bold]
+{96}->{93}
+92[label="mayuscula | ",style=bold]
+{93}->{92}
+94[label="negrilla | ",style=bold]
+{93}->{94}
+95[label="capital-t | ",style=bold]
+{93}->{95}
+99[label="letra | ",style=bold]
+{91}->{99}
+98[label="horizontal | ",style=bold]
+{99}->{98}
+102[label="tamtex | ",style=bold]
+{91}->{102}
+101[label="horizontal | ",style=bold]
+{102}->{101}
+104[label="identificador | identificador_1",style=bold]
+{108}->{104}
+106[label="tamtex | ",style=bold]
+{104}->{106}
+105[label="horizontal | ",style=bold]
+{106}->{105}
+
+}

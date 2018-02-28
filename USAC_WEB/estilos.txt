@@ -1,0 +1,51 @@
+// comentario de una sola linea
+// otro comentraio
+
+
+Titular_ccss[
+    //inicio Grupo_areas_1
+formato := mayuscula,negrilla,capital-t;
+GRUPO(grupo_areas_1);
+formato := mayuscula,negrilla,capital-t;
+letra := "Courier New";
+tamtex := 15.5;
+fondoelemento := "green";
+//fin grupo1
+//inicio grupo 2
+GRUPO(grupo_areas_2);
+formato := mayuscula,negrilla,capital-t;
+letra := "Courier New";
+tamtex := 13;
+//fin grupo2
+
+ID(identificador_1);
+formato := mayuscula,negrilla,capital-t;
+letra := "Arial";
+tamtex := 12;
+ID(identificador_1);
+tamtex := 12;
+]
+
+bloque2[
+    //inicio Grupo_areas_1
+formato := mayuscula,negrilla,capital-t;
+GRUPO(grupo_areas_1);
+formato := mayuscula,negrilla,capital-t;
+letra := "Courier New";
+tamtex := 15.5;
+fondoelemento := "green";
+//fin grupo1
+//inicio grupo 2
+GRUPO(grupo_areas_2);
+formato := mayuscula,negrilla,capital-t;
+letra := "Courier New";
+tamtex := 13;
+//fin grupo2
+
+ID(identificador_1);
+formato := mayuscula,negrilla,capital-t;
+letra := "Arial";
+tamtex := 12;
+ID(identificador_1);
+tamtex := 12;
+]

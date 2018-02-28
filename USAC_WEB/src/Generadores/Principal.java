@@ -7,15 +7,16 @@ package Generadores;
 
 import Analizadores.LenguajeCHTML.AL_HTML;
 import Analizadores.LenguajeCHTML.AS_HTML;
+
+import Analizadores.LenguajeCCSS.AL_CCSS;
+import Analizadores.LenguajeCCSS.AS_CCSS;
+import Arboles_Generados.Arbol_CCSS;
+
 import Arboles_Generados.Arbol_DOM;
+import Estructuras.NodoCSS;
 import Estructuras.NodoDOM;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import javax.swing.JFrame;
-import javax.swing.JTable;
 
 /**
  *
@@ -48,12 +49,34 @@ public class Principal {
         frame.setVisible(true);
         
         */
-        new Principal().CompilarCHTML("");
+        //new Principal().CompilarCHTML("");
+        new Principal().CompilarCCSS("");
         /*String dato ="_hola";
         String d[]=dato.split("_");
         System.out.println(d[1]);*/
     }
 
+    public NodoCSS CompilarCCSS(String texto) throws FileNotFoundException{
+        NodoCSS retorno = null;
+        AL_CCSS lex = new AL_CCSS(new FileReader("estilos.txt"));
+        AS_CCSS parser  = new AS_CCSS(lex);
+        
+        try {
+            parser.parse();
+            NodoCSS raiz = parser.getRoot();
+            Arbol_CCSS gen_arbol = new Arbol_CCSS();
+            if (raiz != null) {
+                gen_arbol.generacion_arbolCCSS(raiz);
+            }else{
+                System.out.println("raiz e nula");
+            }
+            retorno = raiz;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return retorno;
+    }
+    
     public NodoDOM CompilarCHTML(String texto) throws FileNotFoundException {
         NodoDOM retorno = null;
 

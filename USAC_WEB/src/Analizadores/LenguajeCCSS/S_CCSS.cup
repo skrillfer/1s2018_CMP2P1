@@ -1,0 +1,188 @@
+package Analizadores.LenguajeCCSS; 
+
+import Estructuras.*;
+import java_cup.runtime.*;
+
+import java.util.*;
+
+
+action code {:
+    //se declaran variables globales etc.
+    public int Index=1;
+    public NodoCSS root;
+    public NodoCSS n_r=null;
+  
+:}
+
+parser code {:
+    
+    public void syntax_error(Symbol s){
+        System.err.println("Error en la Línea " + (s.right+1) +" Columna "+(s.left+1)+ ". Identificador "
+        +s.value + " no reconocido." );
+        //Inicio.reporteError.agregar("Sintactico",s.right+1,s.left+1,"Identificador "+s.value+" no reconocido");
+    }
+    
+    public NodoCSS crearNodo(String nombre,String valor,int linea,int columna){
+        NodoCSS nuevo = new NodoCSS(nombre,valor,linea,columna,action_obj.Index);
+        action_obj.Index++;
+        if(nuevo.nombre.equals("grupo") || nuevo.nombre.equals("identificador")){
+            action_obj.n_r=nuevo;
+        }
+        return nuevo;
+    }
+    public NodoCSS getRoot(){
+        return action_obj.root;
+    }
+:}
+
+terminal token STRING_LITERAL,NUM,DECIMAL,I_D,MAS,MENOS,POR,DIV,
+APAR,CPAR,ACORCH,CCORCH,COMA,PYC,DSPTS,IGUAL,ALINEADO,TEXTO,
+FORMATO,MAYUSCULA,MINUSCULA,CAPITAL_T,NEGRILLA,CURSIVA,LETRA,
+TAMTEXT,FONDOELEMENTO,AUTOREDIMENSION,TRUE,FALSE,HORIZONTAL,
+VERTICAL,VISIBLE,BORDE,OPAQUE,COLORTEXT,GRUPO,ID,IZQUIERDA,DERECHA,CENTRADO,JUSTIFICADO;
+
+non terminal NodoCSS programa,expr_a,v_att_texto,list_att_texto,att_alineado,att_texto,
+att_formato,att_letra,att_tamtext,att_fondoelemento,att_autoredimension,att_visible,
+att_borde,att_opaque,att_colortext,lista_atributos,identificador,grupo,contenido,
+lista_cont,cont_bloque,bloque,lista_bloques;
+
+precedence left MAS, MENOS;
+precedence left POR, DIV;
+precedence left APAR,CPAR;
+
+start with programa;
+
+
+programa ::= {: root= parser.crearNodo("ccss","",0,0); :}
+            |lista_bloques:r{:
+                    root=r;
+            :};
+
+lista_bloques ::= lista_bloques:r bloque:h{:
+                    r.add(h);
+                    RESULT=r;
+                :}
+                |bloque:h{:
+                    RESULT = parser.crearNodo("ccss","",0,0);
+                    RESULT.add(h);
+                :};
+
+bloque ::= I_D:x ACORCH  cont_bloque:h CCORCH{:
+                RESULT = parser.crearNodo("bloque",x.getCadena(),x.getLinea(),x.getColumna());
+                RESULT.hijos=h.hijos;
+         :};
+
+cont_bloque ::= {: RESULT = parser.crearNodo("contenido","",0,0); :}
+                |lista_cont:r{:
+                        RESULT=r;
+                :};
+
+lista_cont ::= lista_cont:r contenido:h{:
+                if(!h.nombre.equals("##no")){
+                    r.add(h);
+                }
+                RESULT=r;
+              :}
+              |contenido:h{:
+                RESULT = parser.crearNodo("contenido","",0,0);
+                if(!h.nombre.equals("##no")){
+                    RESULT.add(h);    
+                }
+                
+              :};
+
+
+contenido ::= grupo:r              {:  RESULT =r; :}
+              |identificador:r     {:  RESULT =r; :}
+              |lista_atributos:r   {:  
+                                        if(n_r!=null){
+                                            n_r.add(r);
+                                            RESULT= parser.crearNodo("##no","",0,0);
+                                        }else{
+                                            RESULT =r; 
+                                        }
+                                        
+                                   :};
+
+grupo ::= GRUPO:x APAR I_D:y CPAR PYC      {:   RESULT = parser.crearNodo("grupo",y.getCadena(),x.getLinea(),x.getColumna()); 
+                                                
+                                           :};
+
+identificador ::= ID:x APAR I_D:y CPAR PYC {:   RESULT = parser.crearNodo("identificador",y.getCadena(),x.getLinea(),x.getColumna()); 
+                                                
+                                           :};
+
+        
+lista_atributos ::= att_alineado:r              {: RESULT = r; :}
+                    |att_texto:r                {: RESULT = r; :}
+                    |att_formato:r              {: RESULT = r; :}
+                    |att_letra:r                {: RESULT = r; :}
+                    |att_tamtext:r              {: RESULT = r; :}
+                    |att_fondoelemento:r        {: RESULT = r; :}
+                    |att_autoredimension:r      {: RESULT = r; :}
+                    |att_visible:r              {: RESULT = r; :}
+                    |att_borde:r                {: RESULT = r; :}
+                    |att_opaque:r               {: RESULT = r; :}
+                    |att_colortext:r            {: RESULT = r; :};
+
+
+
+att_alineado ::= ALINEADO:x DSPTS IGUAL expr_a:h1 PYC            {: RESULT = parser.crearNodo("alineado","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};     
+
+att_texto    ::= TEXTO:x    DSPTS IGUAL expr_a:h1 PYC            {: RESULT = parser.crearNodo("texto","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+att_texto    ::= FORMATO:x  DSPTS IGUAL list_att_texto:h1 PYC    {: RESULT = parser.crearNodo("formato","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+list_att_texto ::= list_att_texto:r COMA v_att_texto:h{:
+                        r.add(h);
+                        RESULT=r;
+                  :}
+                  |v_att_texto:h{:
+                        RESULT = parser.crearNodo("valores","",0,0);
+                        RESULT.add(h);
+                  :};
+
+
+
+v_att_texto   ::= MAYUSCULA:x   {: RESULT = parser.crearNodo("mayuscula","",x.getLinea(),x.getColumna()); :}
+                 |MINUSCULA:x   {: RESULT = parser.crearNodo("minuscula","",x.getLinea(),x.getColumna()); :}
+                 |NEGRILLA:x    {: RESULT = parser.crearNodo("negrilla","",x.getLinea(),x.getColumna()); :}
+                 |CURSIVA:x     {: RESULT = parser.crearNodo("cursiva","",x.getLinea(),x.getColumna()); :}
+                 |CAPITAL_T:x   {: RESULT = parser.crearNodo("capital-t","",x.getLinea(),x.getColumna()); :};
+    
+
+att_letra    ::= LETRA:x DSPTS IGUAL expr_a:h1 PYC   {: RESULT = parser.crearNodo("letra","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+att_tamtext  ::= TAMTEXT:x DSPTS IGUAL expr_a:h1 PYC {: RESULT = parser.crearNodo("tamtex","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+att_fondoelemento ::= FONDOELEMENTO:x DSPTS IGUAL expr_a:h1 PYC {: RESULT = parser.crearNodo("fondoelemento","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+att_autoredimension  ::= AUTOREDIMENSION:x DSPTS IGUAL ACORCH expr_a:h1 COMA expr_a:h2 CCORCH PYC {: RESULT = parser.crearNodo("autoredimension","",x.getLinea(),x.getColumna());  RESULT.add(h1); RESULT.add(h2);  :};
+
+att_visible ::= VISIBLE:x DSPTS IGUAL  expr_a:h1         {: RESULT = parser.crearNodo("visible","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+att_borde   ::= BORDE:x DSPTS IGUAL ACORCH expr_a:h1 COMA expr_a:h2 COMA expr_a:h3 CCORCH PYC {: RESULT = parser.crearNodo("borde","",x.getLinea(),x.getColumna());  RESULT.add(h1); RESULT.add(h2); RESULT.add(h3); :};
+
+att_opaque  ::= OPAQUE:x DSPTS IGUAL expr_a:h1      {: RESULT = parser.crearNodo("opaque","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+att_colortext ::= COLORTEXT:x DSPTS IGUAL expr_a:h1 {: RESULT = parser.crearNodo("colortext","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+
+
+expr_a ::=  expr_a:h1 MAS:x   expr_a:h2       {:   RESULT = parser.crearNodo("MAS","",x.getLinea(),x.getColumna()); RESULT.add(h1); RESULT.add(h2); :}
+           |expr_a:h1 MENOS:x expr_a:h2       {:   RESULT = parser.crearNodo("MENOS","",x.getLinea(),x.getColumna()); RESULT.add(h1); RESULT.add(h2); :}
+           |expr_a:h1 POR:x   expr_a:h2       {:   RESULT = parser.crearNodo("POR","",x.getLinea(),x.getColumna()); RESULT.add(h1); RESULT.add(h2); :}
+           |expr_a:h1 DIV:x   expr_a:h2       {:   RESULT = parser.crearNodo("DIV","",x.getLinea(),x.getColumna()); RESULT.add(h1); RESULT.add(h2); :}
+           |APAR expr_a:r CPAR      {:   RESULT = r; :}
+           |NUM:x                   {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |DECIMAL:x               {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |STRING_LITERAL:x        {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |TRUE:x                  {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |FALSE:x                 {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |VERTICAL:x              {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |HORIZONTAL:x            {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |IZQUIERDA:x             {:   RESULT = parser.crearNodo("izquierda","",x.getLinea(),x.getColumna()); :}
+           |DERECHA:x               {:   RESULT = parser.crearNodo("derecha","",x.getLinea(),x.getColumna()); :}
+           |CENTRADO:x              {:   RESULT = parser.crearNodo("centrado","",x.getLinea(),x.getColumna()); :}
+           |JUSTIFICADO:x           {:   RESULT = parser.crearNodo("justificado","",x.getLinea(),x.getColumna()); :};
+
+ 
