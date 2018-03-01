@@ -50,7 +50,12 @@ public class Principal {
         
         */
         //new Principal().CompilarCHTML("");
-        new Principal().CompilarCCSS("");
+        
+        
+        //new Principal().CompilarCCSS("");
+        String texto = "hola mundo";
+        
+        
         /*String dato ="_hola";
         String d[]=dato.split("_");
         System.out.println(d[1]);*/

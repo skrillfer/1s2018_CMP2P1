@@ -5,6 +5,8 @@
  */
 package usac_web;
 
+import Analizadores.LenguajeCCSS.AL_CCSS;
+import Analizadores.LenguajeCCSS.AS_CCSS;
 import Analizadores.LenguajeCHTML.AL_HTML;
 import Analizadores.LenguajeCHTML.AS_HTML;
 import Analizadores.LenguajeCJS.*;
@@ -27,6 +29,29 @@ public class USAC_WEB {
      */
     public static void main(String[] args) throws FileNotFoundException {
         new USAC_WEB().CompilarCJS();
+    }
+    
+    
+    public NodoCSS compilarCCSS(String texto) throws FileNotFoundException{
+        NodoCSS retorno=null;
+        
+        escribir("tmpccss.txt",texto);
+        AL_CCSS lex = new AL_CCSS(new FileReader("tmpccss.txt"));//se le pasa al analizador lexico lo que se escribio
+        AS_CCSS parser = new AS_CCSS(lex);
+
+        try {
+            parser.parse();
+            NodoCSS raiz = parser.getRoot();
+            
+            Arbol_CCSS gen_arbol = new Arbol_CCSS();
+            if(raiz!=null){
+                gen_arbol.generacion_arbolCCSS(raiz);
+            }
+            retorno=raiz;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return retorno;
     }
     
     public void CompilarCJS() throws FileNotFoundException{

@@ -5,15 +5,15 @@
 <TITULO>USAC-WEB <FIN-TITULO>
 
 
-<CJS ruta ="/mi.cjs";> <FIN-CJS>
 
-
-<CCSS ruta ="/mi.ccss";> <FIN-CCSS>
+<CCSS ruta ="/home/fernando/NetBeansProjects/1s2018_CMP2P1/USAC_WEB/estilos.txt";> <FIN-CCSS>
 
 
 <FIN-ENCABEZADO>
 <CUERPO fondo="blue";>
-<BOTON> boton1 <FIN-BOTON>
+<BOTON id="btn1"; grupo="g1"; fondo="green"; alineado="izquierda"; >btn1<FIN-BOTON>
+
+<//-
 <PANEL fondo="green"; alto="150"; ancho="150"; alineado="centrado";>
     panel centrado
     <BOTON> boton2 <FIN-BOTON>
@@ -52,6 +52,7 @@ a un metodo de la maquina de turing.
 
 <IMAGEN ruta="/home/fernando/Escritorio/descarga.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
 <IMAGEN ruta="/home/fernando/Escritorio/descarg1a.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
+-//>
 <FIN-CUERPO>
 <FIN-CHTML>
 

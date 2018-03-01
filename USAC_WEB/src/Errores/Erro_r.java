@@ -14,6 +14,7 @@ public class Erro_r {
     private int columna;
     private int fila;
     private String Detalle;
+    private String pertenece;
     
     public Erro_r(int fila, int columna, String valor, String Detalle) {
         this.valor=valor;
@@ -21,6 +22,16 @@ public class Erro_r {
         this.fila=fila;
         this.Detalle=Detalle;
     }
+
+    public Erro_r(int fila,int columna,String valor, String Detalle, String pertenece) {
+        this.valor = valor;
+        this.columna = columna;
+        this.fila = fila;
+        this.Detalle = Detalle;
+        this.pertenece = pertenece;
+    }
+    
+    
 
     /**
      * @return the valor

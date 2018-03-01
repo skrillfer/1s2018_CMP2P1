@@ -133,22 +133,20 @@ att_texto    ::= TEXTO:x    DSPTS IGUAL expr_a:h1 PYC            {: RESULT = par
 
 att_texto    ::= FORMATO:x  DSPTS IGUAL list_att_texto:h1 PYC    {: RESULT = parser.crearNodo("formato","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
 
-list_att_texto ::= list_att_texto:r COMA v_att_texto:h{:
+list_att_texto ::= list_att_texto:r COMA expr_a:h{:
                         r.add(h);
                         RESULT=r;
                   :}
-                  |v_att_texto:h{:
+                  |expr_a:h{:
                         RESULT = parser.crearNodo("valores","",0,0);
                         RESULT.add(h);
                   :};
 
 
 
-v_att_texto   ::= MAYUSCULA:x   {: RESULT = parser.crearNodo("mayuscula","",x.getLinea(),x.getColumna()); :}
-                 |MINUSCULA:x   {: RESULT = parser.crearNodo("minuscula","",x.getLinea(),x.getColumna()); :}
-                 |NEGRILLA:x    {: RESULT = parser.crearNodo("negrilla","",x.getLinea(),x.getColumna()); :}
-                 |CURSIVA:x     {: RESULT = parser.crearNodo("cursiva","",x.getLinea(),x.getColumna()); :}
-                 |CAPITAL_T:x   {: RESULT = parser.crearNodo("capital-t","",x.getLinea(),x.getColumna()); :};
+
+
+
     
 
 att_letra    ::= LETRA:x DSPTS IGUAL expr_a:h1 PYC   {: RESULT = parser.crearNodo("letra","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
@@ -159,7 +157,7 @@ att_fondoelemento ::= FONDOELEMENTO:x DSPTS IGUAL expr_a:h1 PYC {: RESULT = pars
 
 att_autoredimension  ::= AUTOREDIMENSION:x DSPTS IGUAL ACORCH expr_a:h1 COMA expr_a:h2 CCORCH PYC {: RESULT = parser.crearNodo("autoredimension","",x.getLinea(),x.getColumna());  RESULT.add(h1); RESULT.add(h2);  :};
 
-att_visible ::= VISIBLE:x DSPTS IGUAL  expr_a:h1         {: RESULT = parser.crearNodo("visible","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+att_visible ::= VISIBLE:x DSPTS IGUAL  expr_a:h1   PYC      {: RESULT = parser.crearNodo("visible","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
 
 att_borde   ::= BORDE:x DSPTS IGUAL ACORCH expr_a:h1 COMA expr_a:h2 COMA expr_a:h3 CCORCH PYC {: RESULT = parser.crearNodo("borde","",x.getLinea(),x.getColumna());  RESULT.add(h1); RESULT.add(h2); RESULT.add(h3); :};
 
@@ -173,16 +171,22 @@ expr_a ::=  expr_a:h1 MAS:x   expr_a:h2       {:   RESULT = parser.crearNodo("MA
            |expr_a:h1 POR:x   expr_a:h2       {:   RESULT = parser.crearNodo("POR","",x.getLinea(),x.getColumna()); RESULT.add(h1); RESULT.add(h2); :}
            |expr_a:h1 DIV:x   expr_a:h2       {:   RESULT = parser.crearNodo("DIV","",x.getLinea(),x.getColumna()); RESULT.add(h1); RESULT.add(h2); :}
            |APAR expr_a:r CPAR      {:   RESULT = r; :}
-           |NUM:x                   {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
-           |DECIMAL:x               {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
-           |STRING_LITERAL:x        {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
-           |TRUE:x                  {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
-           |FALSE:x                 {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
-           |VERTICAL:x              {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
+           |NUM:x                   {:   RESULT = parser.crearNodo("number",x.getCadena(),x.getLinea(),x.getColumna()); :}
+           |DECIMAL:x               {:   RESULT = parser.crearNodo("number",x.getCadena(),x.getLinea(),x.getColumna()); :}
+           |STRING_LITERAL:x        {:   RESULT = parser.crearNodo("string_literal",x.getCadena().substring(1, x.getCadena().length()-1),x.getLinea(),x.getColumna()); :}
+           |TRUE:x                  {:   RESULT = parser.crearNodo("boolean","true",x.getLinea(),x.getColumna()); :}
+           |FALSE:x                 {:   RESULT = parser.crearNodo("boolean","false",x.getLinea(),x.getColumna()); :}
+           |VERTICAL:x              {:   RESULT = parser.crearNodo("vertical","",x.getLinea(),x.getColumna()); :}
            |HORIZONTAL:x            {:   RESULT = parser.crearNodo("horizontal","",x.getLinea(),x.getColumna()); :}
            |IZQUIERDA:x             {:   RESULT = parser.crearNodo("izquierda","",x.getLinea(),x.getColumna()); :}
            |DERECHA:x               {:   RESULT = parser.crearNodo("derecha","",x.getLinea(),x.getColumna()); :}
            |CENTRADO:x              {:   RESULT = parser.crearNodo("centrado","",x.getLinea(),x.getColumna()); :}
-           |JUSTIFICADO:x           {:   RESULT = parser.crearNodo("justificado","",x.getLinea(),x.getColumna()); :};
+           |JUSTIFICADO:x           {:   RESULT = parser.crearNodo("justificado","",x.getLinea(),x.getColumna()); :}
+           |v_att_texto:x           {:   RESULT = x; :};
 
  
+v_att_texto   ::= MAYUSCULA:x   {: RESULT = parser.crearNodo("mayuscula","",x.getLinea(),x.getColumna()); :}
+                 |MINUSCULA:x   {: RESULT = parser.crearNodo("minuscula","",x.getLinea(),x.getColumna()); :}
+                 |NEGRILLA:x    {: RESULT = parser.crearNodo("negrilla","",x.getLinea(),x.getColumna()); :}
+                 |CURSIVA:x     {: RESULT = parser.crearNodo("cursiva","",x.getLinea(),x.getColumna()); :}
+                 |CAPITAL_T:x   {: RESULT = parser.crearNodo("capital-t","",x.getLinea(),x.getColumna()); :};
