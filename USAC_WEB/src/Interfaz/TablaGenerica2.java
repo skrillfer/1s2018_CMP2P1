@@ -7,6 +7,7 @@ package Interfaz;
 
 import Estructuras.NodoDOM;
 import Estructuras.Propiedad;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Hashtable;
 import javax.swing.JButton;
@@ -31,8 +32,9 @@ public class TablaGenerica2 extends JPanel {
         if(filas>0 && columnas>0){
             setLayout(new GridLayout(filas, columnas));
         }
-        
+        setName("");
         setDatos();
+        setPreferredSize(new Dimension(300, 300));
     }
     
     
@@ -62,9 +64,9 @@ public class TablaGenerica2 extends JPanel {
                     if(hijo.nombre.equals("boton")){
                        add(new BotonGenerico(hijo.propiedades));
                     }else if(hijo.nombre.equals("imagen")){
-                       add(new JTextField(hijo.propiedades.get("$text").valor));
+                       add(new ImagenGenerica(hijo.propiedades));
                     }else if(hijo.nombre.equals("texto")){
-                       add(new JTextField(coll.propiedades.get("$text").valor));
+                       add(new JTextField());
                     }
                 }else{
                     add( new JTextField());

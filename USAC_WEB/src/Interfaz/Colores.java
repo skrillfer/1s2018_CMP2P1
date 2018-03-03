@@ -168,6 +168,7 @@ public class Colores {
     }
 
     public Color obtenerColor(String nombre) {
+        nombre=nombre.toLowerCase();
         Color color = null;
         
         if(colores.containsKey(nombre.trim())){

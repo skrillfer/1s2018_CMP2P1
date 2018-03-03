@@ -52,7 +52,7 @@ public class Principal {
         //new Principal().CompilarCHTML("");
         
         
-        //new Principal().CompilarCCSS("");
+        new Principal().CompilarCCSS("");
         String texto = "hola mundo";
         
         

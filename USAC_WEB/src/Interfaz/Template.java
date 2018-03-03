@@ -40,7 +40,18 @@ import javax.swing.border.EtchedBorder;
 import usac_web.USAC_WEB;
 import CSS_Compilador.*;
 import Errores.Erro_r;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 import java.util.StringTokenizer;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JScrollBar;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -65,7 +76,7 @@ public class Template extends JPanel implements ActionListener{
     JLabel error404 = new JLabel("Error Pagina no Encontrada");
     //************ PANEL PADRE**************************************************
     JPanel panel_P = new JPanel();
-
+    //final JScrollPane scroll = new JScrollPane();
     //************ Atributos de la Barra Principal *****************************
     JPanel barraPrincipal = new JPanel();
     JButton atras = new JButton("");
@@ -104,6 +115,7 @@ public class Template extends JPanel implements ActionListener{
                 }
             }
         });
+       
     }
 
     public void crearBarraPrincipal() {
@@ -143,7 +155,7 @@ public class Template extends JPanel implements ActionListener{
             System.out.println(ex);
         }
         /*Forma 1*/
-        //campoURL.setPreferredSize(new Dimension(500, 25));
+        //barraPrincipal.setLayout(new GridLayout(1, 8));
         barraPrincipal.add(atras);
         barraPrincipal.add(adelante);
         barraPrincipal.add(reload);
@@ -165,14 +177,20 @@ public class Template extends JPanel implements ActionListener{
         add(plus);
         add(favoritos);
          */
-        panel_P.setBorder(new EtchedBorder(EtchedBorder.RAISED));
-        panel_P.setPreferredSize(new Dimension(1000, 600));
+        //scroll.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+        panel_P.setPreferredSize(new Dimension(750, 1000));
+        //panel_P.setLayout(new BoxLayout(panel_P, BoxLayout.Y_AXIS));
         //panel_P.setPreferredSize(this.getPreferredSize().getSize());
-
-        //panel_P.setBackground(Color.red);
+        panel_P.setBackground(Color.red);
         add(barraPrincipal);
-        add(panel_P);
-        //panel_P.setMaximumSize(new Dimension(this.getParent().getWidth(), 0));
+        
+        JScrollPane jsp = new JScrollPane(panel_P);
+        jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 
+        jsp.setPreferredSize(new Dimension(970, 490));
+        
+        add(jsp);
+        
     }
 
     // este metodo busca la pagina ingresada en el campo de texto
@@ -257,7 +275,7 @@ public class Template extends JPanel implements ActionListener{
                     //panel_P=pila_panels.pop();
                     break;
                 case "texto":
-                    JLabel texxto = new TextoGenerico(hijo.propiedades);
+                    JTextPane texxto = new TextoGenerico(hijo.propiedades,panel_P.getPreferredSize());
                     addComponente(texxto.getName(),"texto",texxto,panel_P,"panel",panel_P.getName());
                     panel_P.add(texxto);
                     updateUI();
@@ -276,7 +294,7 @@ public class Template extends JPanel implements ActionListener{
                     break;
                 case "texto_a":
                     //VER BIEN
-                    JTextPane txt_a=new AreaTextoGenerica(hijo.propiedades);
+                    JTextPane txt_a=new AreaTextoGenerica(hijo.propiedades,panel_P.getPreferredSize());
                     JScrollPane scroll = new JScrollPane(txt_a,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                     scroll.setName("texto_a-"+txt_a.getName());
@@ -318,7 +336,7 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public void addComponente(String id, String tipo,Object objeto, Object padre, String tipopadre, String idpadre){
+    public static void addComponente(String id, String tipo,Object objeto, Object padre, String tipopadre, String idpadre){
         System.out.println("CCCC   >   " + id);
         
             //se obtiene el componente padre
@@ -357,7 +375,7 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public String getProp_Componente(String tipo, Object objeto, String prop){
+    public static String getProp_Componente(String tipo, Object objeto, String prop){
         String propiedad="";
         BotonGenerico btn;
         EnlaceGenerico enl;
@@ -520,109 +538,165 @@ public class Template extends JPanel implements ActionListener{
         for (NodoCSS nodo : raiz.hijos) {
             switch(nodo.nombre){
                 case "alineado":
-                    if(raiz.nombre.equals("identificador")){
-                        Componente cmp = lista_componentes.get(raiz.valor.trim());
-                        ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
-                        boolean do_alineado = false;
-                        switch (res.tipo) {
-                            case "izquierda":
-                            case "derecha":
-                            case "justificado":
-                            case "centrado":
-                                do_alineado = true;
-                            default:
-                                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
-
-                        }
-                        switch (cmp.tipo) {
-                            case "boton":
-                                BotonGenerico btn = (BotonGenerico) cmp.objeto;
-                                if(do_alineado){
-                                    btn.propiedades.get("alineado").valor = res.tipo;
-                                    btn.setAlineado();
-                                    System.out.println("se alineo a "+res.tipo);
-                                }
-                                break;
-                            case "enlace":
-                                EnlaceGenerico enl = (EnlaceGenerico) cmp.objeto;
-                                if(do_alineado){
-                                    enl.propiedades.get("alineado").valor = res.tipo;
-                                    //enl.setAlineado();
-                                }
-                        }
-                    }
+                    setAlineado(raiz, nodo, opl);
                     break;
                 case "texto":
-                    if(raiz.nombre.equals("identificador")){
-                        Componente cmp = lista_componentes.get(raiz.valor.trim());
-                        ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
-                        boolean do_texto = false;
-                        switch (res.tipo) {
-                            case "string":
-                                do_texto = true;
-                            default:
-                                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
-
-                        }
-                        switch (cmp.tipo) {
-                            case "boton":
-                                BotonGenerico btn = (BotonGenerico) cmp.objeto;
-                                if(do_texto){
-                                    btn.propiedades.get("$text").valor = (String)res.valor;
-                                    btn.setTexto();
-                                }
-                                break;
-                        }
-                    }
+                    setTexto(raiz, nodo, opl);
                     break;    
                 case "formato":
                     if(raiz.nombre.equals("identificador")){
                         Componente cmp = lista_componentes.get(raiz.valor.trim());
+                        if (cmp==null)
+                            break;
                         NodoCSS valores= nodo.hijos.get(0);
                         for (NodoCSS valor : valores.hijos) {
                             ResultadoG res = opl.ejecutar(valor);
+                            if(res==null)
+                                res= new ResultadoG("ninguno", "");
+                            
                             switch (res.tipo) {
                                 case "capital-t":
                                     switch (cmp.tipo) {
                                         case "boton":
                                             BotonGenerico btn = (BotonGenerico) cmp.objeto;
-                                            try {
-                                                String tp=toCapital_t(btn.propiedades.get("$text").valor);
-                                                if(!tp.equals("")){
-                                                    btn.propiedades.get("$text").valor=tp;
-                                                }
-                                            } catch (Exception e) {}
+                                            btn.setMayu_Minu_Capital(3);
                                             btn.setTexto();
+                                            updateUI();
                                             break;
+                                        case "enlace":
+                                            EnlaceGenerico enl = (EnlaceGenerico) cmp.objeto;
+                                            enl.setMayu_Minu_Capital(3);
+                                            enl.setTexto();
+                                            updateUI();
+                                            break;   
+                                        case "texto":
+                                            TextoGenerico txt = (TextoGenerico) cmp.objeto;
+                                            txt.setMayu_Minu_Capital(3);
+                                            txt.setTexto();
+                                            updateUI();
+                                            break;       
+                                        case "areatexto":
+                                            AreaTextoGenerica atxt = (AreaTextoGenerica) cmp.objeto;
+                                            atxt.setMayu_Minu_Capital(3);
+                                            atxt.setTexto();
+                                            updateUI();
+                                            break;  
+                                        case "cajatexto":    
+                                            CajaTextoGenerica ctxt = (CajaTextoGenerica) cmp.objeto;
+                                            ctxt.setMayu_Minu_Capital(3);
+                                            ctxt.setTexto();
+                                            updateUI();
+                                            break;
+                                        case "opcion":    
+                                            OpcionGenerica opc = (OpcionGenerica) cmp.objeto;
+                                            opc.setMayu_Minu_Capital(3);
+                                            opc.setTexto();
+                                            updateUI();
+                                            break;
+                                        case "cajaopciones":    
+                                            CajaOpcionesGenerica c_opc = (CajaOpcionesGenerica) cmp.objeto;
+                                            c_opc.setMayu_Minu_Capital(3);
+                                            c_opc.setTexto();
+                                            updateUI();
+                                            break;    
+                                            
                                     }
                                     break;
                                 case "mayuscula":
                                     switch (cmp.tipo) {
                                         case "boton":
                                             BotonGenerico btn = (BotonGenerico) cmp.objeto;
-                                            try {
-                                                btn.propiedades.get("$text").valor=btn.propiedades.get("$text").valor.toUpperCase();
-                                            } catch (Exception e) {}
+                                            btn.setMayu_Minu_Capital(2);
                                             btn.setTexto();
-                                            System.out.println("se seeo mayusual");
                                             break;
+                                        case "enlace":
+                                            EnlaceGenerico enl = (EnlaceGenerico) cmp.objeto;
+                                            enl.setMayu_Minu_Capital(2);
+                                            enl.setTexto();
+                                            updateUI();
+                                        case "texto":
+                                            TextoGenerico txt = (TextoGenerico) cmp.objeto;
+                                            txt.setMayu_Minu_Capital(2);
+                                            txt.setTexto();
+                                            updateUI();    
+                                            break; 
+                                        case "areatexto":
+                                            AreaTextoGenerica atxt = (AreaTextoGenerica) cmp.objeto;
+                                            atxt.setMayu_Minu_Capital(2);
+                                            atxt.setTexto();
+                                            updateUI();    
+                                            break;     
+                                        case "cajatexto":    
+                                            CajaTextoGenerica ctxt = (CajaTextoGenerica) cmp.objeto;
+                                            ctxt.setMayu_Minu_Capital(2);
+                                            ctxt.setTexto();
+                                            updateUI();    
+                                            break;  
+                                        case "opcion":
+                                            OpcionGenerica opc = (OpcionGenerica) cmp.objeto;
+                                            opc.setMayu_Minu_Capital(2);
+                                            opc.setTexto();
+                                            updateUI();
+                                            break;
+                                        case "cajaopciones":
+                                            CajaOpcionesGenerica c_opc = (CajaOpcionesGenerica) cmp.objeto;
+                                            c_opc.setMayu_Minu_Capital(2);
+                                            c_opc.setTexto();
+                                            updateUI();
+                                            break;   
                                     }
                                     break;
                                 case "minuscula":
                                     switch (cmp.tipo) {
                                         case "boton":
                                             BotonGenerico btn = (BotonGenerico) cmp.objeto;
-                                            try {
-                                                btn.propiedades.get("$text").valor=btn.propiedades.get("$text").valor.toLowerCase();
-                                            } catch (Exception e) {}
+                                            btn.setMayu_Minu_Capital(1);
                                             btn.setTexto();
                                             break;
+                                        case "enlace":
+                                            EnlaceGenerico enl = (EnlaceGenerico) cmp.objeto;
+                                            enl.setMayu_Minu_Capital(1);
+                                            enl.setTexto();
+                                            break; 
+                                        case "texto":
+                                            TextoGenerico txt = (TextoGenerico) cmp.objeto;
+                                            txt.setMayu_Minu_Capital(1);
+                                            txt.setTexto();
+                                            break;    
+                                        case "areatexto":
+                                            AreaTextoGenerica atxt = (AreaTextoGenerica) cmp.objeto;
+                                            atxt.setMayu_Minu_Capital(1);
+                                            atxt.setTexto();
+                                            break; 
+                                        case "cajatexto":      
+                                            CajaTextoGenerica ctxt = (CajaTextoGenerica) cmp.objeto;
+                                            ctxt.setMayu_Minu_Capital(1);
+                                            ctxt.setTexto();
+                                            break; 
+                                        case "opcion":
+                                            OpcionGenerica opc = (OpcionGenerica) cmp.objeto;
+                                            opc.setMayu_Minu_Capital(1);
+                                            opc.setTexto();
+                                            updateUI();
+                                            break;
+                                        case "cajaopciones":
+                                            CajaOpcionesGenerica c_opc = (CajaOpcionesGenerica) cmp.objeto;
+                                            c_opc.setMayu_Minu_Capital(1);
+                                            c_opc.setTexto();
+                                            updateUI();
+                                            break;         
                                     }
                                     break;
                                 case "cursiva":
                                     switch (cmp.tipo) {
                                         case "boton":
-                                            BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                                        case "enlace":
+                                        case "texto": 
+                                        case "areatexto":
+                                        case "cajatexto":
+                                        case "opcion":
+                                        case "cajaopciones":    
+                                            JComponent btn = (JComponent) cmp.objeto;
                                             Font ft =null;
                                             if(btn.getFont().isBold()){
                                                 ft=new Font(btn.getFont().getName(),Font.ITALIC+Font.BOLD,btn.getFont().getSize());
@@ -630,16 +704,27 @@ public class Template extends JPanel implements ActionListener{
                                                 ft=new Font(btn.getFont().getName(),Font.ITALIC,btn.getFont().getSize());
                                             }
                                             try {
-                                                btn.setFont(ft);
+                                                 Map atributes = ft.getAttributes();
+                                                if (cmp.tipo.equals("enlace")) {
+                                                    atributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                                                    
+                                                }//btn.setFont(ft);
+                                                btn.setFont(ft.deriveFont(atributes));
                                             } catch (Exception e) {}
-                                            btn.setTexto();
+                                            updateUI();
                                             break;
                                     }
                                     break;
                                 case "negrilla":
                                     switch (cmp.tipo) {
                                         case "boton":
-                                            BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                                        case "enlace":  
+                                        case "texto":    
+                                        case "areatexto":   
+                                        case "cajatexto":   
+                                        case "opcion":
+                                        case "cajaopciones":    
+                                            JComponent btn = (JComponent) cmp.objeto;
                                             Font ft =null;
                                             if(btn.getFont().isItalic()){
                                                 ft=new Font(btn.getFont().getName(),Font.ITALIC+Font.BOLD,btn.getFont().getSize());
@@ -647,14 +732,19 @@ public class Template extends JPanel implements ActionListener{
                                                 ft=new Font(btn.getFont().getName(),Font.BOLD,btn.getFont().getSize());
                                             }
                                             try {
-                                                btn.setFont(ft);
+                                                Map atributes = ft.getAttributes();
+                                                if (cmp.tipo.equals("enlace")) {
+                                                    atributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                                                }//btn.setFont(ft);
+                                                btn.setFont(ft.deriveFont(atributes));
+                                                
                                             } catch (Exception e) {}
-                                            btn.setTexto();
+                                            updateUI();
                                             break;
                                     }
                                     break;
                                 default:
-                                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
 
                             }   
                         }
@@ -662,33 +752,7 @@ public class Template extends JPanel implements ActionListener{
                     
                     break;   
                 case "letra":
-                    if(raiz.nombre.equals("identificador")){
-                        Componente cmp = lista_componentes.get(raiz.valor.trim());
-                        ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
-                        boolean do_letra = false;
-                        switch (res.tipo) {
-                            case "string":
-                                do_letra = true;
-                            default:
-                                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
-                        }
-                        switch (cmp.tipo) {
-                            case "boton":
-                                BotonGenerico btn = (BotonGenerico) cmp.objeto;
-                                if(do_letra){
-                                    String valor = (String)res.valor;
-                                    valor= valor.trim();
-                                    Font ft = null;
-                                    try {
-                                        ft= new Font(valor,btn.getFont().getStyle(),btn.getFont().getSize());
-                                        btn.setFont(ft);
-                                        System.out.println("se aplico fuente: ["+valor+"]");
-                                    } catch (Exception e) { System.out.println("error al aplicar fuente");}
-                                    btn.setTexto();
-                                }
-                                break;
-                        }
-                    }
+                    setLetra(raiz, nodo, opl);
                     break; 
                 case "tamtex":
                     setTamtex(raiz, nodo, opl);
@@ -703,10 +767,243 @@ public class Template extends JPanel implements ActionListener{
                     setVisible(raiz, nodo, opl);
                     break;        
                 case "borde":
+                    setBorde(raiz, nodo, opl);
                     break;
                 case "opaque":
+                    setOpaque(raiz, nodo, opl);
                     break;
                 case "colortext":
+                    setColortext(raiz, nodo, opl);
+                    break;
+            }
+        }
+    }
+    
+    public void setAlineado(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+        if (raiz.nombre.equals("identificador")) {
+            Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp == null) {
+                cmp = new Componente("null", "null", new Object(), null);
+            }
+            
+            ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res == null) {
+                res = new ResultadoG("null", null);
+            }
+            boolean do_alineado = false;
+            switch (res.tipo) {
+                case "izquierda":
+                case "derecha":
+                case "justificado":
+                case "centrado":    
+                    do_alineado = true;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+
+            }
+            switch (cmp.tipo) {
+                case "boton":
+                    BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                    if (do_alineado) {
+                        btn.propiedades.get("alineado").valor = res.tipo;
+                        btn.setAlineado();
+                        System.out.println("se alineo a " + res.tipo);
+                    }
+                    break;
+                case "enlace":
+                    EnlaceGenerico enl = (EnlaceGenerico) cmp.objeto;
+                    if (do_alineado) {
+                        enl.propiedades.get("alineado").valor = res.tipo;
+                        enl.setAlineado();
+                    }
+                    break;
+                case "imagen":
+                    ImagenGenerica img = (ImagenGenerica) cmp.objeto;
+                    if (do_alineado) {
+                        img.propiedades.get("alineado").valor = res.tipo;
+                        img.setAlineado();
+                    }
+                    break;
+                case "texto":
+                    TextoGenerico txt = (TextoGenerico) cmp.objeto;
+                    if (do_alineado) {
+                        txt.propiedades.get("alineado").valor = res.tipo;
+                        txt.setAlineado();
+                    }
+                    break;    
+                case "areatexto":    
+                    AreaTextoGenerica atxt = (AreaTextoGenerica) cmp.objeto;
+                    if (do_alineado) {
+                        atxt.propiedades.get("alineado").valor = res.tipo;
+                        atxt.setAlineado();
+                    }
+                    break;    
+                case "cajatexto":    
+                    CajaTextoGenerica ctxt = (CajaTextoGenerica) cmp.objeto;
+                    if (do_alineado) {
+                        ctxt.propiedades.get("alineado").valor = res.tipo;
+                        ctxt.setAlineado();
+                    }
+                    break;    
+                case "panel":      
+                    PanelGenerico panel = (PanelGenerico) cmp.objeto;
+                    if (do_alineado) {
+                        panel.propiedades.get("alineado").valor = res.tipo;
+                        panel.setAlineado();
+                    }
+                    break; 
+                case "opcion":      
+                    OpcionGenerica opc = (OpcionGenerica) cmp.objeto;
+                    if (do_alineado) {
+                        opc.propiedades.get("alineado").valor = res.tipo;
+                        opc.setAlineado();
+                    }
+                    break;    
+                case "cajaopciones":      
+                    CajaOpcionesGenerica c_opc = (CajaOpcionesGenerica) cmp.objeto;
+                    if (do_alineado) {
+                        c_opc.propiedades.get("alineado").valor = res.tipo;
+                        c_opc.setAlineado();
+                    }
+                    break;       
+                case "spinner":      
+                    SpinnerGenerico spiin = (SpinnerGenerico) cmp.objeto;
+                    if (do_alineado) {
+                        spiin.propiedades.get("alineado").valor = res.tipo;
+                        spiin.setAlineado();
+                    }
+                    break;      
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    break;
+            }
+        }
+    }
+    
+    public void setTexto(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+        if (raiz.nombre.equals("identificador")) {
+            Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp == null)
+                cmp = new Componente("null", "null", new Object(),null);
+
+            ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res == null)
+                res = new ResultadoG("ninguno", null);
+            
+            boolean do_texto = false;
+            switch (res.tipo) {
+                case "string":
+                    do_texto = true;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, texto solo acepta STRING", "Lenguaje CCSS");
+
+            }
+            switch (cmp.tipo) {
+                case "boton":
+                    BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                    if (do_texto) {
+                        btn.propiedades.get("$text").valor = (String) res.valor;
+                        btn.setTexto();
+                    }
+                    break;
+                case "enlace":
+                    EnlaceGenerico enl = (EnlaceGenerico) cmp.objeto;
+                    if (do_texto) {
+                        enl.propiedades.get("$text").valor = (String) res.valor;
+                        enl.setTexto();
+                    }
+                    break;
+                case "texto":
+                    TextoGenerico txt = (TextoGenerico) cmp.objeto;
+                    if (do_texto) {
+                        txt.propiedades.get("$text").valor = (String) res.valor;
+                        txt.setTexto();
+                    }
+                    break;
+                case "areatexto": 
+                    AreaTextoGenerica atxt = (AreaTextoGenerica) cmp.objeto;
+                    if (do_texto) {
+                        atxt.propiedades.get("$text").valor = (String) res.valor;
+                        atxt.setTexto();
+                    }
+                    break;
+                case "cajatexto":     
+                    CajaTextoGenerica ctxt = (CajaTextoGenerica) cmp.objeto;
+                    if (do_texto) {
+                        ctxt.propiedades.get("$text").valor = (String) res.valor;
+                        ctxt.setTexto();
+                    }
+                    break;
+                case "opcion":     
+                    OpcionGenerica opc = (OpcionGenerica) cmp.objeto;
+                    if (do_texto) {
+                        opc.propiedades.get("$text").valor = (String) res.valor;
+                        opc.setTexto();
+                    }
+                    break;
+                case "cajaopciones":     
+                    CajaOpcionesGenerica c_opc = (CajaOpcionesGenerica) cmp.objeto;
+                    if (do_texto) {
+                        c_opc.propiedades.get("$text").valor = (String) res.valor;
+                        c_opc.setTexto();
+                    }
+                    break;    
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    break;
+            }
+        }
+    }
+    
+    
+    public void setLetra(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+        if (raiz.nombre.equals("identificador")) {
+            Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp == null) 
+                cmp = new Componente("null", "null", new Object(), null);
+            
+            ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res == null)
+                res = new ResultadoG("ninguno", null);
+            
+            boolean do_letra = false;
+            switch (res.tipo) {
+                case "string":
+                    do_letra = true;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Letra solo acepta: STRING ", "Lenguaje CCSS");
+            }
+            switch (cmp.tipo) {
+                case "boton":
+                case "enlace":  
+                case "texto":   
+                case "areatexto":   
+                case "cajatexto":
+                case "opcion":
+                case "cajaopciones":    
+                    JComponent btn = (JComponent) cmp.objeto;
+                    if (do_letra) {
+                        String valor = (String) res.valor;
+                        valor = valor.trim();
+                        Font ft = null;
+                        try {
+                            ft = new Font(valor, btn.getFont().getStyle(), btn.getFont().getSize());
+                            Map atributes = ft.getAttributes();
+                            if (cmp.tipo.equals("enlace")){
+                                atributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                            }//btn.setFont(ft);
+                            btn.setFont(ft.deriveFont(atributes));
+
+                            
+                            System.out.println("se aplico fuente: [" + valor + "]");
+                        } catch (Exception e) {
+                            System.out.println("error al aplicar fuente");
+                        }
+                        updateUI();
+                    }
+                    break;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -716,17 +1013,27 @@ public class Template extends JPanel implements ActionListener{
     public void setTamtex(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp==null)
+                cmp = new Componente("", "",new Object(), null);
+            
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res==null)
+                res = new ResultadoG("ninguno",null);
             boolean do_tamtext = false;
             switch (res.tipo) {
                 case "number":
                     do_tamtext = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,Tamtex solo acepta: NUMBER", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
-                    BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                case "enlace": 
+                case "texto":
+                case "areatexto":
+                case "cajatexto":
+                case "cajaopciones":    
+                    JComponent btn = (JComponent) cmp.objeto;
                     if (do_tamtext) {
                         Double valor = (Double) res.valor;
                         long value = Math.round(valor);
@@ -735,13 +1042,21 @@ public class Template extends JPanel implements ActionListener{
                         Font ft = null;
                         try {
                             ft = new Font(btn.getFont().getName(), btn.getFont().getStyle(), tam);
-                            btn.setFont(ft);
+                            Map atributes = ft.getAttributes();
+                            if (cmp.tipo.equals("enlace")){
+                                atributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+                            }//btn.setFont(ft);
+                            btn.setFont(ft.deriveFont(atributes));
+                            
                             System.out.println("se aplico tam: [" + tam + "]");
                         } catch (Exception e) {
                             System.out.println("error al aplico tamtext");
                         }
-                        btn.setTexto();
+                        updateUI();
                     }
+                    break;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, TamTex  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -751,33 +1066,51 @@ public class Template extends JPanel implements ActionListener{
     public void setFondoElemento(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp==null)
+                cmp = new Componente("", "",new Object(), null);
+            
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res==null)
+                res = new ResultadoG("ninguno",null);
+            
             boolean do_fondo = false;
             switch (res.tipo) {
                 case "string":
                     do_fondo = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,fondoElemento solo acepta: STRING", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
-                    BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                case "enlace":
+                case "texto": 
+                case "areatexto": 
+                case "cajatexto":
+                case "panel":
+                case "opcion":    
+                    JComponent btn = (JComponent) cmp.objeto;
+                    if (cmp.tipo.equals("enlace"))
+                            btn.setOpaque(true);
                     if (do_fondo) {
                         String valor = (String) res.valor;
                         valor = valor.trim();
                         Color color = meta_colores.obtenerColor(valor);
                         try {
                             if(color!=null){
+                                System.out.println("se aplico fondocolor: [" + valor + "] a "+ cmp.id);
                                 btn.setBackground(color);
                             }else{
                                 addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna,(String) nodo.hijos.get(0).valor , "el color es invalido", "LenguajeCCSS");
                             }
-                            System.out.println("se aplico fondocolor: [" + valor + "]");
+                            
                         } catch (Exception e) {
                             System.out.println("error al aplicar fuente");
                         }
-                        btn.setTexto();
+                        updateUI();
                     }
+                    break;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, FondoElemento  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -787,17 +1120,30 @@ public class Template extends JPanel implements ActionListener{
     public void setVisible(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp==null)
+                cmp = new Componente("", "",new Object(), null);
+            
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res==null)
+                res = new ResultadoG("ninguno",null);
+            
             boolean do_fondo = false;
             switch (res.tipo) {
                 case "boolean":
                     do_fondo = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible solo acepta: boolean", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
-                    BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                case "enlace":
+                case "imagen":    
+                case "texto":   
+                case "areatexto": 
+                case "cajatexto":
+                case "cajaopciones": 
+                case "spinner":     
+                    JComponent btn = (JComponent) cmp.objeto;
                     if (do_fondo) {
                         boolean valor = (boolean) res.valor;
                         
@@ -808,8 +1154,11 @@ public class Template extends JPanel implements ActionListener{
                         } catch (Exception e) {
                             System.out.println("error al aplicar fuente");
                         }
-                        btn.setTexto();
                     }
+                    updateUI();
+                    break;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -818,46 +1167,176 @@ public class Template extends JPanel implements ActionListener{
     public void setBorde(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp==null)
+                cmp = new Componente("", "",new Object(), null);
+            
             ResultadoG res1 = opl.ejecutar(nodo.hijos.get(0));
             ResultadoG res2 = opl.ejecutar(nodo.hijos.get(1));
             ResultadoG res3 = opl.ejecutar(nodo.hijos.get(2));
+            if (res1==null)
+                res1 = new ResultadoG("ninguno",null);
+            if (res2==null)
+                res2 = new ResultadoG("ninguno",null);
+            if (res3==null)
+                res3 = new ResultadoG("ninguno",null);
             
             boolean do_borde = false;
-            
-            if(res1.tipo.equals("number") && res2.tipo.equals("string") && res1.tipo.equals("boolean")){
+            System.out.println(res1.tipo +":"+res2.tipo+":"+res3.tipo);
+            if(res1.tipo.equals("number") && res2.tipo.equals("string") && res3.tipo.equals("boolean")){
                 do_borde=true;
+                System.out.println("si cumple");
             }else{
-                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "borde debe ser [number,string,boolean] error en los tipos", "Lenguaje CCSS");
+                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Eror Semantico, Borde debe ser [number,string,boolean] error en los tipos", "Lenguaje CCSS");
             }
             
             switch (cmp.tipo) {
                 case "boton":
-                    BotonGenerico btn = (BotonGenerico) cmp.objeto;
+                case "enlace":    
+                case "texto":
+                case "areatexto":    
+                case "cajatexto":     
+                case "borde":    
+                case "cajaopciones":        
+                    JComponent btn = (JComponent) cmp.objeto;
                     if (do_borde) {
                         Double r1=(double)res1.valor;
                         String r2=(String)res2.valor;
                         boolean r3 = (boolean)res3.valor;
-                        
+                        System.out.println("ANTES se aplica borde redondeado");
+                        Color color=meta_colores.obtenerColor(r2);
                         try {
-                            //btn.setVisible(valor);
-                            //btn.setVisible(valor);
-                            //System.out.println("se aplico visibilidad: [" + valor + "]");
+                            if(r3){
+                                System.out.println("se aplica borde redondeado");
+                                if(color!=null){
+                                    //AbstractBorder brdr = new TextBubbleBorder(Color.BLACK,r1.intValue(),btn.getPreferredSize().height/10,0);
+                                    LineBorder brdr = new LineBorder(color, r1.intValue(),true);
+                                    btn.setBorder(brdr);
+                                }else{
+                                    addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
+                                }
+                            }else{
+                                if(color!=null){
+                                    btn.setBorder(BorderFactory.createMatteBorder(r1.intValue(), r1.intValue(), r1.intValue(), r1.intValue(), color));
+                                }else{
+                                    addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
+                                }
+                                
+                            }
+                            
                         } catch (Exception e) {
                             System.out.println("error al aplicar fuente");
                         }
-                        btn.setTexto();
+                        updateUI();
                     }
+                    break;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Borde  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    break;
+            }
+        }
+    }
+    
+    public void setOpaque(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+        if (raiz.nombre.equals("identificador")) {
+            Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp==null)
+                cmp = new Componente("", "",new Object(), null);
+            
+            ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res==null)
+                res= new ResultadoG("ninguno", null);
+            boolean do_fondo = false;
+            switch (res.tipo) {
+                case "boolean":
+                    do_fondo = true;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque solo acepta: true o false", "Lenguaje CCSS");
+            }
+            switch (cmp.tipo) {
+                case "boton":
+                case "enlace":    
+                case "texto":      
+                case "areatexto":
+                case "cajatexto":
+                case "panel":
+                case "opcion":
+                case "cajaopciones":  
+                case "spinner":      
+                    JComponent btn = (JComponent) cmp.objeto;
+                    if (do_fondo) {
+                        boolean valor = (boolean) res.valor;
+                        
+                        try {
+                            btn.setOpaque(valor);
+                            System.out.println("se aplico opaque: [" + valor + "]");
+                        } catch (Exception e) {
+                            System.out.println("error al aplicar opaque");
+                        }
+                        updateUI();
+                    }
+                    break;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
     }
     
     
+    public void setColortext(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+        if (raiz.nombre.equals("identificador")) {
+            Componente cmp = lista_componentes.get(raiz.valor.trim());
+            if (cmp==null)
+                cmp = new Componente("", "",new Object(), null);
+            
+            ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
+            if (res==null)
+                res= new ResultadoG("ninguno", null);
+            
+            boolean do_colortext = false;
+            switch (res.tipo) {
+                case "string":
+                    do_colortext = true;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, color text solo acepta: string", "Lenguaje CCSS");
+            }
+            switch (cmp.tipo) {
+                case "boton":
+                case "enlace":    
+                case "texto":  
+                case "areatexto":  
+                case "cajatexto":     
+                    JComponent btn = (JComponent) cmp.objeto;
+                    if (do_colortext) {
+                        String valor = (String) res.valor;
+                        valor=valor.trim();
+                        Color color=meta_colores.obtenerColor(valor);
+
+                        try {
+                            if(color!=null){
+                                btn.setForeground(color);
+                            }else{
+                                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, COLORTEXT, color Invalido->: "+valor, "Lenguaje CCSS");
+                            }
+                            System.out.println("se aplico colortext: [" + valor + "]");
+                        } catch (Exception e) {
+                            System.out.println("error al aplicar colortext");
+                        }
+                        updateUI();
+                    }
+                    break;
+                default:
+                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, ColorText  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    break;    
+            }
+        }
+    }
     
-    public String toCapital_t(String txt){
+    
+    public static String toCapital_t(String txt){
         String salida="";
         txt=txt.trim();
-        String delim = " \n\r\t";
+        String delim = " ";
         StringTokenizer st = new StringTokenizer(txt, delim);
         while (st.hasMoreTokens()) {
             String tx=st.nextToken();
@@ -865,11 +1344,19 @@ public class Template extends JPanel implements ActionListener{
             salida+=" "+tx;
             //System.out.println(st.nextToken());
         }
+        delim = "\n";
+        st = new StringTokenizer(salida, delim);
         
+        while (st.hasMoreTokens()) {
+            String tx=st.nextToken();
+            tx=tx.substring(0, 1).toUpperCase() + tx.substring(1).toLowerCase();
+            salida+="\n"+tx;
+            //System.out.println(st.nextToken());
+        }
         return salida;
     }
     
-    public void addError( int fila,int columna,String valor, String Detalle, String pertenece){
+    public static void addError( int fila,int columna,String valor, String Detalle, String pertenece){
         lista_errores.add(new Erro_r(fila, columna, valor, Detalle,pertenece));
     }
 }

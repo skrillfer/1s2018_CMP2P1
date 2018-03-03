@@ -161,9 +161,9 @@ att_visible ::= VISIBLE:x DSPTS IGUAL  expr_a:h1   PYC      {: RESULT = parser.c
 
 att_borde   ::= BORDE:x DSPTS IGUAL ACORCH expr_a:h1 COMA expr_a:h2 COMA expr_a:h3 CCORCH PYC {: RESULT = parser.crearNodo("borde","",x.getLinea(),x.getColumna());  RESULT.add(h1); RESULT.add(h2); RESULT.add(h3); :};
 
-att_opaque  ::= OPAQUE:x DSPTS IGUAL expr_a:h1      {: RESULT = parser.crearNodo("opaque","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+att_opaque  ::= OPAQUE:x DSPTS IGUAL expr_a:h1    PYC  {: RESULT = parser.crearNodo("opaque","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
 
-att_colortext ::= COLORTEXT:x DSPTS IGUAL expr_a:h1 {: RESULT = parser.crearNodo("colortext","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
+att_colortext ::= COLORTEXT:x DSPTS IGUAL expr_a:h1  PYC{: RESULT = parser.crearNodo("colortext","",x.getLinea(),x.getColumna());  RESULT.add(h1); :};
 
 
 expr_a ::=  expr_a:h1 MAS:x   expr_a:h2       {:   RESULT = parser.crearNodo("MAS","",x.getLinea(),x.getColumna()); RESULT.add(h1); RESULT.add(h2); :}

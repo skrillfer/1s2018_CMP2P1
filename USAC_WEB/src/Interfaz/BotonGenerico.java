@@ -9,6 +9,9 @@ import Estructuras.Propiedad;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,7 +25,10 @@ import javax.swing.JTextField;
  * @author fernando
  */
 public class BotonGenerico extends JButton {
-
+    public boolean mayuscula=false;
+    public boolean minuscula=false;
+    public boolean capital_t=false; 
+    
     Hashtable<String, Propiedad> propiedades;
 
     public BotonGenerico(Hashtable<String, Propiedad> propiedades) {
@@ -52,78 +58,7 @@ public class BotonGenerico extends JButton {
             
             
         }
-        /*Enumeration<String> ex = propiedades.keys();
-        String clave;
-        Propiedad propiedad;
-        while (ex.hasMoreElements()) {
-            clave = ex.nextElement();
-            propiedad = propiedades.get(clave);
-            
-            switch (propiedad.nombre.toLowerCase()) {
-                case "click":
-                    this.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            //buscar el metodo al que hace click en todos los CJS
-                            //despues de encontrarlo ejecuto ese metodo
-                        }
-                    });
-                    break;
-                case "ruta":
-                    //esta propiedad redirecciona la pagina a otra
-                    //venir y buscar el archivo y guardar el nodo raiz que tengo actualmente para hacer el atras
-                    this.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            //buscar el metodo al que hace click en todos los CJS
-                            //despues de encontrarlo ejecuto ese metodo
-                        }
-                    });
-                    break;
-
-                case "$text":
-                    setText(propiedad.valor);
-                    break;
-                case "id":
-                    setName(propiedad.valor);
-                    break;
-                case "grupo":
-                    //----------------
-                    break;
-                case "alto":
-                    //System.out.println(Integer.parseInt(propiedad.valor));
-                    try {
-                        //if(getWidth()==0){
-                        setPreferredSize(new Dimension(getPreferredSize().width, Integer.valueOf(propiedad.valor)));
-                        //}else{
-                        //setPreferredSize(new Dimension(getWidth(), Integer.valueOf(propiedad.valor)));
-                        //}
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                    //
-                    break;
-                case "ancho":
-                    try {
-                        //if(getHeight()==0){
-                        setPreferredSize(new Dimension(Integer.valueOf(propiedad.valor), getPreferredSize().height));
-                        //}else{
-                        //setPreferredSize(new Dimension(Integer.valueOf(propiedad.valor), getSize().height));
-                        //}
-
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-
-                    break;
-                case "alineado":
-                    //---------------
-                    break;
-                case "ccss":
-                    //---------------
-                    break;
-            }
-        }*/
+        
     }
     
     public void cambiarGrupo(String grupo){
@@ -219,7 +154,19 @@ public class BotonGenerico extends JButton {
     
     public void setTexto(){
          try {
-                setText(propiedades.get("$text").valor);
+                String txt=propiedades.get("$text").valor;
+                try {
+                    if(minuscula){
+                        txt=txt.toLowerCase();
+                    }else if(mayuscula){
+                        txt=txt.toUpperCase();
+                    }else if(capital_t){
+                        txt=Template.toCapital_t(txt);
+                    }
+                } catch (Exception e) {}
+                
+                setText(txt);
+                
             } catch (Exception e) {System.out.println(e.getMessage());}
             
         updateUI();
@@ -251,29 +198,75 @@ public class BotonGenerico extends JButton {
     
     public void setAlineado(){
        try{
-                String alineado = propiedades.get("alineado").valor.trim();
-                switch(alineado.toLowerCase()){
-                    
-                    case "centrado":
-                        this.setHorizontalAlignment(JTextField.CENTER);
-                        break;
-                    case "derecha":
-                        setHorizontalAlignment(JTextField.RIGHT);
-                        break;
-                    case "izquierda":
-                        setHorizontalAlignment(JTextField.LEFT);
-                        break;
-                    case "justificado":
-                        //no aplica
-                        break;
-                    default:
-                        //error
-                        
-                }
-            }catch(Exception e){}
+            String alineado = propiedades.get("alineado").valor.trim();
+           switch (alineado.toLowerCase()) {
+
+               case "centrado":
+                   this.setHorizontalAlignment(JTextField.CENTER);
+                   break;
+               case "derecha":
+                   setHorizontalAlignment(JTextField.RIGHT);
+                   break;
+               case "izquierda":
+                   setHorizontalAlignment(JTextField.LEFT);
+                   break;
+               case "justificado":
+                   //no aplica
+                   break;
+               default:
+               //error
+
+           }
+        }catch(Exception e){}
         updateUI();
     }
     
     
-    
+    public void setMayu_Minu_Capital(int num){
+        switch (num) {
+            case 1:
+                // es para minusculas
+                minuscula=true;
+                mayuscula=false;
+                capital_t=false;
+                break;
+            case 2:
+                // es para mayusculas
+                minuscula=false;
+                mayuscula=true;
+                capital_t=false;
+                break;
+            case 3:
+                // es para capital-t
+                minuscula=false;
+                mayuscula=false;
+                capital_t=true;
+                break;
+            default:
+                break;
+        }
+    }
+    /*
+    @Override
+    protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Dimension arcs = new Dimension(cornerRadius, cornerRadius);
+            int width = getWidth();
+            int height = getHeight();
+            Graphics2D graphics = (Graphics2D) g;
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Color backgroundColor=null;
+
+        backgroundColor=getBackground();
+            //Draws the rounded panel with borders.
+            if (backgroundColor != null) {
+                graphics.setColor(backgroundColor);
+            } else {
+                graphics.setColor(getBackground());
+            }
+            graphics.fillRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height); //paint background
+            graphics.setColor(getForeground());
+            graphics.drawRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height); //paint border
+        }
+    */
 }

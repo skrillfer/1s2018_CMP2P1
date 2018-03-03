@@ -14,6 +14,7 @@ import java.awt.event.ComponentListener;
 import java.util.Hashtable;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 /**
@@ -41,6 +42,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
         agregarNuevaPagina("nuevo");
         //agregarNuevaPagina("nuevo2");
         //getContentPane().add(temp1);   
+                
+
         setVisible(true);
         getContentPane().addComponentListener((ComponentListener) this);
         /*
@@ -60,6 +63,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
     public void creandoControlTab(){
         controlTab1.setPreferredSize(this.getPreferredSize().getSize());
         controlTab1.setBackground(Color.gray);
+        
+        //JPanel container = new JPanel();
+        //container.add(panel1);
+        //container.add(Panel2);
+        
+        
         getContentPane().add(controlTab1);
         //controlTab1.setTabPlacement(JTabbedPane.BOTTOM);
     }
@@ -70,6 +79,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
         //pagina.populateContentPane(this.getContentPane());
         
         //pagina.setBounds(10, 10, 800, 300);
+        
+        //JScrollPane jsp = new JScrollPane(pagina);
+        //frame.add(jsp);
         
         controlTab1.add(tabname, pagina);
         controlTab1.setSelectedComponent(pagina);
@@ -92,14 +104,21 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
                 Template t=(Template)controlTab1.getComponent(controlTab1.getSelectedIndex());
                 
                 
-                JPanel bar=(JPanel)t.getComponent(0);
-                bar.setPreferredSize(new Dimension(width, bar.getHeight()));
+                //JPanel bar=(JPanel)t.getComponent(0);
+                //bar.setPreferredSize(new Dimension(width, bar.getHeight()));
                 
                 
-                JPanel pp=(JPanel)t.getComponent(1);
-                //pp.setBackground(Color.yellow);
-                pp.setPreferredSize(new Dimension(width, height-50));
+                JScrollPane scroll = (JScrollPane)t.getComponent(1);
+                System.out.println(scroll.getViewport().getComponents().length);
                 
+                JPanel pp=(JPanel)scroll.getViewport().getComponents()[0];
+                
+                //scroll.getViewport().removeAll();
+                Double ttt=width*0.75;
+                pp.setPreferredSize(new Dimension(ttt.intValue(), pp.getPreferredSize().height));
+                scroll.setPreferredSize(new Dimension(width, height));
+                //scroll.getViewport().add(pp);
+                scroll.updateUI();
         }
     }
 

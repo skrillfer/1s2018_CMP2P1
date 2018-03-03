@@ -19,12 +19,77 @@ letra := "Courier New";
 tamtex := 13;
 
 
+ID(enla1);
+alineado := derecha;
+formato := minuscula;
+letra := "Monospaced";
+tamtex := 15.5;
+fondoelemento := "yellow";
+visible := true;
+texto := "hola mundo    te AMO"; 
+borde := [10,"red",true];
+opaque := false;
+colortext := "white";
+
+ID(txt1);
+alineado := derecha;
+formato := capital-t;
+letra := "Monospaced";
+tamtex := 15.5;
+fondoelemento := "yellow";
+visible := true;
+
+borde := [10,"black",true];
+opaque := true;
+colortext := "green";
+
+
+
+ID(ctxt2);
+alineado := derecha;
+formato := NEGRILLA,cursiva,capital-t;
+letra := "Monospaced";
+tamtex := 10.5;
+fondoelemento := "#FF6347";
+visible := true;
+borde := [10,"black",true];
+opaque := true;
+colortext := "white";
+
+
+ID(ctxt1);
+alineado := centrado;
+formato := NEGRILLA,minuscula;
+letra := "Monospaced";
+tamtex := 10.5;
+fondoelemento := "#FF6347";
+visible := true;
+borde := [10,"black",true];
+opaque := true;
+colortext := "white";
+
+ID(caja1);
+alineado := derecha;
+formato := NEGRILLA,mayuscula;
+letra := "Monospaced";
+tamtex := 8.5;
+fondoelemento := "#CAE1FF";
+visible := true;
+borde := [2,"black",true];
+opaque := true;
+colortext := "#0000FF";
+
+
 ID(btn1);
 alineado := derecha;
-texto := "hola mundo    te amo"; 
-formato := minuscula,cursiva,negrilla;
 letra := "Monospaced";
-tamtex := 5.5;
-fondoelemento := "#6365ff";
-visible := false;
+tamtex := 15.5;
+visible := true;
+texto := "yo soy el boton 1"; 
+opaque := true;
+fondoelemento := "yellow";
+colortext := "red";
+
+
+
 ]

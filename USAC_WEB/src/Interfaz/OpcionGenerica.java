@@ -9,26 +9,31 @@ import Estructuras.Propiedad;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Hashtable;
-import javax.swing.JComponent;
-import javax.swing.JSpinner;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 /**
  *
  * @author fernando
  */
-public class SpinnerGenerico extends JSpinner{
+public class OpcionGenerica extends JLabel{
+    public boolean mayuscula=false;
+    public boolean minuscula=false;
+    public boolean capital_t=false;
     Hashtable<String,Propiedad> propiedades;
 
-    public SpinnerGenerico(Hashtable<String, Propiedad> propiedades) {
+    public OpcionGenerica(Hashtable<String, Propiedad> propiedades) {
         this.propiedades = propiedades;
         setPropiedades();
     }
     
     public void setPropiedades(){
-        
+        setOpaque(true); 
         setId();
         setGrupo();
         setAlineado();
@@ -36,13 +41,6 @@ public class SpinnerGenerico extends JSpinner{
         setFondo();
         setAlto();
         setAncho();
-        
-        if(propiedades.get("alto").valor.trim().equals("") && propiedades.get("ancho").valor.trim().equals("")){
-            if (getPreferredSize().width == 28 && getPreferredSize().height == 20) {
-                setPreferredSize(new Dimension(45, 20));
-            }
-        }
-              
     }
     
     
@@ -115,37 +113,38 @@ public class SpinnerGenerico extends JSpinner{
         updateUI();
     }
     
-    public void setAlineado(){
-        try {
-            String alineado = propiedades.get("alineado").valor;
-            SimpleAttributeSet attribs = new SimpleAttributeSet();
-
-            JComponent editor = this.getEditor();
-            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor;
-            switch (alineado.toLowerCase()) {
-                case "centrado":
-                    spinnerEditor.getTextField().setHorizontalAlignment(JTextField.CENTER);
-                    break;
-                case "derecha":
-                    spinnerEditor.getTextField().setHorizontalAlignment(JTextField.RIGHT);
-                    break;
-                case "izquierda":
-                    spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
-                    break;
-            }
-        } catch (Exception e) {
-        }
-    }
-    
-    public void setTexto(){
-          //******************************************************************Seteando $text
-            try {
-                if(!propiedades.get("$text").valor.trim().isEmpty()){
-                    int inicio = Integer.valueOf(propiedades.get("$text").valor.trim());
-                    setValue(inicio);
+     public void setAlineado(){
+         try{
+                String alineado = propiedades.get("alineado").valor;
+                switch(alineado.toLowerCase()){
+                    case "centrado":
+                        this.setHorizontalAlignment(JTextField.CENTER);
+                        break;
+                    case "derecha":
+                        setHorizontalAlignment(JTextField.RIGHT);
+                        break;
+                    case "izquierda":
+                        setHorizontalAlignment(JTextField.LEFT);
+                        break;
                 }
+        }catch(Exception e){}
+    }
+     
+     public void setTexto(){
+         try {
+                String txt=propiedades.get("$text").valor;
+                try {
+                        if(minuscula){
+                            txt=txt.toLowerCase();
+                        }else if(mayuscula){
+                            txt=txt.toUpperCase();
+                        }else if(capital_t){
+                            txt=Template.toCapital_t(txt);
+                        }
+                } catch (Exception e) {}
+                setText(txt);
             } catch (Exception e) {}
-        
+         updateUI();
     }
     
     public void setFondo(){
@@ -153,6 +152,7 @@ public class SpinnerGenerico extends JSpinner{
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
             if(color!=null){
+                System.out.println("!!!!!!!!!se ha seteado el fondo "+ color);
                 setBackground(color);
             }
         } catch (Exception e) {}
@@ -172,4 +172,30 @@ public class SpinnerGenerico extends JSpinner{
             } catch (Exception e) {System.out.println(e.getMessage());}
         updateUI();
     }
+    
+     public void setMayu_Minu_Capital(int num){
+        switch (num) {
+            case 1:
+                // es para minusculas
+                minuscula=true;
+                mayuscula=false;
+                capital_t=false;
+                break;
+            case 2:
+                // es para mayusculas
+                minuscula=false;
+                mayuscula=true;
+                capital_t=false;
+                break;
+            case 3:
+                // es para capital-t
+                minuscula=false;
+                mayuscula=false;
+                capital_t=true;
+                break;
+            default:
+                break;
+        }
+    }
+    
 }

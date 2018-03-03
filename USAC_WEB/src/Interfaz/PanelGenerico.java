@@ -32,11 +32,13 @@ public class PanelGenerico extends JPanel{
         
         setBorder(new EtchedBorder(EtchedBorder.RAISED));
         setId();
-        setTexto();
-        setAncho();
-        setAlto();
-        setFondo();
+        setGrupo();
         setAlineado();
+        setTexto();
+        setFondo();
+        setAlto();
+        setAncho();
+        
     }
     
     
@@ -48,6 +50,15 @@ public class PanelGenerico extends JPanel{
         updateUI();
     }
     
+    public void setGrupo() {
+        try {
+            propiedades.get("grupo").valor = propiedades.get("grupo").valor.trim();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        updateUI();
+    }
+
     public void setTexto(){
         try {
                 setToolTipText(propiedades.get("$text").valor.trim());
@@ -94,8 +105,66 @@ public class PanelGenerico extends JPanel{
                 case "centrado":
                     setLayout(new FlowLayout(FlowLayout.CENTER));
                     break;
+                case "justificado":
+                    setLayout(new FlowLayout(FlowLayout.LEADING));
+                    break;    
             }
         } catch (Exception e) {}
         updateUI();
+    }
+    
+    public void cambiarGrupo(String grupo){
+        grupo=grupo.trim();
+        if(!grupo.equals("")){
+            // si existe el grupo que quiero setear a este
+            // sino existe entonces agrego este grupo
+            if(!Template.lista_grupos.containsKey(grupo)){
+                Lista lt = new Lista();
+                Template.lista_grupos.put(grupo,lt);
+            }
+            // vere si el id existe en el grupo que tiene este mismo OBJETO
+            String a_grupo=propiedades.get("grupo").valor.trim();
+            if(!a_grupo.equals("")){ // si no es vacio el grupo de este componente
+                // tengo que buscar el componente en la lista de grupos
+                Lista lt= Template.lista_grupos.get(a_grupo);
+                int index=0;
+                
+                Componente cmp=null;
+                for (Componente componente : lt.getLista()) {
+                    if(componente.id.equals(getName())){
+                        cmp=lt.getLista().get(index);
+                        lt.getLista().remove(index);
+                    }
+                    index++;
+                }
+                
+                if(cmp!=null)// quiere decir que si pertenecia a un grupo 
+                    lt.add(cmp);
+                else
+                    lt.add(cmp);// entonces agrego el elemetno al grupo..
+            }
+            
+        }
+        // cuando cambio de grupo deberia sacar el elemento de la lista ddel GRUPO
+    }
+    
+    public void cambiarId(String id){
+        // cuando cambia el id debe de sacarse de la hash de lista de componentens y
+        // verificar si el nuevo id se puede cambiar
+        id=id.trim();
+        if(!id.equals("")){
+            if(!Template.lista_componentes.containsKey(id)){
+                // se saca el anterior y se mete el nuevo
+                Componente cmp = Template.lista_componentes.get(getName());
+                
+                if(cmp!=null){
+                    Template.lista_componentes.remove(id);
+                    Template.lista_componentes.put(id, cmp);
+                    setName(id);
+                    propiedades.get("id").valor=getName();
+                            
+                }
+            }
+        }
     }
 }
