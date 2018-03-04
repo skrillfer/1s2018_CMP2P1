@@ -103,7 +103,7 @@ public class Arreglo {
             ResultadoG resultado = opL.ejecutar(hijo);
             if (resultado != null) {
                 total++;
-                datos.add(resultado.valor);
+                datos.add(resultado);
             }
         }
         if(dimensiones.isEmpty()){
@@ -119,7 +119,7 @@ public class Arreglo {
                 Nodo hijo = val.get(i);
                 ResultadoG resultado = opL.ejecutar(hijo);
                 if (resultado != null) {
-                    datos.set(i,resultado.valor);
+                    datos.set(i,resultado);
                 }
             }
         }
@@ -131,7 +131,7 @@ public class Arreglo {
             int posicion = ((Double)res.valor).intValue();
             
             if (posicion <= (datos.size()-1) && posicion >= 0) {
-                datos.set(posicion, dato.valor);
+                datos.set(posicion, dato);
                 return true;
             }
         }
@@ -152,19 +152,32 @@ public class Arreglo {
     public String funcion_aTexto(){
         String data="";
         for (int i = 0; i < datos.size(); i++) {
-            Object dato = datos.get(i);
+            Object dato1 = datos.get(i);
+            ResultadoG  dato = (ResultadoG)dato1;
             if(dato!=null){
-                String tipo = dato.getClass().getSimpleName();
-                if(tipo.equals("Double")){
-                    data += String.valueOf(((Double)dato));
-                }else if(tipo.equals("Boolean")){
-                    data += Boolean.toString((boolean)dato);
-                }else if(tipo.equals("String")){
-                    data += (String)dato;
+                String tipo = dato.tipo;
+                //System.out.println("tipo del dato===>"+tipo);
+                if(tipo.equals("number")){
+                    data += String.valueOf(((Double)dato.valor));
+                }else if(tipo.equals("boolean")){
+                    data += Boolean.toString((boolean)dato.valor);
+                }else if(tipo.equals("string")){
+                    data += (String)dato.valor;
+                }else if(tipo.equals("date") || tipo.equals("datetime")){
+                    data += (String)dato.valor;
                 }
             }
         }
         return data;
     }
-
+    
+    public Object getValor(ArrayList<Integer> indices) {
+        int indice = indices.get(0);
+        if ((indice + 1) <= datos.size() && indice >= 0) {
+            return datos.get(indice);
+        } else {
+            //indice incorrecto
+            return null;
+        }
+    }
 }

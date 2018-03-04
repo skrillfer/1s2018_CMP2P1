@@ -7,6 +7,7 @@ package CJS_Compilador;
 
 import CJS_Compilador.OperacionesARL.OperacionesARL;
 import Estructuras.Nodo;
+import Interfaz.Template;
 
 /**
  *
@@ -62,6 +63,7 @@ public class Declaracion extends Compilador{
     }
     
     public Object declarar() {
+        System.out.println(raiz.nombre);
         switch (raiz.nombre) {
             //********************  AMBITO GLOBAL ******************************
             case "declara_var":
@@ -93,49 +95,17 @@ public class Declaracion extends Compilador{
                 declara_vecF2_L();
                 break;
             case "asigna_vecLocalF1":
-                asignacionLocal();
+                //asignacionLocal();
                 break;
             case "asigna_vecLocalF2":
-
+                asigna_vecLocalF2();
                 break;
             case "asignacionLocal":
                 asignacionLocal();
                 break;
-                        
-            /*case "atributoVarDA"://atributo tipo entero,cadena... declarado y asignado
-                return atributoVarDA();
-            case "atributoVarD"://atributo tipo entero,cadena... declarado
-                return atributoVarD();
-            case "atributoAlsDI"://atributo tipo Als declarado e instanciado
-                return atributoAlsDI();
-            case "atributoAlsD"://atributo tipo Als declarado
-                return atributoAlsD();
-            case "atributoVarArDA"://atributo arreglo entero,cadena.. declarado y asignado
-                return atributoVarArDA();
-            case "atributoVarArD"://atributo arreglo entero,cadena.. declarado
-                return atributoVarArD();
-            case "varLocalD"://variable local tipo,entero,cadena... declarada
-                return varLocalD();
-            case "varLocalDA"://variable local tipo,entero,cadena... declarada y asignada
-                return varLocalDA();
-            case "varLocalAlsD"://variable local Als... declarada
-                return varLocalAlsD();
-            case "varLocalAlsDI"://variable local Als... declarada e instanciada
-                return varLocalAlsDI();
-            case "varLocalArD"://variable arreglo local tipo cadena,numero... declarada
-                return varLocalArD();
-            case "varLocalArDA"://variable arreglo local tipo cadena,numero... declarada y asignada
-                return varLocalArDA();
-
-            //direccionamientos
-            case "atributoVarArDD"://atributo arreglo direccionado
-                return atributoVarArDD();
-            case "atributoAlsDD"://atributo als direccionado
-                return atributoAlsDD();
-            case "varLocalAlsDD"://variable local Als... direccionada
-                return varLocalAlsDD();
-            case "varLocalArDD"://variable arreglo local tipo cadena,numero... direccionada
-                return varLocalArDD();*/
+            default:
+                System.out.println(raiz.nombre);
+                break;
         }
 
         return null;
@@ -152,15 +122,22 @@ public class Declaracion extends Compilador{
             //----------ejecuto la parte de la expresion
             ResultadoG resultado = opL.ejecutar(exp);
             if(resultado!=null ){
-                // la variable toma el tipo del valor que le es asignado, de ahi en adelante no cambia
+                // la variable toma el tipo del valor que le es asignado
                 tipo=resultado.tipo;
                 SimboloG simbolo = new SimboloG(tipo, nombre, "", resultado.valor);
                 simbolo.inicializado = true;
                 if (!global.setSimbolo(simbolo)) {
-                    System.out.println("Agregado el simbolo correctamente");
-                    //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
+                    Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
                 }
+            }else{
+                SimboloG simbolo = new SimboloG("", nombre, "", null);
+                if (!global.setSimbolo(simbolo)) {
+                    Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
+                }/*else{
+                    System.out.println("se agrego correctamente  "+simbolo.nombre);
+                }*/
             }
+             
         }else{
             SimboloG simbolo = new SimboloG(tipo, nombre, "", null);
             if (!global.setSimbolo(simbolo)) {
@@ -235,8 +212,6 @@ public class Declaracion extends Compilador{
             if(valor!=null){
                 arreglo.setValor(raiz.hijos.get(1).hijos.get(0),valor);// envio el (Nodo)indice y el (ResultadoG)valor
             }
-            
-            
         }
     }
     
@@ -245,14 +220,22 @@ public class Declaracion extends Compilador{
         SimboloG sim = global.getSimbolo(nombre, CJS.claseActual);
         ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
         if(sim != null){
-            //* por lo del tipo de la variable DUDA1
-            sim.inicializado=true;
-            if(sim.esArreglo == false && resultado!=null){
-                sim.tipo=resultado.tipo;
-                sim.valor=resultado.valor;
+            
+            if(resultado!=null){
+                if(!resultado.tipo.equals("")){
+                    sim.inicializado=true;
+                    if(sim.esArreglo == false){
+                        sim.tipo=resultado.tipo;
+                        sim.valor=resultado.valor;
+                    }else{
+                        sim.esArreglo=true;
+                        sim.tipo=resultado.tipo;
+                        sim.valor=resultado.valor;
+                    }
+                }
             }
         }else{
-            System.out.println("variable no existe");
+           Template.reporteError_CJS.agregar("Semantico", raiz.hijos.get(0).linea, raiz.hijos.get(0).columna, "La variable " + nombre + " no existe en el ambito donde fue invocada");
         }
     }
    
@@ -263,40 +246,61 @@ public class Declaracion extends Compilador{
         SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
         ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
         if(sim != null){
-            //* por lo del tipo de la variable DUDA1
-            sim.inicializado=true;
-            if(sim.esArreglo == false && resultado!=null){
-                sim.tipo=resultado.tipo;
-                sim.valor=resultado.valor;
+            if(resultado!=null){
+                if(!resultado.tipo.equals("")){
+                    sim.inicializado=true;
+                    if(sim.esArreglo == false){
+                        sim.tipo=resultado.tipo;
+                        sim.valor=resultado.valor;
+                    }else{
+                        sim.esArreglo=true;
+                        sim.tipo=resultado.tipo;
+                        sim.valor=resultado.valor;
+                    }
+                }
             }
+            
         }else{
-            System.out.println("variable Local no existe");
+            Template.reporteError_CJS.agregar("Semantico", raiz.hijos.get(0).linea, raiz.hijos.get(0).columna, "La variable " + nombre + " no existe en el ambito donde fue invocada");
         }
     }
+      
     public void declara_var_L(){
         String tipo = "";//el tipo de la  variable depende del valor que tenga
         String nombre= raiz.hijos.get(0).valor;//se obtiene el nombre de la variable a declarar
         
-        
-        if(raiz.hijos.get(1).hijos.size()>0){
+        if(raiz.hijos.get(1).hijos.size()>0){// si tiene asignacion
             Nodo exp = raiz.hijos.get(1).hijos.get(0);//se obtiene el nodo de la expresion
             //----------ejecuto la parte de la expresion
             ResultadoG resultado = opL.ejecutar(exp);
+            System.out.println("declarare:"+nombre);
             if(resultado!=null ){
-                // la variable toma el tipo del valor que le es asignado, de ahi en adelante no cambia
+                // la variable toma el tipo del valor que le es asignado
                 tipo=resultado.tipo;
                 SimboloG simbolo = new SimboloG(tipo, nombre, "", resultado.valor);
                 simbolo.inicializado = true;
+
                 if (!tabla.setSimbolo(simbolo)) {
-                    System.out.println("Agregado el simbolo correctamente");
-                    //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
-                }
+                    Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
+                }/*else{
+                    System.out.println("se agrego correctamente  "+simbolo.nombre);
+                }*/
+                
+            }else{
+                SimboloG simbolo = new SimboloG("", nombre, "", null);
+                if (!tabla.setSimbolo(simbolo)) {
+                    Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
+                }/*else{
+                    System.out.println("se agrego correctamente  "+simbolo.nombre);
+                }*/
             }
-        }else{
+        }else{// no tiene asignacion
             SimboloG simbolo = new SimboloG(tipo, nombre, "", null);
             if (!tabla.setSimbolo(simbolo)) {
-                //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
-            }
+                Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
+            }/*else{
+                System.out.println("se agrego correctamente  "+simbolo.nombre);
+            }*/
         }
     }
     
@@ -326,7 +330,23 @@ public class Declaracion extends Compilador{
         }
     }
     
-  
+    public void asigna_vecLocalF2(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo="";
+        
+        SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);// SE OBTIENE EL ARRGELO COMO TAL
+       
+        ResultadoG valor =opL.ejecutar(raiz.hijos.get(2));// se obitene el nodo que contiene EXPR  se ejecuta
+        
+        if(sim.esArreglo){
+            Arreglo arreglo = (Arreglo)sim.valor;
+            
+            if(valor!=null){
+                arreglo.setValor(raiz.hijos.get(1).hijos.get(0),valor);// envio el (Nodo)indice y el (ResultadoG)valor
+            }
+        }
+    }
+    
     
     @Override
     public Metodo ejecutar(Nodo raiz) {

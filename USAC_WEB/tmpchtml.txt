@@ -28,7 +28,7 @@
                         <FIN-FIL_T>
 <FIN-TABLA>
 
-<CAJA fondo="blue";> <OPCION fondo="yellow";>opcion1<FIN-OPCION>  <OPCION fondo="green";>opcion2<FIN-OPCION> <OPCION fondo="pink";>opcion3<FIN-OPCION> <FIN-CAJA>
+<CAJA fondo="blue"; id ="caja1"; > <OPCION id ="opcion1"; fondo="yellow";>opcion1<FIN-OPCION>  <OPCION fondo="green";>opcion2<FIN-OPCION> <OPCION fondo="pink";>opcion3<FIN-OPCION> <FIN-CAJA>
 
 <TEXTO id="txt1"; fondo="white"; alineado="centrado"; > La historia es la ciencia que tiene como objeto el estudio del pasado de la humanidad y como método, el propio de las ciencias sociales.2​ Se denomina también «historia» al periodo que transcurre desde la aparición de la escritura hasta la actualidad.
 

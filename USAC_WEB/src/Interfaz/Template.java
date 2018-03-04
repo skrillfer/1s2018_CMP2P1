@@ -40,6 +40,7 @@ import javax.swing.border.EtchedBorder;
 import usac_web.USAC_WEB;
 import CSS_Compilador.*;
 import Errores.Erro_r;
+import Errores.ReporteError;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -58,6 +59,7 @@ import javax.swing.border.LineBorder;
  * @author fernando
  */
 public class Template extends JPanel implements ActionListener{
+    public static ReporteError reporteError_CJS = new ReporteError(); // este REPORTE es para CJS
     //**************************************************************************
     static Hashtable<String,Componente> lista_componentes= new Hashtable<>();
     static Hashtable<String,Lista> lista_grupos= new Hashtable<>();

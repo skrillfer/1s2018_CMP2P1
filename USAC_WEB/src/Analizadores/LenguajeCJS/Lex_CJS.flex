@@ -82,7 +82,7 @@ comm_multilinea = "'/" ~ "/'"
 <YYINITIAL> ">" {return new Symbol(sym.MAYQ, new token(yycolumn, yyline, yytext()));} 
 <YYINITIAL> ">=" {return new Symbol(sym.MAYIQ, new token(yycolumn, yyline, yytext()));} 
 <YYINITIAL> "==" {return new Symbol(sym.IG_IG, new token(yycolumn, yyline, yytext()));} 
-<YYINITIAL> "=!" {return new Symbol(sym.DIF, new token(yycolumn, yyline, yytext()));} 
+<YYINITIAL> "!=" {return new Symbol(sym.DIF, new token(yycolumn, yyline, yytext()));} 
 
 
 <YYINITIAL> "&&" {return new Symbol(sym.AND, new token(yycolumn, yyline, yytext()));} 

@@ -1,0 +1,89 @@
+Funcion test_Rel_Logicas(){
+
+    
+    test_Logicas();
+
+}
+
+Funcion test_Rel_Numeros(){
+    Si(100!=100){
+        Imprimir("dES igualdad");
+    }
+
+    Si(100==100){
+        Imprimir("igualdad");
+    }
+    Si(10.2<100){
+        Imprimir("MENOR que");
+    }
+
+    Si(100.02>100){
+        Imprimir("mayor que");
+    }
+
+    Si(100.0<=100){
+        Imprimir("MENOR igual que");
+    }
+
+    Si(1000>=100){
+        Imprimir("mayor igual que");
+    }
+}
+
+Funcion  test_Rel_Cadenas(){
+    Si("hola "!="hola"){
+        Imprimir("dES igualdad");
+    }
+
+    Si("hola "!="holA"){
+        Imprimir("Des igualdad");
+    }
+
+    Si("Fernando"=="Fernando"){
+        Imprimir("igualdad");
+    }
+
+    Si("Compiladores"<"compiladores"){
+        Imprimir("MENOR que");
+    }
+
+    Si("compiladores">"COMPILADORES"){
+        Imprimir("mayor que");
+    }
+
+    
+    Si('12/32/58'=='  12/32/58 '){
+        Imprimir("Fechas IGUALEs");
+    }
+
+    Si('12/32/58 14:00:02'=='  12/32/58 14:00:02'){
+        Imprimir("HORA y Fecha IGUALEs");
+    }
+}
+
+Funcion test_Logicas(){
+    Si(100<=100 && 14==14){
+        Imprimir("Yes, Cumple AND");
+    }Sino{
+        Imprimir("No Cumple AND");
+    }
+
+
+    Si(100<=100 && 14==14 || 1+1>4*3){
+        Imprimir("Yes,Cumple AND y OR");
+    }Sino{
+        Imprimir("No Cumple AND");
+    }
+
+    Si(100<=100 && (14!=14 || 1+1>4*3)){
+        Imprimir("Cumple AND y OR");
+    }Sino{
+        Imprimir("Yes,NO Cumple AND y OR");
+    }
+
+    Si(100<=100 && !(14!=14 || 1+1>4*3)){
+        Imprimir("Yes,Cumple AND y OR");
+    }Sino{
+        Imprimir("NO Cumple AND y OR");
+    }
+}

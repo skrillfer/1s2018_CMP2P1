@@ -1,0 +1,47 @@
+DimV arr1{8};
+arr1{0}:123;
+
+Funcion test(){
+    Imprimir(arr1{0});
+    DimV vector1:{"Fernando nacio", " el ",'13/12/21'," y tiene ",24," anios"};
+    arr1{0}:vector1{0};
+    Imprimir(arr1{0});
+
+    Imprimir("Test Vectores");
+   
+    Imprimir(arr1{0});
+    Imprimir(vector1.aTexto());
+    Imprimir("tamano de vector1: " + vector1.Conteo);
+    Imprimir(vector1{4}+"  que talega");
+    Imprimir(vector1{4}+100);
+}
+
+Funcion testVariables(){
+
+    DimV test : '12/12/12'*'12/12/12';
+    Imprimir("testeando declaracion de variables");
+    DimV txt1: "hola me llamo fernando";
+
+    txt1:test;
+    Imprimir(txt1);
+
+    DimV num1;
+    DimV fecha: '  12/32/23 ';
+
+    Imprimir(fecha +" "+ txt1 + " <--> ");
+    
+    DimV test2: num1+100;
+
+    num1:1234;
+    test:"matilda";
+
+    Imprimir(num1+100);
+    Imprimir("fecha:");
+    Imprimir(fecha);
+    Imprimir("jasd:");
+    Imprimir(jasd);
+    Imprimir("test:");
+    Imprimir(test);
+    Imprimir("tests2:");
+    Imprimir(test2);
+}

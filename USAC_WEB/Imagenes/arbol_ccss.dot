@@ -1,10 +1,10 @@
 digraph G {
 node[shape=Mrecord]
-232[label="ccss | ",style=bold]
-231[label="bloque | Titular_ccss",style=bold]
-{232}->{231}
+266[label="ccss | ",style=bold]
+265[label="bloque | Titular_ccss",style=bold]
+{266}->{265}
 5[label="formato | ",style=bold]
-{231}->{5}
+{265}->{5}
 2[label="valores | ",style=bold]
 {5}->{2}
 1[label="mayuscula | ",style=bold]
@@ -14,7 +14,7 @@ node[shape=Mrecord]
 4[label="capital-t | ",style=bold]
 {2}->{4}
 11[label="formato | ",style=bold]
-{231}->{11}
+{265}->{11}
 8[label="valores | ",style=bold]
 {11}->{8}
 7[label="mayuscula | ",style=bold]
@@ -24,7 +24,7 @@ node[shape=Mrecord]
 10[label="capital-t | ",style=bold]
 {8}->{10}
 12[label="grupo | g1",style=bold]
-{231}->{12}
+{265}->{12}
 17[label="formato | ",style=bold]
 {12}->{17}
 14[label="valores | ",style=bold]
@@ -52,7 +52,7 @@ node[shape=Mrecord]
 28[label="izquierda | ",style=bold]
 {29}->{28}
 31[label="grupo | g2",style=bold]
-{231}->{31}
+{265}->{31}
 36[label="formato | ",style=bold]
 {31}->{36}
 33[label="valores | ",style=bold]
@@ -71,8 +71,8 @@ node[shape=Mrecord]
 {31}->{42}
 41[label="number | 13",style=bold]
 {42}->{41}
-44[label="identificador | enla1",style=bold]
-{231}->{44}
+44[label="identificador | opcion1",style=bold]
+{265}->{44}
 46[label="alineado | ",style=bold]
 {44}->{46}
 45[label="derecha | ",style=bold]
@@ -81,7 +81,7 @@ node[shape=Mrecord]
 {44}->{50}
 49[label="valores | ",style=bold]
 {50}->{49}
-48[label="minuscula | ",style=bold]
+48[label="mayuscula | ",style=bold]
 {49}->{48}
 53[label="letra | ",style=bold]
 {44}->{53}
@@ -119,8 +119,8 @@ node[shape=Mrecord]
 {44}->{76}
 75[label="string_literal | white",style=bold]
 {76}->{75}
-78[label="identificador | txt1",style=bold]
-{231}->{78}
+78[label="identificador | enla1",style=bold]
+{265}->{78}
 80[label="alineado | ",style=bold]
 {78}->{80}
 79[label="derecha | ",style=bold]
@@ -129,7 +129,7 @@ node[shape=Mrecord]
 {78}->{84}
 83[label="valores | ",style=bold]
 {84}->{83}
-82[label="capital-t | ",style=bold]
+82[label="minuscula | ",style=bold]
 {83}->{82}
 87[label="letra | ",style=bold]
 {78}->{87}
@@ -147,195 +147,243 @@ node[shape=Mrecord]
 {78}->{96}
 95[label="boolean | true",style=bold]
 {96}->{95}
-101[label="borde | ",style=bold]
-{78}->{101}
-98[label="number | 10",style=bold]
-{101}->{98}
-99[label="string_literal | black",style=bold]
-{101}->{99}
-100[label="boolean | true",style=bold]
-{101}->{100}
-104[label="opaque | ",style=bold]
+99[label="texto | ",style=bold]
+{78}->{99}
+98[label="string_literal | hola mundo    te AMO",style=bold]
+{99}->{98}
+104[label="borde | ",style=bold]
 {78}->{104}
+101[label="number | 10",style=bold]
+{104}->{101}
+102[label="string_literal | red",style=bold]
+{104}->{102}
 103[label="boolean | true",style=bold]
 {104}->{103}
-107[label="colortext | ",style=bold]
+107[label="opaque | ",style=bold]
 {78}->{107}
-106[label="string_literal | green",style=bold]
+106[label="boolean | false",style=bold]
 {107}->{106}
-109[label="identificador | ctxt2",style=bold]
-{231}->{109}
-111[label="alineado | ",style=bold]
-{109}->{111}
-110[label="derecha | ",style=bold]
-{111}->{110}
-117[label="formato | ",style=bold]
-{109}->{117}
-114[label="valores | ",style=bold]
-{117}->{114}
-113[label="negrilla | ",style=bold]
+110[label="colortext | ",style=bold]
+{78}->{110}
+109[label="string_literal | white",style=bold]
+{110}->{109}
+112[label="identificador | txt1",style=bold]
+{265}->{112}
+114[label="alineado | ",style=bold]
+{112}->{114}
+113[label="derecha | ",style=bold]
 {114}->{113}
-115[label="cursiva | ",style=bold]
-{114}->{115}
+118[label="formato | ",style=bold]
+{112}->{118}
+117[label="valores | ",style=bold]
+{118}->{117}
 116[label="capital-t | ",style=bold]
-{114}->{116}
-120[label="letra | ",style=bold]
-{109}->{120}
-119[label="string_literal | Monospaced",style=bold]
-{120}->{119}
-123[label="tamtex | ",style=bold]
-{109}->{123}
-122[label="number | 10.5",style=bold]
-{123}->{122}
-126[label="fondoelemento | ",style=bold]
-{109}->{126}
-125[label="string_literal | #FF6347",style=bold]
-{126}->{125}
-129[label="visible | ",style=bold]
-{109}->{129}
-128[label="boolean | true",style=bold]
-{129}->{128}
-134[label="borde | ",style=bold]
-{109}->{134}
-131[label="number | 10",style=bold]
-{134}->{131}
-132[label="string_literal | black",style=bold]
-{134}->{132}
-133[label="boolean | true",style=bold]
-{134}->{133}
-137[label="opaque | ",style=bold]
-{109}->{137}
-136[label="boolean | true",style=bold]
-{137}->{136}
-140[label="colortext | ",style=bold]
-{109}->{140}
-139[label="string_literal | white",style=bold]
-{140}->{139}
-142[label="identificador | ctxt1",style=bold]
-{231}->{142}
-144[label="alineado | ",style=bold]
-{142}->{144}
-143[label="centrado | ",style=bold]
-{144}->{143}
-149[label="formato | ",style=bold]
-{142}->{149}
-147[label="valores | ",style=bold]
-{149}->{147}
-146[label="negrilla | ",style=bold]
-{147}->{146}
-148[label="minuscula | ",style=bold]
-{147}->{148}
-152[label="letra | ",style=bold]
-{142}->{152}
-151[label="string_literal | Monospaced",style=bold]
-{152}->{151}
-155[label="tamtex | ",style=bold]
-{142}->{155}
-154[label="number | 10.5",style=bold]
-{155}->{154}
-158[label="fondoelemento | ",style=bold]
-{142}->{158}
-157[label="string_literal | #FF6347",style=bold]
-{158}->{157}
-161[label="visible | ",style=bold]
-{142}->{161}
-160[label="boolean | true",style=bold]
-{161}->{160}
-166[label="borde | ",style=bold]
-{142}->{166}
-163[label="number | 10",style=bold]
-{166}->{163}
-164[label="string_literal | black",style=bold]
-{166}->{164}
-165[label="boolean | true",style=bold]
-{166}->{165}
-169[label="opaque | ",style=bold]
-{142}->{169}
-168[label="boolean | true",style=bold]
-{169}->{168}
-172[label="colortext | ",style=bold]
-{142}->{172}
-171[label="string_literal | white",style=bold]
-{172}->{171}
-174[label="identificador | caja1",style=bold]
-{231}->{174}
-176[label="alineado | ",style=bold]
-{174}->{176}
-175[label="derecha | ",style=bold]
-{176}->{175}
-181[label="formato | ",style=bold]
-{174}->{181}
-179[label="valores | ",style=bold]
-{181}->{179}
-178[label="negrilla | ",style=bold]
-{179}->{178}
-180[label="mayuscula | ",style=bold]
-{179}->{180}
-184[label="letra | ",style=bold]
-{174}->{184}
-183[label="string_literal | Monospaced",style=bold]
-{184}->{183}
-187[label="tamtex | ",style=bold]
-{174}->{187}
-186[label="number | 8.5",style=bold]
-{187}->{186}
-190[label="fondoelemento | ",style=bold]
-{174}->{190}
-189[label="string_literal | #CAE1FF",style=bold]
-{190}->{189}
-193[label="visible | ",style=bold]
-{174}->{193}
-192[label="boolean | true",style=bold]
-{193}->{192}
-198[label="borde | ",style=bold]
-{174}->{198}
-195[label="number | 2",style=bold]
-{198}->{195}
-196[label="string_literal | black",style=bold]
-{198}->{196}
-197[label="boolean | true",style=bold]
-{198}->{197}
-201[label="opaque | ",style=bold]
-{174}->{201}
-200[label="boolean | true",style=bold]
-{201}->{200}
-204[label="colortext | ",style=bold]
-{174}->{204}
-203[label="string_literal | #0000FF",style=bold]
-{204}->{203}
-206[label="identificador | btn1",style=bold]
-{231}->{206}
-208[label="alineado | ",style=bold]
-{206}->{208}
-207[label="derecha | ",style=bold]
-{208}->{207}
-211[label="letra | ",style=bold]
-{206}->{211}
-210[label="string_literal | Monospaced",style=bold]
-{211}->{210}
-214[label="tamtex | ",style=bold]
-{206}->{214}
-213[label="number | 15.5",style=bold]
-{214}->{213}
-217[label="visible | ",style=bold]
-{206}->{217}
-216[label="boolean | true",style=bold]
-{217}->{216}
-220[label="texto | ",style=bold]
-{206}->{220}
-219[label="string_literal | yo soy el boton 1",style=bold]
-{220}->{219}
-223[label="opaque | ",style=bold]
-{206}->{223}
-222[label="boolean | true",style=bold]
-{223}->{222}
-226[label="fondoelemento | ",style=bold]
-{206}->{226}
-225[label="string_literal | yellow",style=bold]
-{226}->{225}
-229[label="colortext | ",style=bold]
-{206}->{229}
-228[label="string_literal | red",style=bold]
-{229}->{228}
+{117}->{116}
+121[label="letra | ",style=bold]
+{112}->{121}
+120[label="string_literal | Monospaced",style=bold]
+{121}->{120}
+124[label="tamtex | ",style=bold]
+{112}->{124}
+123[label="number | 15.5",style=bold]
+{124}->{123}
+127[label="fondoelemento | ",style=bold]
+{112}->{127}
+126[label="string_literal | yellow",style=bold]
+{127}->{126}
+130[label="visible | ",style=bold]
+{112}->{130}
+129[label="boolean | true",style=bold]
+{130}->{129}
+135[label="borde | ",style=bold]
+{112}->{135}
+132[label="number | 10",style=bold]
+{135}->{132}
+133[label="string_literal | black",style=bold]
+{135}->{133}
+134[label="boolean | true",style=bold]
+{135}->{134}
+138[label="opaque | ",style=bold]
+{112}->{138}
+137[label="boolean | true",style=bold]
+{138}->{137}
+141[label="colortext | ",style=bold]
+{112}->{141}
+140[label="string_literal | green",style=bold]
+{141}->{140}
+143[label="identificador | ctxt2",style=bold]
+{265}->{143}
+145[label="alineado | ",style=bold]
+{143}->{145}
+144[label="derecha | ",style=bold]
+{145}->{144}
+151[label="formato | ",style=bold]
+{143}->{151}
+148[label="valores | ",style=bold]
+{151}->{148}
+147[label="negrilla | ",style=bold]
+{148}->{147}
+149[label="cursiva | ",style=bold]
+{148}->{149}
+150[label="capital-t | ",style=bold]
+{148}->{150}
+154[label="letra | ",style=bold]
+{143}->{154}
+153[label="string_literal | Monospaced",style=bold]
+{154}->{153}
+157[label="tamtex | ",style=bold]
+{143}->{157}
+156[label="number | 10.5",style=bold]
+{157}->{156}
+160[label="fondoelemento | ",style=bold]
+{143}->{160}
+159[label="string_literal | #FF6347",style=bold]
+{160}->{159}
+163[label="visible | ",style=bold]
+{143}->{163}
+162[label="boolean | true",style=bold]
+{163}->{162}
+168[label="borde | ",style=bold]
+{143}->{168}
+165[label="number | 10",style=bold]
+{168}->{165}
+166[label="string_literal | black",style=bold]
+{168}->{166}
+167[label="boolean | true",style=bold]
+{168}->{167}
+171[label="opaque | ",style=bold]
+{143}->{171}
+170[label="boolean | true",style=bold]
+{171}->{170}
+174[label="colortext | ",style=bold]
+{143}->{174}
+173[label="string_literal | white",style=bold]
+{174}->{173}
+176[label="identificador | ctxt1",style=bold]
+{265}->{176}
+178[label="alineado | ",style=bold]
+{176}->{178}
+177[label="centrado | ",style=bold]
+{178}->{177}
+183[label="formato | ",style=bold]
+{176}->{183}
+181[label="valores | ",style=bold]
+{183}->{181}
+180[label="negrilla | ",style=bold]
+{181}->{180}
+182[label="minuscula | ",style=bold]
+{181}->{182}
+186[label="letra | ",style=bold]
+{176}->{186}
+185[label="string_literal | Monospaced",style=bold]
+{186}->{185}
+189[label="tamtex | ",style=bold]
+{176}->{189}
+188[label="number | 10.5",style=bold]
+{189}->{188}
+192[label="fondoelemento | ",style=bold]
+{176}->{192}
+191[label="string_literal | #FF6347",style=bold]
+{192}->{191}
+195[label="visible | ",style=bold]
+{176}->{195}
+194[label="boolean | true",style=bold]
+{195}->{194}
+200[label="borde | ",style=bold]
+{176}->{200}
+197[label="number | 10",style=bold]
+{200}->{197}
+198[label="string_literal | black",style=bold]
+{200}->{198}
+199[label="boolean | true",style=bold]
+{200}->{199}
+203[label="opaque | ",style=bold]
+{176}->{203}
+202[label="boolean | true",style=bold]
+{203}->{202}
+206[label="colortext | ",style=bold]
+{176}->{206}
+205[label="string_literal | white",style=bold]
+{206}->{205}
+208[label="identificador | caja1",style=bold]
+{265}->{208}
+210[label="alineado | ",style=bold]
+{208}->{210}
+209[label="derecha | ",style=bold]
+{210}->{209}
+215[label="formato | ",style=bold]
+{208}->{215}
+213[label="valores | ",style=bold]
+{215}->{213}
+212[label="negrilla | ",style=bold]
+{213}->{212}
+214[label="mayuscula | ",style=bold]
+{213}->{214}
+218[label="letra | ",style=bold]
+{208}->{218}
+217[label="string_literal | Monospaced",style=bold]
+{218}->{217}
+221[label="tamtex | ",style=bold]
+{208}->{221}
+220[label="number | 8.5",style=bold]
+{221}->{220}
+224[label="fondoelemento | ",style=bold]
+{208}->{224}
+223[label="string_literal | #CAE1FF",style=bold]
+{224}->{223}
+227[label="visible | ",style=bold]
+{208}->{227}
+226[label="boolean | true",style=bold]
+{227}->{226}
+232[label="borde | ",style=bold]
+{208}->{232}
+229[label="number | 2",style=bold]
+{232}->{229}
+230[label="string_literal | black",style=bold]
+{232}->{230}
+231[label="boolean | true",style=bold]
+{232}->{231}
+235[label="opaque | ",style=bold]
+{208}->{235}
+234[label="boolean | true",style=bold]
+{235}->{234}
+238[label="colortext | ",style=bold]
+{208}->{238}
+237[label="string_literal | #0000FF",style=bold]
+{238}->{237}
+240[label="identificador | btn1",style=bold]
+{265}->{240}
+242[label="alineado | ",style=bold]
+{240}->{242}
+241[label="derecha | ",style=bold]
+{242}->{241}
+245[label="letra | ",style=bold]
+{240}->{245}
+244[label="string_literal | Monospaced",style=bold]
+{245}->{244}
+248[label="tamtex | ",style=bold]
+{240}->{248}
+247[label="number | 15.5",style=bold]
+{248}->{247}
+251[label="visible | ",style=bold]
+{240}->{251}
+250[label="boolean | true",style=bold]
+{251}->{250}
+254[label="texto | ",style=bold]
+{240}->{254}
+253[label="string_literal | yo soy el boton 1",style=bold]
+{254}->{253}
+257[label="opaque | ",style=bold]
+{240}->{257}
+256[label="boolean | true",style=bold]
+{257}->{256}
+260[label="fondoelemento | ",style=bold]
+{240}->{260}
+259[label="string_literal | yellow",style=bold]
+{260}->{259}
+263[label="colortext | ",style=bold]
+{240}->{263}
+262[label="string_literal | red",style=bold]
+{263}->{262}
 
 }

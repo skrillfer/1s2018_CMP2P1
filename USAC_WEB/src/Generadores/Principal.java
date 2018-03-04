@@ -52,9 +52,9 @@ public class Principal {
         //new Principal().CompilarCHTML("");
         
         
-        new Principal().CompilarCCSS("");
+        //new Principal().CompilarCCSS("");
         String texto = "hola mundo";
-        
+        new usac_web.USAC_WEB().CompilarCJS();
         
         /*String dato ="_hola";
         String d[]=dato.split("_");

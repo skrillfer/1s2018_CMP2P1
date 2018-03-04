@@ -1,0 +1,450 @@
+Funcion test_Suma (){
+    Imprimir("prueba de boolean + boolean");
+    Imprimir('false'+'false');
+
+    Imprimir("prueba de boolean + numerico");
+    Imprimir('true'+15);
+
+    Imprimir("prueba de boolean + texto");
+    Imprimir('true'+" eres mi verdad");
+    
+    Imprimir("prueba de boolean + date");
+    Imprimir('true'+'13/23/24');
+    
+    Imprimir("prueba de boolean + datetime");
+    Imprimir('true'+'24/21/23 15:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de number + boolean");
+    Imprimir(12 + 'true');
+
+    Imprimir("prueba de number + number");
+    Imprimir(12 + 12.5);
+
+    Imprimir("prueba de number + texto");
+    Imprimir(23 + " es el numero de jordan");
+
+    Imprimir("prueba de number + date");
+    Imprimir(1.02 + '13/23/22');
+
+    Imprimir("prueba de number + datetime");
+    Imprimir(1.02 + '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de texto + boolean");
+    Imprimir("noche y dia " + 'true');
+
+    Imprimir("prueba de texto + number");
+    Imprimir(" precio: " + 12.5);
+
+    Imprimir("prueba de texto + texto");
+    Imprimir(" te encanta el 23 porque " + " es el numero de jordan");
+
+    Imprimir("prueba de texto + date");
+    Imprimir(" OG black" + '13/23/22');
+
+    Imprimir("prueba de texto + datetime");
+    Imprimir(" PRRa" + '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de texto + boolean");
+    Imprimir("noche y dia " + 'true');
+
+    Imprimir("prueba de texto + number");
+    Imprimir(" precio: " + 12.5);
+
+    Imprimir("prueba de texto + texto");
+    Imprimir(" te encanta el 23 porque " + " es el numero de jordan");
+
+    Imprimir("prueba de texto + date");
+    Imprimir(" OG black" + '13/23/22');
+
+    Imprimir("prueba de texto + datetime");
+    Imprimir(" PRRa" + '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de date + boolean");
+    Imprimir('13/23/22' + 'true');
+
+    Imprimir("prueba de date + number");
+    Imprimir('13/23/22' + 12.5);
+
+    Imprimir("prueba de date + texto");
+    Imprimir('13/23/22' + " es el numero de jordan");
+
+    Imprimir("prueba de date + date");
+    Imprimir('13/23/22' + '13/23/22');
+
+    Imprimir("prueba de date + datetime");
+    Imprimir('13/23/22' + '13/23/22 18:00:00');
+
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de datetime + boolean");
+    Imprimir('13/23/22 18:00:00' + 'true');
+
+    Imprimir("prueba de datetime + number");
+    Imprimir('13/23/22 18:00:00' + 12.5);
+
+    Imprimir("prueba de datetime + texto");
+    Imprimir('13/23/22 18:00:00' + " es el numero de jordan");
+
+    Imprimir("prueba de datetime + date");
+    Imprimir('13/23/22 18:00:00' + '13/23/22');
+
+    Imprimir("prueba de datetime + datetime");
+    Imprimir('13/23/22 18:00:00' + '13/23/22 18:00:00');
+}
+
+
+Funcion test_Resta (){
+    Imprimir("prueba de boolean - boolean");
+    Imprimir('false' - 'false');
+
+    Imprimir("prueba de boolean - numerico");
+    Imprimir('true' - 15);
+
+    Imprimir("prueba de boolean - texto");
+    Imprimir('true' - " eres mi verdad");
+    
+    Imprimir("prueba de boolean - date");
+    Imprimir('true' - '13/23/24');
+    
+    Imprimir("prueba de boolean - datetime");
+    Imprimir('true'- '24/21/23 15:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de number - boolean");
+    Imprimir(12 - 'true');
+
+    Imprimir("prueba de number - number");
+    Imprimir(12 - 12.5);
+
+    Imprimir("prueba de number - texto");
+    Imprimir(23 - " es el numero de jordan");
+
+    Imprimir("prueba de number - date");
+    Imprimir(1.02 - '13/23/22');
+
+    Imprimir("prueba de number - datetime");
+    Imprimir(1.02 - '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de texto - boolean");
+    Imprimir("noche y dia " - 'true');
+
+    Imprimir("prueba de texto - number");
+    Imprimir(" precio: " - 12.5);
+
+    Imprimir("prueba de texto - texto");
+    Imprimir(" te encanta el 23 porque " - " es el numero de jordan");
+
+    Imprimir("prueba de texto - date");
+    Imprimir(" OG black" - '13/23/22');
+
+    Imprimir("prueba de texto - datetime");
+    Imprimir(" PRRa" - '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de date - boolean");
+    Imprimir('13/23/22' - 'true');
+
+    Imprimir("prueba de date - number");
+    Imprimir('13/23/22' - 12.5);
+
+    Imprimir("prueba de date - texto");
+    Imprimir('13/23/22' - " es el numero de jordan");
+
+    Imprimir("prueba de date - date");
+    Imprimir('13/23/22' - '13/23/22');
+
+    Imprimir("prueba de date - datetime");
+    Imprimir('13/23/22' - '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de datetime - boolean");
+    Imprimir('13/23/22 18:00:00' - 'true');
+
+    Imprimir("prueba de datetime - number");
+    Imprimir('13/23/22 18:00:00' - 12.5);
+
+    Imprimir("prueba de datetime - texto");
+    Imprimir('13/23/22 18:00:00' - " es el numero de jordan");
+
+    Imprimir("prueba de datetime - date");
+    Imprimir('13/23/22 18:00:00' - '13/23/22');
+
+    Imprimir("prueba de datetime - datetime");
+    Imprimir('13/23/22 18:00:00' - '13/23/22 18:00:00');
+
+}
+
+Funcion test_Mult (){
+    Imprimir("prueba de boolean * boolean");
+    Imprimir('true' * 'true');
+
+    Imprimir("prueba de boolean * numerico");
+    Imprimir('true' * 15);
+
+    Imprimir("prueba de boolean * texto");
+    Imprimir('true' * " eres mi verdad");
+    
+    Imprimir("prueba de boolean * date");
+    Imprimir('true' * '13/23/24');
+    
+    Imprimir("prueba de boolean * datetime");
+    Imprimir('true' * '24/21/23 15:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de number * boolean");
+    Imprimir(12 * 'true');
+
+    Imprimir("prueba de number * number");
+    Imprimir(12 * 12.5);
+
+    Imprimir("prueba de number * texto");
+    Imprimir(23 * " es el numero de jordan");
+
+    Imprimir("prueba de number * date");
+    Imprimir(1.02 * '13/23/22');
+
+    Imprimir("prueba de number * datetime");
+    Imprimir(1.02 * '13/23/22 18:00:00');
+    
+  
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de texto * boolean");
+    Imprimir("noche y dia " * 'true');
+
+    Imprimir("prueba de texto * number");
+    Imprimir(" precio: " * 12.5);
+
+    Imprimir("prueba de texto * texto");
+    Imprimir(" te encanta el 23 porque " * " es el numero de jordan");
+
+    Imprimir("prueba de texto * date");
+    Imprimir(" OG black"  * '13/23/22');
+
+    Imprimir("prueba de texto * datetime");
+    Imprimir(" PRRa" * '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de date * boolean");
+    Imprimir('13/23/22' * 'true');
+
+    Imprimir("prueba de date * number");
+    Imprimir('13/23/22' * 12.5);
+
+    Imprimir("prueba de date * texto");
+    Imprimir('13/23/22' * " es el numero de jordan");
+
+    Imprimir("prueba de date * date");
+    Imprimir('13/23/22' * '13/23/22');
+
+    Imprimir("prueba de date * datetime");
+    Imprimir('13/23/22' * '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de datetime * boolean");
+    Imprimir('13/23/22 18:00:00' * 'true');
+
+    Imprimir("prueba de datetime * number");
+    Imprimir('13/23/22 18:00:00' * 12.5);
+
+    Imprimir("prueba de datetime * texto");
+    Imprimir('13/23/22 18:00:00' * " es el numero de jordan");
+
+    Imprimir("prueba de datetime * date");
+    Imprimir('13/23/22 18:00:00' * '13/23/22');
+
+    Imprimir("prueba de datetime * datetime");
+    Imprimir('13/23/22 18:00:00' * '13/23/22 18:00:00');
+
+
+
+
+
+
+   
+
+}
+
+
+Funcion test_Div (){
+    Imprimir("******************************************************************");
+    Imprimir("prueba de texto / boolean");
+    Imprimir("noche y dia " / 'true');
+
+    Imprimir("prueba de texto / number");
+    Imprimir(" precio: " / 12.5);
+
+    Imprimir("prueba de texto / texto");
+    Imprimir(" te encanta el 23 porque " / " es el numero de jordan");
+
+    Imprimir("prueba de texto / date");
+    Imprimir(" OG black"  / '13/23/22');
+
+    Imprimir("prueba de texto / datetime");
+    Imprimir(" PRRa" / '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de date / boolean");
+    Imprimir('13/23/22' / 'true');
+
+    Imprimir("prueba de date / number");
+    Imprimir('13/23/22' / 12.5);
+
+    Imprimir("prueba de date / texto");
+    Imprimir('13/23/22' / " es el numero de jordan");
+
+    Imprimir("prueba de date / date");
+    Imprimir('13/23/22' / '13/23/22');
+
+    Imprimir("prueba de date / datetime");
+    Imprimir('13/23/22' / '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de datetime / boolean");
+    Imprimir('13/23/22 18:00:00' / 'true');
+
+    Imprimir("prueba de datetime / number");
+    Imprimir('13/23/22 18:00:00' / 12.5);
+
+    Imprimir("prueba de datetime / texto");
+    Imprimir('13/23/22 18:00:00' / " es el numero de jordan");
+
+    Imprimir("prueba de datetime / date");
+    Imprimir('13/23/22 18:00:00' / '13/23/22');
+
+    Imprimir("prueba de datetime / datetime");
+    Imprimir('13/23/22 18:00:00' / '13/23/22 18:00:00');
+    
+
+    Imprimir("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    Imprimir("prueba de boolean / boolean");
+    Imprimir('true' / 'true');
+
+    Imprimir("prueba de boolean / numerico");
+    Imprimir('true' / 100);
+
+    Imprimir("prueba de boolean / texto");
+    Imprimir('true' / " eres mi verdad");
+    
+    Imprimir("prueba de boolean / date");
+    Imprimir('true' / '13/23/24');
+    
+    Imprimir("prueba de boolean / datetime");
+    Imprimir('true' / '24/21/23 15:00:00');
+
+    Imprimir("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    Imprimir("prueba de number / boolean");
+    Imprimir('true' / 12);
+
+    Imprimir("prueba de number / number");
+    Imprimir(12 / 12.5);
+
+    Imprimir("prueba de number / texto");
+    Imprimir(23 / " es el numero de jordan");
+
+    Imprimir("prueba de number / date");
+    Imprimir(1.02 / '13/23/22');
+
+    Imprimir("prueba de number / datetime");
+    Imprimir(1.02 / '13/23/22 18:00:00');
+
+
+
+
+
+    
+    
+
+   
+}
+
+
+Funcion test_Pot (){
+    Imprimir("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    Imprimir("prueba de boolean ^ boolean");
+    Imprimir('true' ^ 'true');
+
+    Imprimir("prueba de boolean ^ numerico");
+    Imprimir('true' ^ 100);
+
+    Imprimir("prueba de boolean ^ texto");
+    Imprimir('true' ^ " eres mi verdad");
+    
+    Imprimir("prueba de boolean ^ date");
+    Imprimir('true' ^ '13/23/24');
+    
+    Imprimir("prueba de boolean ^ datetime");
+    Imprimir('true' ^ '24/21/23 15:00:00');
+
+    Imprimir("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    Imprimir("prueba de number ^ boolean");
+    Imprimir('true' ^ 12);
+
+    Imprimir("prueba de number ^ number");
+    Imprimir(2 ^ 8);
+
+    Imprimir("prueba de number ^ texto");
+    Imprimir(23 ^ " es el numero de jordan");
+
+    Imprimir("prueba de number ^ date");
+    Imprimir(1.02 ^ '13/23/22');
+
+    Imprimir("prueba de number ^ datetime");
+    Imprimir(1.02 ^ '13/23/22 18:00:00');
+
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de texto ^ boolean");
+    Imprimir("noche y dia " ^ 'true');
+
+    Imprimir("prueba de texto ^ number");
+    Imprimir(" precio: " ^ 12.5);
+
+    Imprimir("prueba de texto ^ texto");
+    Imprimir(" te encanta el 23 porque " ^ " es el numero de jordan");
+
+    Imprimir("prueba de texto ^ date");
+    Imprimir(" OG black"  ^ '13/23/22');
+
+    Imprimir("prueba de texto ^ datetime");
+    Imprimir(" PRRa" ^ '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de date ^ boolean");
+    Imprimir('13/23/22' ^ 'true');
+
+    Imprimir("prueba de date ^ number");
+    Imprimir('13/23/22' ^ 12.5);
+
+    Imprimir("prueba de date ^ texto");
+    Imprimir('13/23/22' ^ " es el numero de jordan");
+
+    Imprimir("prueba de date ^ date");
+    Imprimir('13/23/22' ^ '13/23/22');
+
+    Imprimir("prueba de date ^ datetime");
+    Imprimir('13/23/22' ^ '13/23/22 18:00:00');
+
+    Imprimir("******************************************************************");
+    Imprimir("prueba de datetime ^ boolean");
+    Imprimir('13/23/22 18:00:00' ^ 'true');
+
+    Imprimir("prueba de datetime ^ number");
+    Imprimir('13/23/22 18:00:00' ^ 12.5);
+
+    Imprimir("prueba de datetime ^ texto");
+    Imprimir('13/23/22 18:00:00' ^ " es el numero de jordan");
+
+    Imprimir("prueba de datetime ^ date");
+    Imprimir('13/23/22 18:00:00' ^ '13/23/22');
+
+    Imprimir("prueba de datetime ^ datetime");
+    Imprimir('13/23/22 18:00:00' ^ '13/23/22 18:00:00');
+
+}
+

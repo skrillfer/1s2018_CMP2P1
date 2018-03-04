@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import Estructuras.*;
 import Arboles_Generados.*;
 import CJS_Compilador.CJS;
+import Interfaz.Template;
 /**
  *
  * @author fernando
@@ -56,7 +57,7 @@ public class USAC_WEB {
     
     public void CompilarCJS() throws FileNotFoundException{
         //escribir("programa.txt","100");
-        AL_CJS lex = new AL_CJS(new FileReader("programa.txt"));//se le pasa al analizador lexico lo que se escribio
+        AL_CJS lex = new AL_CJS(new FileReader("entrada_cjs.txt"));//se le pasa al analizador lexico lo que se escribio
         AS_CJS parser = new AS_CJS(lex);
         
        
@@ -67,7 +68,8 @@ public class USAC_WEB {
             genTcjs.generacion_arbolCJS(raiz);
             
             CJS cj_s= new CJS();
-            cj_s.ejecucionCJS(raiz, "metodo1");
+            cj_s.ejecucionCJS(raiz, "test","entrada_cjs.txt");
+            //Template.reporteError_CJS.generarHtml("Reporte de Errores", "CJS");
             
             //---------------------------Se le pasa la raiz a la clase CJS
             

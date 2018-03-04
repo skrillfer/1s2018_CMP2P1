@@ -38,7 +38,8 @@ non terminal Nodo programa,raiz,declara_var,asigna_var,asignacionGlb,declara_vec
 asigna_vecGlbF1,asigna_vecGlbF2,lista_valores,funcion_conteo,funcion_acadena,valor,Si,opcional,Sino,Selecciona,
 lista_casos,caso_defecto,Para,dec_for,operador,instrucciones,Mientras,Detener,Imprimir,Retornar,
 Mensaje,Instrucciones,funcion,parametros,lista_parametros,expr_l,expr_r,expr_a,simplificada,dato,
-Lcontenido_cjs,contenido_cjs,f_conteoG,f_acadenaG,sentencia,cont_selecciona,LlamadaFuncion,lista_envio,envio;
+Lcontenido_cjs,contenido_cjs,f_conteoG,f_acadenaG,sentencia,cont_selecciona,LlamadaFuncion,lista_envio,envio,
+accesoAr;
 
 precedence left MAS, MENOS;
 precedence left POR, DIV,MOD;
@@ -120,7 +121,7 @@ asigna_vecGlbF1  ::= I_D:a DSPTS ALLA lista_valores:c CLLA PYC{:
                        RESULT.add(c);
                     :};
 
-asigna_vecGlbF2 ::= I_D:a ALLA expr_a:b CLLA DSPTS  expr_a:X PYC {:
+asigna_vecGlbF2 ::= I_D:a ALLA expr_l:b CLLA DSPTS  expr_l:X PYC {:
                        RESULT = parser.crearNodo("asigna_vecGlbF2","",a.getLinea(),a.getColumna());
                        RESULT.add(parser.crearNodo("nombre",a.getCadena(),a.getLinea(),a.getColumna()));
                        Nodo dim=parser.crearNodo("indice","",b.linea,b.columna);
@@ -270,7 +271,7 @@ sentencia      ::= declara_vecF1:X      {: X.nombre="declara_vecF1_L"; RESULT= X
                    |declara_var:X       {: X.nombre="declara_var_L"; RESULT= X;     :}
                    |asigna_vecGlbF1:X   {: X.nombre="asigna_vecLocalF1"; RESULT= X;     :}
                    |asigna_vecGlbF2:X   {: X.nombre="asigna_vecLocalF2"; RESULT= X;     :}
-                   |asignacionGlb:X     {: X.nombre="asignacionLocal"; RESULT= X;   :}
+                   |asignacionGlb:X     {: X.nombre="asignacionLocal";  RESULT= X;      :}
                    |Si:X                {: RESULT = X; :}
                    |Selecciona:X        {: RESULT = X; :}
                    |Mientras:X          {: RESULT = X; :}
@@ -281,6 +282,9 @@ sentencia      ::= declara_vecF1:X      {: X.nombre="declara_vecF1_L"; RESULT= X
                    |Mensaje:X           {: RESULT = X; :}
                    |LlamadaFuncion:X PYC {: RESULT = X; :};
    
+
+
+
 //************************Metodos y Funciones***********************************
 funcion ::= FUNCION:w I_D:x APAR parametros:y CPAR ALLA instrucciones:z CLLA 
            {:
@@ -377,9 +381,15 @@ expr_a ::= expr_a:b MAS:a expr_a:c    {:
           |APAR expr_l:r CPAR         {:  RESULT=r;    :}
           |MENOS:a expr_a:H               {:  RESULT = parser.crearNodo("unitario","",a.getLinea(),a.getColumna()); RESULT.add(H); :}
           |dato:r                     {:  RESULT=r;    :}
-          //|acceso !! FALTA ACCEDER A METODOS Y A POSICIONES DE VECTORES
+          //|acceso !! FALTA ACCEDER A METODOS Y A POSICIONES DE VECTORES   
+          |accesoAr:r                 {:  RESULT=r;    :}
           |simplificada:r           {:  RESULT=r;    :};
 
+accesoAr ::= I_D:f ALLA expr_l:a CLLA{:
+                RESULT=parser.crearNodo("accesoAr",f.getCadena(),f.getLinea(),f.getColumna());
+                RESULT.add(a);
+                //RESULT.add(lista);
+            :};
 
 simplificada ::= expr_a:X ADD:w {: 
                                 RESULT = parser.crearNodo("ADD","",w.getLinea(),w.getColumna());

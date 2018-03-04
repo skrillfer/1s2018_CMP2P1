@@ -16,13 +16,13 @@ import java.util.Stack;
 public class CJS extends Compilador{
     
     
-    public void ejecucionCJS(Nodo raiz,String metodoInicio){
+    public void ejecucionCJS(Nodo raiz,String metodoInicio,String archivo){
         //aqui habra una lista de archivos cjs que pertenecen a el html
         //como hay una lista de archivos cjs debe haber una lista de CLASES (JAVASCRIPT)
         //##############Se crear una nueva CLASE
         raiz.valor="clase1";
         Clase n_clase = new Clase(raiz);
-        
+        n_clase.archivo=archivo;
         claseActual=n_clase;
         global=n_clase.global;
         tabla = n_clase.tabla;

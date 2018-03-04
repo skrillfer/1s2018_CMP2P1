@@ -38,6 +38,7 @@ public abstract class Compilador {
                 case "declara_vecF1_L":
                 case "declara_vecF2_L":
                 case "asignacionLocal":
+                case "asigna_vecLocalF2":    
                     new Declaracion(sentencia, global, tabla);
                     break;
                 case "llamadaFuncion":

@@ -19,6 +19,18 @@ letra := "Courier New";
 tamtex := 13;
 
 
+ID(opcion1);
+alineado := derecha;
+formato := mayuscula;
+letra := "Monospaced";
+tamtex := 15.5;
+fondoelemento := "yellow";
+visible := true;
+texto := "hola mundo    te AMO"; 
+borde := [10,"red",true];
+opaque := false;
+colortext := "white";
+
 ID(enla1);
 alineado := derecha;
 formato := minuscula;
