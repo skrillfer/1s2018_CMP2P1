@@ -36,7 +36,7 @@ public class CajaOpcionesGenerica extends JComboBox {
     ArrayList<OpcionGenerica> lista_generica = new ArrayList<>();
     
     Colores meta_colores;
-    Hashtable<String, Propiedad> propiedades;
+    public Hashtable<String, Propiedad> propiedades;
     ArrayList<NodoDOM> opciones;
 
     public CajaOpcionesGenerica(Hashtable<String, Propiedad> propiedades, ArrayList<NodoDOM> opciones,Colores meta_colores) {

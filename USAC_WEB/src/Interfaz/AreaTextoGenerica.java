@@ -35,7 +35,7 @@ public class AreaTextoGenerica extends JTextPane{
     
     private char LastkeyChar=0;
     
-    Hashtable<String,Propiedad> propiedades;
+    public Hashtable<String,Propiedad> propiedades;
     Dimension tamPadre=null;
 
     public AreaTextoGenerica(Hashtable<String,Propiedad> propiedades,  Dimension tamPadre) {

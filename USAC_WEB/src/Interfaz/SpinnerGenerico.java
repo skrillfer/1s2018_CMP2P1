@@ -20,7 +20,7 @@ import javax.swing.text.StyleConstants;
  * @author fernando
  */
 public class SpinnerGenerico extends JSpinner{
-    Hashtable<String,Propiedad> propiedades;
+    public Hashtable<String,Propiedad> propiedades;
 
     public SpinnerGenerico(Hashtable<String, Propiedad> propiedades) {
         this.propiedades = propiedades;

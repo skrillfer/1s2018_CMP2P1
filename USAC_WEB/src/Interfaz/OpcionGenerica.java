@@ -25,7 +25,7 @@ public class OpcionGenerica extends JLabel{
     public boolean mayuscula=false;
     public boolean minuscula=false;
     public boolean capital_t=false;
-    Hashtable<String,Propiedad> propiedades;
+    public Hashtable<String,Propiedad> propiedades;
 
     public OpcionGenerica(Hashtable<String, Propiedad> propiedades) {
         this.propiedades = propiedades;

@@ -21,13 +21,12 @@ public class Para extends Compilador {
         Nodo operador = raiz.hijos.get(2);
         Nodo sentencias = raiz.hijos.get(3);
 
-        opL = new OperacionesARL(global, tabla);
-        ResultadoG condicion = opL.ejecutar(expCondicion);
-
+        
         Nodo expA = declaracion.hijos.get(1);
 
         //********** declarar la variable
         Nodo declaraVar = new Nodo("declara_var_L", "", declaracion.linea, declaracion.columna, 0);
+        declaracion.hijos.get(0).nombre="nombre";
         declaraVar.add(declaracion.hijos.get(0));
         Nodo h1 = new Nodo("asigna_var", "", expA.linea, expA.columna, 0);
         h1.add(expA);
@@ -35,46 +34,67 @@ public class Para extends Compilador {
 
         TablaSimboloG tablaTempPrincipal = new TablaSimboloG();
         tablaTempPrincipal.cambiarAmbito(tabla);
-        pilaTablas.add(tabla);
+        pilaTablas.push(tabla);
         tabla = tablaTempPrincipal;
 
-        new Declaracion(declaraVar, global, tabla);
+        Declaracion declara = new Declaracion(declaraVar, global, tabla);
+        
+        SimboloG simbolo = tabla.getSimbolo(declaracion.hijos.get(0).valor, CJS.claseActual);
+        opL = new OperacionesARL(global, tabla);
+        ResultadoG condicion = opL.ejecutar(expCondicion);
+        
+        if(simbolo!=null){
+            if (condicion.tipo.equals("boolean")) {
 
-        if (condicion.tipo.equals("boolean")) {
+                while ((Boolean) condicion.valor) {
 
-            while ((Boolean) condicion.valor) {
+                    TablaSimboloG tablaTemp = new TablaSimboloG();
+                    tablaTemp.cambiarAmbito(tabla);
+                    pilaTablas.push(tabla);
+                    tabla = tablaTemp;
 
-                TablaSimboloG tablaTemp = new TablaSimboloG();
-                tablaTemp.cambiarAmbito(tabla);
-                pilaTablas.push(tabla);
-                tabla = tablaTemp;
-                
-                metodoActual = ejecutarSentencias(sentencias);
-                
-                tabla = pilaTablas.pop();
-                //**************************************************************
-                //**************************************************************
+                    metodoActual = ejecutarSentencias(sentencias);
 
-                if (operador.valor.equals("add") || operador.valor.equals("sub")) {
-                    Nodo n_ADD = new Nodo(operador.valor.toUpperCase(), "", operador.linea, operador.columna, 0);
-                    n_ADD.add(declaracion.hijos.get(0));
-                    opL.ejecutar(n_ADD);
+                    tabla = pilaTablas.pop();
+                    //**************************************************************
+                    //**************************************************************
+
+                    opL = new OperacionesARL(global, tabla);
+                    if (operador.valor.equals("add") || operador.valor.equals("sub")) {
+                        Nodo n_ADD = new Nodo(operador.valor.toUpperCase(), "", operador.linea, operador.columna, 0);
+                        declaracion.hijos.get(0).nombre = "id";
+                        n_ADD.add(declaracion.hijos.get(0));
+
+                        ResultadoG rsg = opL.ejecutar(n_ADD);
+                        if (rsg != null) {
+                            simbolo.valor=rsg.valor;
+                        }
+                    }
+
+                    if (metodoActual.estadoRetorno) {
+                        break;
+                    }
+                    if (metodoActual.estadoTerminar) {
+                        metodoActual.estadoTerminar = false;
+                        break;
+                    }
+
+                    if (metodoActual.estadoContinuar) {
+                        metodoActual.estadoContinuar = false;
+                    }
+
+                    condicion = opL.ejecutar(expCondicion);
+                    if (condicion.tipo.equals("number")) {
+                        if ((int) condicion.valor == 1) {
+                            condicion = new ResultadoG("boolean", true);
+                        } else if ((int) condicion.valor == 0) {
+                            condicion = new ResultadoG("boolean", false);
+                        }
+                    }
                 }
-                if (metodoActual.estadoRetorno) {
-                    break;
-                }
-                if (metodoActual.estadoTerminar) {
-                    metodoActual.estadoTerminar = false;
-                    break;
-                }
-
-                if (metodoActual.estadoContinuar) {
-                    metodoActual.estadoContinuar = false;
-                }
-
-                condicion = opL.ejecutar(expCondicion);
             }
         }
+            
         
         tabla = pilaTablas.pop();
         return metodoActual;

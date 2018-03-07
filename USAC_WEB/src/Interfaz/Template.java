@@ -41,16 +41,23 @@ import usac_web.USAC_WEB;
 import CSS_Compilador.*;
 import Errores.Erro_r;
 import Errores.ReporteError;
+import Estructuras.Historia;
+import Estructuras.Lista_Cargadas;
 import java.awt.CardLayout;
+import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.Map;
 import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JScrollBar;
+import javax.swing.SwingConstants;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.LineBorder;
 
@@ -59,10 +66,18 @@ import javax.swing.border.LineBorder;
  * @author fernando
  */
 public class Template extends JPanel implements ActionListener{
+    //******************* consola de salida ***/////////////////
+    public static String CONSOLA="";
+    //----------------------------------------------------//
     public static ReporteError reporteError_CJS = new ReporteError(); // este REPORTE es para CJS
     //**************************************************************************
-    static Hashtable<String,Componente> lista_componentes= new Hashtable<>();
+    public static Hashtable<String,Componente> lista_componentes= new Hashtable<>();
     static Hashtable<String,Lista> lista_grupos= new Hashtable<>();
+    
+    
+    static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_id = new Hashtable<>();
+    static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_grupo = new Hashtable<>();
+    
     
     static ArrayList<Erro_r> lista_errores = new ArrayList<>();
     //**************************************************************************
@@ -73,7 +88,7 @@ public class Template extends JPanel implements ActionListener{
     //______________________________ PILA DE PAGINAS____________________________
     ArrayList<JPanel> listaPaginas = new ArrayList<>();
     //__________________________________________________________________________
-    
+    static Lista_Cargadas lista_cargadas = new Lista_Cargadas();
     //************ MENSAJE PAGINA NO ENCONTRADA ********************************
     JLabel error404 = new JLabel("Error Pagina no Encontrada");
     //************ PANEL PADRE**************************************************
@@ -101,19 +116,7 @@ public class Template extends JPanel implements ActionListener{
         campoURL.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    
-                    if(!campoURL.getText().isEmpty()){
-                        try {
-                            try {
-                                buscarPagina(campoURL.getText());
-                            } catch (URISyntaxException ex) {
-                                Logger.getLogger(Template.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } catch (FileNotFoundException ex) {
-                            Logger.getLogger(Template.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    //System.out.println();
+                    cargar_Recargar();
                 }
             }
         });
@@ -128,12 +131,15 @@ public class Template extends JPanel implements ActionListener{
             reload.setBorderPainted(false);
             reload.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/Recursos/reload.png"))));
 
+            
             adelante.setOpaque(false);
+            adelante.setEnabled(false);
             adelante.setContentAreaFilled(false);
             adelante.setBorderPainted(false);
             adelante.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/Recursos/adelante.png"))));
 
             atras.setOpaque(false);
+            atras.setEnabled(false);
             atras.setContentAreaFilled(false);
             atras.setBorderPainted(false);
             atras.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/Recursos/atras.png"))));
@@ -158,14 +164,27 @@ public class Template extends JPanel implements ActionListener{
         }
         /*Forma 1*/
         //barraPrincipal.setLayout(new GridLayout(1, 8));
+        atras.addActionListener(this);
         barraPrincipal.add(atras);
+        
+        adelante.addActionListener(this);
         barraPrincipal.add(adelante);
+        
+        reload.addActionListener(this);
         barraPrincipal.add(reload);
+        
         barraPrincipal.add(campoURL);
+        
+        historial.addActionListener(this);
         barraPrincipal.add(historial);
+        
         opciones.addActionListener(this);
         barraPrincipal.add(opciones);
+        
+        plus.addActionListener(this);
         barraPrincipal.add(plus);
+        
+        favoritos.addActionListener(this);
         barraPrincipal.add(favoritos);
         //add(barraPrincipal);
         /*Forma 2*/
@@ -183,7 +202,7 @@ public class Template extends JPanel implements ActionListener{
         panel_P.setPreferredSize(new Dimension(750, 1000));
         //panel_P.setLayout(new BoxLayout(panel_P, BoxLayout.Y_AXIS));
         //panel_P.setPreferredSize(this.getPreferredSize().getSize());
-        panel_P.setBackground(Color.red);
+        //panel_P.setBackground(Color.red);
         add(barraPrincipal);
         
         JScrollPane jsp = new JScrollPane(panel_P);
@@ -197,18 +216,38 @@ public class Template extends JPanel implements ActionListener{
 
     // este metodo busca la pagina ingresada en el campo de texto
     public void buscarPagina(String path) throws FileNotFoundException, URISyntaxException {
-        panel_P.removeAll();
         
+        panel_P.removeAll();
+        panel_P.setBackground(new Color(238, 238, 238));
+        updateUI();
         File f = new File(path);
-        //if (f.exists() && !f.isDirectory()) {
+        if (f.exists() && !f.isDirectory()) {
             //1. compilar el archivo CHTML
-           NodoDOM dom=new USAC_WEB().CompilarCHTML(leerArchivo("/home/fernando/NetBeansProjects/1s2018_CMP2P1/USAC_WEB/last.txt"));
+           NodoDOM dom=new USAC_WEB().CompilarCHTML(leerArchivo(path));
            if(dom!=null){
-               GENERADOR_VISTA(dom,panel_P);
-               ejecutarArchivosCcss();
+               try {
+                    VentanaPrincipal.lista_historial.add(new Historia(path));
+                    lista_cargadas.add(path);
+                    
+                    if(lista_cargadas.size()>1 && lista_cargadas.getPt()==-1){
+                        atras.setEnabled(true);
+                    }
+                    
+                    
+                    GENERADOR_VISTA(dom,panel_P);
+               } catch (Exception e) {
+                   reporteError_CJS.agregar("Error Ejecucion", dom.linea, dom.columna,"Generando Vista-> "+ e.getMessage(), path);
+               }
+               
+               try {
+                   //ejecutarArchivosCcss();
+               } catch (Exception e) {
+                   reporteError_CJS.agregar("Error Ejecucion", dom.linea, dom.columna,"Ejecutando CCSS ->"+ e.getMessage(), path);
+               }
+               
            }
            
-        /*} else {
+        } else {
             System.out.println("no existe");
             panel_P.removeAll();
             
@@ -216,7 +255,7 @@ public class Template extends JPanel implements ActionListener{
             panel_P.add(error404);
             //panel_P.repaint();
             updateUI();
-        }*/
+        }
     }
 
     public void setearFont(JLabel label) {
@@ -228,7 +267,71 @@ public class Template extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         Object boton = e.getSource();
         if(boton==opciones){
-            new VentanaOpciones();
+            String data=lista_cargadas.getPagina(lista_cargadas.getIndex());
+            System.out.println("===>"+data);
+            new VentanaOpciones(data,obtenerListaArchivosCJS(),obtenerListaArchivosCCSS());
+        }else if(boton==reload){
+            cargar_Recargar();
+        }else if(boton==historial){
+            presentarHistorial();
+        }else if(boton==adelante){
+            if(lista_cargadas.size()>1){
+                
+                String link="";
+                int index=-1;
+                
+                index=lista_cargadas.getPt()+1;
+                
+                link=lista_cargadas.getPagina(index);
+                if(!link.equals("")){
+                    System.out.println("adel==>"+index);
+                    lista_cargadas.setPt(index);
+                    campoURL.setText(link);
+                    updateUI();
+                    cargar_Recargar();
+                    atras.setEnabled(true);
+                    if(index==(lista_cargadas.size()-1 )){
+                        adelante.setEnabled(false);
+                        updateUI();
+                    }
+                }
+                
+            }
+        }else if(boton==atras){
+            if(lista_cargadas.size()>1){
+                int pt = lista_cargadas.getPt();
+                String link="";
+                int index=-1;
+                if(pt==-1){
+                    index=lista_cargadas.getIndex()-1;
+                    link=lista_cargadas.getPagina(index);
+                    if(!link.equals("")){
+                        adelante.setEnabled(true);
+                        lista_cargadas.setPt(index);
+                        campoURL.setText(link);
+                        updateUI();
+                        cargar_Recargar();
+                        
+                        if(index==0 ){
+                            atras.setEnabled(false);
+                            updateUI();
+                        }
+                    }
+                }else{
+                    index=pt-1;
+                    link=lista_cargadas.getPagina(index);
+                    if(!link.equals("")){
+                        adelante.setEnabled(true);
+                        lista_cargadas.setPt(index);
+                        campoURL.setText(link);
+                        cargar_Recargar();
+                        if(index==0 ){
+                            atras.setEnabled(false);
+                        }
+                    }
+                }
+                //String link= lista_cargadas.getPagina(WIDTH);
+            }
         }
     }
 
@@ -506,7 +609,26 @@ public class Template extends JPanel implements ActionListener{
         } catch (Exception e) {}
     }
     
-    
+    public ArrayList<String> obtenerListaArchivosCCSS(){
+        ArrayList<String> lista = new ArrayList<>();
+        Enumeration<String> llaves = lista_ccss.keys();
+        while (llaves.hasMoreElements()) {
+            String llave = llaves.nextElement();
+            String vruta = lista_ccss.get(llave).trim();
+            lista.add(vruta);
+        }
+        return lista;
+    }
+    public ArrayList<String> obtenerListaArchivosCJS(){
+        ArrayList<String> lista = new ArrayList<>();
+        Enumeration<String> llaves = lista_cjs.keys();
+        while (llaves.hasMoreElements()) {
+            String llave = llaves.nextElement();
+            String vruta = lista_cjs.get(llave).trim();
+            lista.add(vruta);
+        }
+        return lista;
+    }
     public void ejecutarArchivosCcss() throws FileNotFoundException{
         Enumeration<String> llaves = lista_ccss.keys();
         while (llaves.hasMoreElements()) {
@@ -521,10 +643,35 @@ public class Template extends JPanel implements ActionListener{
                    for (NodoCSS nodo : bloque.hijos) {
                        switch (nodo.nombre) {
                            case "grupo":
-                               aplicarCcss(nodo);
+                               
+                               ArrayList<Componente> listaCOMP ;
+                               if(lista_grupos.contains(nodo.valor.trim())){
+                                   listaCOMP = lista_grupos.get(nodo.valor.trim()).getLista();
+                                   for (Componente componente : listaCOMP) {
+                                       NodoCSS nnn = new NodoCSS("identificador",componente.id.trim(), nodo.linea,nodo.columna, 1000);
+                                       nnn.hijos=nodo.hijos;
+                                       aplicarCcss(nnn);
+                                   }
+                               }
+                               
+                               if(!lista_estilos_grupo.containsKey(nodo.valor.trim())){
+                                   ArrayList<NodoCSS> lista = new ArrayList<>();
+                                   lista.add(nodo);
+                                   lista_estilos_grupo.put(nodo.valor.trim(),lista);
+                               }else{
+                                   lista_estilos_grupo.get(nodo.valor.trim()).add(nodo);
+                               }
+                               
                                break;
                            case "identificador":
                                aplicarCcss(nodo);
+                               if(!lista_estilos_id.containsKey(nodo.valor.trim())){
+                                   ArrayList<NodoCSS> lista = new ArrayList<>();
+                                   lista.add(nodo);
+                                   lista_estilos_id.put(nodo.valor.trim(),lista);
+                               }else{
+                                   lista_estilos_id.get(nodo.valor.trim()).add(nodo);
+                               }
                                break;
                        }
                    }
@@ -1361,27 +1508,68 @@ public class Template extends JPanel implements ActionListener{
     public static void addError( int fila,int columna,String valor, String Detalle, String pertenece){
         lista_errores.add(new Erro_r(fila, columna, valor, Detalle,pertenece));
     }
-}
 
+    public void presentarHistorial(){
+        ArrayList<Historia> ls=VentanaPrincipal.lista_historial;
+        JPanel panell= new JPanel();
+        panell.setLayout(new BoxLayout(panell, BoxLayout.PAGE_AXIS));
+        JScrollPane scroll = new JScrollPane(panell);
+        
+        for (Historia hi :  ls) {
+            JPanel historia = new JPanel();
+            historia.setLayout(new GridLayout(1, 2));
+            historia.setBackground(Color.ORANGE);
+            historia.setPreferredSize(new Dimension(900, 30));
+            
+            JLabel link = new JLabel(hi.ruta);
+            link.setHorizontalAlignment(SwingConstants.CENTER);
+            link.setForeground(Color.BLUE);
+            link.setToolTipText("Click goto:"+hi.ruta);
 
-class Componente {
-    public String id;
-    public String tipo; // boton,imagen,enlace etc.
-    Object objeto ;
-    Componente padre;
-    public Componente(String id, String tipo, Object objeto,Componente padre) {
-        this.id = id;
-        this.tipo = tipo;
-        this.objeto = objeto;
-        this.padre=padre;
+            link.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    campoURL.setText(link.getText().trim());
+                    cargar_Recargar();
+                }
+                
+            });
+            
+            JLabel fecha_hora = new JLabel(hi.fecha+"    "+hi.hora);
+            fecha_hora.setForeground(Color.black);
+            fecha_hora.setHorizontalAlignment(SwingConstants.CENTER);
+            historia.add(link);
+            historia.add(fecha_hora);
+            
+            panell.add(historia);
+        }
+        JFrame ventana = new JFrame("Historial");
+        ventana.add(scroll);
+        //ventana.setBounds(WIDTH, WIDTH, WIDTH, HEIGHT);
+        ventana.setSize(1000, 300);
+        ventana.setLocationRelativeTo(this);
+
+        ventana.setVisible(true);
     }
 
-    public Componente() {
-        this.id="";
-        this.tipo="";
-        this.objeto=null;
-        this.padre=null;
+    public void cargar_Recargar(){
+        if (!campoURL.getText().isEmpty()) {
+                
+                try {
+                    try {
+                         buscarPagina(campoURL.getText().trim());
+                    } catch (URISyntaxException ex) {
+                        Logger.getLogger(Template.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Template.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        } else {
+            new AlertaGenerica("campo Url Vacio");
+        }
     }
     
-
+    
 }
+
+

@@ -63,7 +63,7 @@ public class Declaracion extends Compilador{
     }
     
     public Object declarar() {
-        System.out.println(raiz.nombre);
+        //System.out.println(raiz.nombre);
         switch (raiz.nombre) {
             //********************  AMBITO GLOBAL ******************************
             case "declara_var":
@@ -220,15 +220,19 @@ public class Declaracion extends Compilador{
         SimboloG sim = global.getSimbolo(nombre, CJS.claseActual);
         ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
         if(sim != null){
-            
             if(resultado!=null){
                 if(!resultado.tipo.equals("")){
                     sim.inicializado=true;
-                    if(sim.esArreglo == false){
-                        sim.tipo=resultado.tipo;
-                        sim.valor=resultado.valor;
-                    }else{
-                        sim.esArreglo=true;
+                    if(resultado.simbolo!=null){
+                        if(resultado.simbolo.esArreglo==false){
+                            sim.tipo=resultado.tipo;
+                            sim.valor=resultado.valor;
+                        }else{
+                            sim.esArreglo=true;
+                            sim.tipo=resultado.tipo;
+                            sim.valor=resultado.valor;
+                        }
+                    }else {
                         sim.tipo=resultado.tipo;
                         sim.valor=resultado.valor;
                     }
@@ -246,14 +250,22 @@ public class Declaracion extends Compilador{
         SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
         ResultadoG resultado = opL.ejecutar(raiz.hijos.get(1));// se obtiene el valor a asignar
         if(sim != null){
-            if(resultado!=null){
+            //System.out.println("asignare:"+nombre);
+
+            if(resultado!=null){                
+                //System.out.println("        asignare:"+nombre+" Tipo:"+resultado.tipo + " Esarreglo:"+resultado.valor);
                 if(!resultado.tipo.equals("")){
                     sim.inicializado=true;
-                    if(sim.esArreglo == false){
-                        sim.tipo=resultado.tipo;
-                        sim.valor=resultado.valor;
-                    }else{
-                        sim.esArreglo=true;
+                    if(resultado.simbolo!=null){
+                        if(resultado.simbolo.esArreglo==false){
+                            sim.tipo=resultado.tipo;
+                            sim.valor=resultado.valor;
+                        }else{
+                            sim.esArreglo=true;
+                            sim.tipo=resultado.tipo;
+                            sim.valor=resultado.valor;
+                        }
+                    }else {
                         sim.tipo=resultado.tipo;
                         sim.valor=resultado.valor;
                     }
@@ -282,17 +294,17 @@ public class Declaracion extends Compilador{
 
                 if (!tabla.setSimbolo(simbolo)) {
                     Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
-                }/*else{
+                }else{
                     System.out.println("se agrego correctamente  "+simbolo.nombre);
-                }*/
+                }
                 
             }else{
                 SimboloG simbolo = new SimboloG("", nombre, "", null);
                 if (!tabla.setSimbolo(simbolo)) {
                     Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
-                }/*else{
+                }else{
                     System.out.println("se agrego correctamente  "+simbolo.nombre);
-                }*/
+                }
             }
         }else{// no tiene asignacion
             SimboloG simbolo = new SimboloG(tipo, nombre, "", null);

@@ -7,9 +7,12 @@ package CJS_Compilador;
 import Estructuras.*;
 import java.util.Stack;
 import CJS_Compilador.OperacionesARL.OperacionesARL;
-/**
- *
- * @author fernando
+import Interfaz.AlertaGenerica;
+import Interfaz.Template;
+/*
+ Verificar DECLARACION DE VARIABLE ASIGNANDOLE UN VECTOR CON ANTERIORIDAD..... Dimv vector2:vector1;
+ Falta poner las demas Declaraciones o accesos Locales.. ver en Declaracion
+ 
  */
 public abstract class Compilador {
     //--------------------------------------------------------------------------
@@ -66,8 +69,6 @@ public abstract class Compilador {
                         return metodoActual;
                     }
                     break;
-                case "selecciona":
-                    break;
                 case "mientras":
                     Mientras mientras = new Mientras();
                     nivelCiclo++;
@@ -78,15 +79,61 @@ public abstract class Compilador {
                     }
                     nivelCiclo--;
                     break;
+                 case "selecciona":
+                    nivelCiclo++;
+                    Selecciona seleccion = new Selecciona();
+                    metodoActual = seleccion.ejecutar(sentencia);
+                    if (metodoActual.estadoRetorno) {
+                        nivelCiclo--;
+                        return metodoActual;
+                    }
+                    if (metodoActual.estadoContinuar) {
+                        nivelCiclo--;
+                        return metodoActual;
+                    }
+                    nivelCiclo--;
+                    break;    
+                case "para":
+                    nivelCiclo++;
+                    Para para = new Para();
+                    metodoActual = para.ejecutar(sentencia);
+                    if (metodoActual.estadoRetorno) {
+                        nivelCiclo--;
+                        return metodoActual;
+                    }
+                    nivelCiclo--;
+                    break;    
                 case "imprimir":
                     opL = new OperacionesARL(global,tabla);
                     ResultadoG rs = opL.ejecutar(sentencia.hijos.get(0));
                     try {
+                        Template.CONSOLA+="\n"+rs.valor;
                         System.out.println(rs.valor);
                     } catch (Exception e) {
                     }
-                    
                     break;
+                case "mensaje":
+                    opL = new OperacionesARL(global,tabla);
+                    ResultadoG r1s = opL.ejecutar(sentencia.hijos.get(0));
+                    try {
+                        AlertaGenerica alert = new AlertaGenerica(r1s.valor.toString());
+                        //Template.CONSOLA+="\n"+r1s.valor;
+                        //System.out.println(r1s.valor);
+                    } catch (Exception e) {
+                    }
+                    break;    
+                case "detener":
+                    if (nivelCiclo > 0) {
+                        metodoActual.estadoTerminar = true;
+                        return metodoActual;
+                    } else {
+                        Template.reporteError_CJS.agregar("Semantico", sentencia.linea, sentencia.columna, "La sentencia terminar solo puede estar detro de ciclos");
+                    }
+                    break;    
+                case "Accion_Setear":
+                    Accion_Setear setear = new Accion_Setear();
+                    metodoActual = setear.ejecutar(sentencia);
+                    break;    
             }
         }
         return metodoActual;

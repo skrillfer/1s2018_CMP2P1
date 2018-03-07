@@ -23,7 +23,7 @@ public class TablaGenerica2 extends JPanel {
     int columnas=0;
     NodoDOM raizT;
 
-    Hashtable<String, Propiedad> propiedadesTabla;
+    public Hashtable<String, Propiedad> propiedadesTabla;
 
     public TablaGenerica2(Hashtable<String, Propiedad> propiedadesTabla, NodoDOM raizT) {
         this.propiedadesTabla=this.propiedadesTabla;

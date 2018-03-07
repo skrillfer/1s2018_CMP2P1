@@ -41,6 +41,7 @@ public LinkedList<Erro_r> retornarErrores(){
 %unicode
 %line
 %column
+%ignorecase
 %char
 %cup
 
@@ -62,6 +63,7 @@ cadena = [\"] [^(\")]* [\"]
 
 comm_multilinea = "'/" ~ "/'"
 
+comm_linea = "'" [^\r\n]* [^\r\n]
 
 %%
 
@@ -125,6 +127,7 @@ comm_multilinea = "'/" ~ "/'"
 <YYINITIAL> "setElemento" {return new Symbol(sym.SETELEMENTO, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> {comm_multilinea} {}
+<YYINITIAL> {comm_linea}      {}
 <YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 

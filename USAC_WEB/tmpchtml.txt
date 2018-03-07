@@ -1,128 +1,27 @@
-<//- comentario1 y me la pelan -//>
-<//- comentario2 y  -//>
 <CHTML>
-<ENCABEZADO>
-<TITULO>USAC-WEB <FIN-TITULO>
+    <ENCABEZADO>
+    <CJS ruta ="/home/fernando/Escritorio/a_cristina/Contenido/archivo_cjs1.cjs";> <FIN-CJS>
+    <CJS ruta ="/home/fernando/Escritorio/a_cristina/Contenido/archivo_cjs2.cjs";> <FIN-CJS>
+
+    <CCSS ruta="/home/fernando/Escritorio/a_cristina/Contenido/archivo_estilo1.ccss";> <FIN-CCSS>
+    <CCSS ruta="/home/fernando/Escritorio/a_cristina/Contenido/archivo_estilo2.ccss";> <FIN-CCSS>
+    <TITULO> PAGINA 1<FIN-TITULO>
+    <FIN-ENCABEZADO>
+    <CUERPO fondo="yellow";>
 
 
+    <PANEL id="panel_1"; grupo="panel_redireccion"; ancho="716"; alto="50";>
+        <BOTON grupo="boton_redireccion"; alto="35"; ancho="120"; ruta="/home/fernando/Escritorio/a_cristina/Contenido/informacion.chtml";>Informacion
+        <FIN-BOTON>
 
-<CCSS ruta ="/home/fernando/NetBeansProjects/1s2018_CMP2P1/USAC_WEB/estilos.txt";> <FIN-CCSS>
+        <BOTON grupo="boton_redireccion"; alto="35"; ancho="160"; ruta="/home/fernando/Escritorio/a_cristina/Contenido/tabla.chtml";>Tabla Estudiante
+        <FIN-BOTON>
 
-
-<FIN-ENCABEZADO>
-<CUERPO fondo="red";>
-<SPINNER> <FIN-SPINNER>
-
- <TABLA>
-                        <FIL_T>
-                            <CT> <FIN-CT>
-                            <CT> <FIN-CT>
-                            <CT> <FIN-CT>
-                            <CT> <FIN-CT>
-                        <FIN-FIL_T>         
-                        <FIL_T>
-                        <FIN-FIL_T>
-                        <FIL_T>
-                            <CB> <FIN-CB>
-                            <CB> <FIN-CB>
-                        <FIN-FIL_T>
-<FIN-TABLA>
-
-<CAJA fondo="blue"; id ="caja1"; > <OPCION id ="opcion1"; fondo="yellow";>opcion1<FIN-OPCION>  <OPCION fondo="green";>opcion2<FIN-OPCION> <OPCION fondo="pink";>opcion3<FIN-OPCION> <FIN-CAJA>
-
-<TEXTO id="txt1"; fondo="white"; alineado="centrado"; > La historia es la ciencia que tiene como objeto el estudio del pasado de la humanidad y como método, el propio de las ciencias sociales.2​ Se denomina también «historia» al periodo que transcurre desde la aparición de la escritura hasta la actualidad.
-
-más allá de las acepciones propias de la ciencia histórica, «historia», en el lenguaje usual, es la narración de cualquier suceso, incluso de sucesos imaginarios y de mentiras;3​4​ sea su propósito el engaño, el placer estético o cualquier otro (ficción histórica). Por el contrario, el propósito de la ciencia histórica es averiguar los hechos y procesos que ocurrieron y se desarrollaron en el pasado e interpretarlos ateniéndose a criterios de objetividad; aunque la posibilidad de cumplimiento de tales propósitos y el grado en que sean posibles son en sí mismos objetos de debate.
-
-<FIN-TEXTO>
-
-<TEXTO_A id="ctxt1"; > <FIN-TEXTO_A>
-
-<TEXTO_A id="ctxt2"; > <FIN-TEXTO_A>
-
-<CAJA_TEXTO id="caja1"; > <FIN-CAJA_TEXTO>
-
-<PANEL fondo="green"; alto="150"; ancho="150"; alineado="centrado";>
-    panel centrado
-    <BOTON> boton2 <FIN-BOTON>
-    <BOTON> boton3 <FIN-BOTON>
-    <BOTON> boton4 <FIN-BOTON>
-    <BOTON> boton21 <FIN-BOTON>
-    <BOTON> boton31 <FIN-BOTON>
-    <BOTON> boton41 <FIN-BOTON>
-<FIN-PANEL>
-
-<PANEL fondo="orange"; alto="150"; ancho="150"; alineado="izquierda";>
-    panel izquierda
-    <BOTON> boton2 <FIN-BOTON>
-    <BOTON> boton3 <FIN-BOTON>
-    <BOTON> boton4 <FIN-BOTON>
-    <BOTON> boton21 <FIN-BOTON>
-    <BOTON> boton31 <FIN-BOTON>
-    <BOTON> boton41 <FIN-BOTON>
-<FIN-PANEL>
-
-<PANEL fondo="orange"; alto="150"; ancho="150"; alineado="derecha";>
-    panel derecha
-    <BOTON> boton2 <FIN-BOTON>
-    <BOTON> boton3 <FIN-BOTON>
-    <BOTON> boton4 <FIN-BOTON>
-    <BOTON> boton21 <FIN-BOTON>
-    <BOTON> boton31 <FIN-BOTON>
-    <BOTON> boton41 <FIN-BOTON>
-<FIN-PANEL>
+        <BOTON grupo="boton_redireccion"; alto="35"; ancho="100"; ruta="/home/fernando/Escritorio/a_cristina/Contenido/home.chtml";>Principal
+        <FIN-BOTON>
+         
+    <FIN-PANEL>
 
 
-
-
-<IMAGEN id="img1"; ruta="/home/fernando/Escritorio/descarga.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
-
-
-<//- 
-<BOTON id="btn1"; grupo="g1"; fondo="green"; alineado="izquierda"; alto="150"; ancho="250";>btn1<FIN-BOTON>
-
- <ENLACE id="enla1"; grupo="g1"; fondo="cyan"; alineado="izquierda"; alto="150"; ancho="250";> <FIN-ENLACE>  -//>
-
-<//-
-<PANEL fondo="green"; alto="150"; ancho="150"; alineado="centrado";>
-    panel centrado
-    <BOTON> boton2 <FIN-BOTON>
-    <BOTON> boton3 <FIN-BOTON>
-    <BOTON> boton4 <FIN-BOTON>
-    <BOTON> boton21 <FIN-BOTON>
-    <BOTON> boton31 <FIN-BOTON>
-    <BOTON> boton41 <FIN-BOTON>
-<FIN-PANEL>
-
-<PANEL fondo="orange"; alto="150"; ancho="150"; alineado="izquierda";>
-    panel izquierda
-    <BOTON> boton2 <FIN-BOTON>
-    <BOTON> boton3 <FIN-BOTON>
-    <BOTON> boton4 <FIN-BOTON>
-    <BOTON> boton21 <FIN-BOTON>
-    <BOTON> boton31 <FIN-BOTON>
-    <BOTON> boton41 <FIN-BOTON>
-<FIN-PANEL>
-
-<PANEL fondo="orange"; alto="150"; ancho="150"; alineado="derecha";>
-    panel derecha
-    <BOTON> boton2 <FIN-BOTON>
-    <BOTON> boton3 <FIN-BOTON>
-    <BOTON> boton4 <FIN-BOTON>
-    <BOTON> boton21 <FIN-BOTON>
-    <BOTON> boton31 <FIN-BOTON>
-    <BOTON> boton41 <FIN-BOTON>
-<FIN-PANEL>
-
-<TEXTO fondo="white"; alineado="centrado";> Machine learning una tendencia tecnologica:
-Es una subdisciplina de la inteligencia artificial, todo surge a partir de la gran maquina de turin
-creaada por Alan Turing, llamada la madre de todos los metodos, ya que cualquier poblema puede resumirse
-a un metodo de la maquina de turing.
-<FIN-TEXTO>
-
-<IMAGEN ruta="/home/fernando/Escritorio/descarga.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
-<IMAGEN ruta="/home/fernando/Escritorio/descarg1a.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
--//>
-<FIN-CUERPO>
+    <FIN-CUERPO>
 <FIN-CHTML>
-

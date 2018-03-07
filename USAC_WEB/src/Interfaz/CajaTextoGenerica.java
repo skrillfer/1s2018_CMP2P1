@@ -23,7 +23,7 @@ public class CajaTextoGenerica extends JTextField {
     public boolean capital_t=false; 
     Dimension tamPadre=null;
     private char LastkeyChar=0;
-    Hashtable<String, Propiedad> propiedades;
+    public Hashtable<String, Propiedad> propiedades;
 
     public CajaTextoGenerica(Hashtable<String, Propiedad> propiedades) {
         this.propiedades = propiedades;

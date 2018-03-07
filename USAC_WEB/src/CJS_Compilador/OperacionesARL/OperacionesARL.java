@@ -6,8 +6,10 @@
 package CJS_Compilador.OperacionesARL;
 import Estructuras.*;
 import CJS_Compilador.*;
+import Interfaz.Componente;
 import Interfaz.Template;
 import java.util.ArrayList;
+import javax.swing.JComponent;
 /**
  *
  * @author fernando
@@ -118,14 +120,16 @@ public class OperacionesARL {
                 linea2=0;        columna2=0;
                 ResultadoG r_add1 = ejecutar(nodo.hijos.get(0));
                 result = operacionesSimplificadas(r_add1, "ADD");
-                imprimirResultado(result);
+                //imprimirResultado(result);
                 break;
             case "SUB":
                 linea1=nodo.hijos.get(0).linea;         columna1=nodo.hijos.get(0).columna;
                 linea2=0;        columna2=0;
                 ResultadoG r_sub1 = ejecutar(nodo.hijos.get(0));
+                System.out.println("voy a DECREMENTAR:"+r_sub1.valor);
                 result = operacionesSimplificadas(r_sub1, "SUB");
-                imprimirResultado(result);
+                //System.out.println("===>"+result.valor);
+                //imprimirResultado(result.valor);
                 break;
             case "POT":
                 linea1=nodo.hijos.get(0).linea;         columna1=nodo.hijos.get(0).columna;
@@ -1202,7 +1206,7 @@ public class OperacionesARL {
     }
     
     public ResultadoG operacionesSimplificadas(ResultadoG r1, String op){
-        if(verNulabilidad(r1, r1)){
+        if(r1==null){
             return null;
         }
         ResultadoG resultado=null;
@@ -1258,6 +1262,20 @@ public class OperacionesARL {
                     tabla = tablaAux;
                     retorno = accesoAr(raiz, nivel, aux);
                     break;
+            case "id_componente":
+                nombre = raiz.valor;
+                if(Template.lista_componentes.containsKey(nombre)){
+                    Componente componente=Template.lista_componentes.get(nombre);
+                    retorno.valor = componente;
+                    retorno.tipo  = componente.tipo;
+                    retorno.simbolo = null;
+                }else {
+                    //retorno.tipo = "-1";
+                    //retorno.valor = null;
+                    Template.reporteError_CJS.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " no existe en la lista de componentes CHTML");
+                    return null;
+                }
+                break;
             case "id":
                 nombre = raiz.valor;
                 simbolo = tabla.getSimbolo(nombre, aux);
@@ -1276,7 +1294,7 @@ public class OperacionesARL {
                         }
                         if(simbolo.esArreglo){
                             retorno.valor = simbolo.valor;
-                            retorno.tipo  = simbolo.tipo;
+                            retorno.tipo = "Arreglo";
                             retorno.simbolo = simbolo;
                         }
                     }else{

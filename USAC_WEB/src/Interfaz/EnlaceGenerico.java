@@ -32,7 +32,7 @@ public class EnlaceGenerico extends JLabel{
     public boolean mayuscula=false;
     public boolean minuscula=false;
     public boolean capital_t=false; 
-    Hashtable<String,Propiedad> propiedades;
+    public Hashtable<String,Propiedad> propiedades;
   
     public EnlaceGenerico(Hashtable<String,Propiedad> propiedades) throws URISyntaxException {
         this.propiedades=propiedades;

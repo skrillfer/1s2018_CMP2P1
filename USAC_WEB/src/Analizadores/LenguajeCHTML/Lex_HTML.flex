@@ -43,7 +43,6 @@ public LinkedList<Erro_r> retornarErrores(){
 %char
 %ignorecase
 %cup
-%state STRING
 
 LineTerminator = \r|\n|\r\n|\n\r|\t
 WhiteSpace = {LineTerminator} | [ \t\f]|\t
@@ -57,15 +56,15 @@ cadena = [\"] [^\"]* [\"]
 
 
 
-//comentario_a = "<//-" ~ "-//>"
 
-Comentario1 = "<//-" "-"* [^-] ~"-//>" | "<//-" "-"* "-//>"
+Comentario1 = "<//-" [^-] ~"-//>" | "<//-" "-"* [^-] "-"* "-//>"
 
 
 
 %%
 
 /* OPERADORES Y SIGNOS */
+<YYINITIAL> {Comentario1} { System.out.println("Comentario:\n"+ yytext()); }
 
 
 >([^<]*)< {return new Symbol(sym.EXPLICIT, new token(yycolumn, yyline, yytext()));}
@@ -89,7 +88,6 @@ Comentario1 = "<//-" "-"* [^-] ~"-//>" | "<//-" "-"* "-//>"
 
 
 
-<YYINITIAL> {Comentario1} { System.out.println("Comentario:\n"+ yytext()); }
 
 
 

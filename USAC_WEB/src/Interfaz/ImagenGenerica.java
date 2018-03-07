@@ -24,7 +24,7 @@ import javax.swing.JTextField;
  * @author fernando
  */
 public  class ImagenGenerica extends JLabel implements MouseListener{
-    Hashtable<String,Propiedad> propiedades;
+    public Hashtable<String,Propiedad> propiedades;
     int alto=0;
     int ancho=0;
     String click="";

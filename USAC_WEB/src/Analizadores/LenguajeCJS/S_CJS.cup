@@ -39,7 +39,7 @@ asigna_vecGlbF1,asigna_vecGlbF2,lista_valores,funcion_conteo,funcion_acadena,val
 lista_casos,caso_defecto,Para,dec_for,operador,instrucciones,Mientras,Detener,Imprimir,Retornar,
 Mensaje,Instrucciones,funcion,parametros,lista_parametros,expr_l,expr_r,expr_a,simplificada,dato,
 Lcontenido_cjs,contenido_cjs,f_conteoG,f_acadenaG,sentencia,cont_selecciona,LlamadaFuncion,lista_envio,envio,
-accesoAr;
+accesoAr,Accion_Obtener,Accion_Setear,PtoObtener,PtoSetElemento,PtoObservador,FuncionAnonima;
 
 precedence left MAS, MENOS;
 precedence left POR, DIV,MOD;
@@ -280,8 +280,71 @@ sentencia      ::= declara_vecF1:X      {: X.nombre="declara_vecF1_L"; RESULT= X
                    |Imprimir:X          {: RESULT = X; :}
                    |Retornar:X          {: RESULT = X; :}
                    |Mensaje:X           {: RESULT = X; :}
-                   |LlamadaFuncion:X PYC {: RESULT = X; :};
+                   |LlamadaFuncion:X PYC {: RESULT = X; :}
+                   |Accion_Setear:X PYC    {: RESULT = X; :}
+                   |Accion_Obtener:X PYC   {: RESULT = X; :};
    
+
+
+
+
+Accion_Obtener ::= DOCUMENTO:w  PtoObtener:h {:
+                        RESULT = parser.crearNodo("Accion_Obtener","",w.getLinea(),w.getColumna());
+                        RESULT.add(h);
+                  :};
+
+
+Accion_Setear  ::= Accion_Obtener:x PtoSetElemento:h{:
+                        RESULT = parser.crearNodo("Accion_Setear","",x.linea,x.columna);
+                        RESULT.add(x);
+                        RESULT.add(h);
+                  :}
+                  |Accion_Obtener:x PtoObservador:h{:
+                        RESULT = parser.crearNodo("Accion_Setear","",x.linea,x.columna);
+                        RESULT.add(x);
+                        RESULT.add(h);
+                  :}
+                  |I_D:w PtoSetElemento:h {:
+                        RESULT = parser.crearNodo("Accion_Setear","",w.getLinea(),w.getColumna());
+                        RESULT.add(parser.crearNodo("id_componente",w.getCadena(),w.getLinea(),w.getColumna()));
+                        RESULT.add(h);
+                  :}
+                  |I_D:w PtoObservador:h {:
+                        RESULT = parser.crearNodo("Accion_Setear","",w.getLinea(),w.getColumna());
+                        RESULT.add(parser.crearNodo("id_componente",w.getCadena(),w.getLinea(),w.getColumna()));
+                        RESULT.add(h);
+                  :};
+
+
+/*----------------------------------------------------------------------------*/
+PtoObtener ::= PTO:w OBTENER APAR expr_l:x CPAR {:    
+                        RESULT = parser.crearNodo("pto_obtener","",w.getLinea(),w.getColumna());
+                        RESULT.add(x);
+                 :};
+
+PtoSetElemento ::= PTO:w SETELEMENTO APAR expr_l:x COMA expr_l:y CPAR {:    
+                        RESULT = parser.crearNodo("pto_elemento","",w.getLinea(),w.getColumna());
+                        RESULT.add(x);
+                        RESULT.add(y);
+                  :};
+
+
+PtoObservador ::=  PTO:w OBSERVADOR  APAR expr_l:x COMA FuncionAnonima:y CPAR {:    
+                        RESULT = parser.crearNodo("pto_observador","",w.getLinea(),w.getColumna());
+                        RESULT.add(x);
+                        RESULT.add(y);
+                  :};
+
+
+FuncionAnonima ::= FUNCION:w APAR CPAR ALLA instrucciones:x CLLA {:
+                        RESULT = parser.crearNodo("f_anonima","",w.getLinea(),w.getColumna());
+                        RESULT.add(x);
+                  :}
+                  |I_D:w APAR CPAR {:
+                        RESULT = parser.crearNodo("f_anonima","",w.getLinea(),w.getColumna());
+                        RESULT.add(parser.crearNodo("id",w.getCadena(),w.getLinea(),w.getColumna()));
+                  :};
+
 
 
 
@@ -381,9 +444,9 @@ expr_a ::= expr_a:b MAS:a expr_a:c    {:
           |APAR expr_l:r CPAR         {:  RESULT=r;    :}
           |MENOS:a expr_a:H               {:  RESULT = parser.crearNodo("unitario","",a.getLinea(),a.getColumna()); RESULT.add(H); :}
           |dato:r                     {:  RESULT=r;    :}
-          //|acceso !! FALTA ACCEDER A METODOS Y A POSICIONES DE VECTORES   
+          |Accion_Obtener:r           {:  RESULT=r;    :}
           |accesoAr:r                 {:  RESULT=r;    :}
-          |simplificada:r           {:  RESULT=r;    :};
+          |simplificada:r             {:  RESULT=r;    :};
 
 accesoAr ::= I_D:f ALLA expr_l:a CLLA{:
                 RESULT=parser.crearNodo("accesoAr",f.getCadena(),f.getLinea(),f.getColumna());

@@ -2,8 +2,21 @@ DimV arr1{8};
 arr1{0}:123;
 
 Funcion test(){
+    testAlerta();
+}
+
+Funcion testAlerta(){
+    Mensaje("Perdiendo el control");
+    
+}
+
+
+Funcion testVectores(){
     Imprimir(arr1{0});
     DimV vector1:{"Fernando nacio", " el ",'13/12/21'," y tiene ",24," anios"};
+    DimV tmp:" tengo una cadena";
+    Imprimir(tmp);
+    tmp:vector1;
     arr1{0}:vector1{0};
     Imprimir(arr1{0});
 
@@ -14,6 +27,33 @@ Funcion test(){
     Imprimir("tamano de vector1: " + vector1.Conteo);
     Imprimir(vector1{4}+"  que talega");
     Imprimir(vector1{4}+100);
+    
+    
+    Imprimir(" == == === = === ");
+
+    Imprimir(tmp{2}+" "+tmp{4}+" "+tmp{0});
+}
+Funcion testWhile(){
+    
+    DimV valor:100;
+    Selecciona(valor){
+        Caso 50+50:
+            Imprimir("Es 100");
+            Detener;
+        Caso 200:
+            Imprimir ("Es 200");
+        Defecto:
+            Imprimir ("Soy defecto");        
+    }
+    DimV num1:100;
+    Mientras(num1<200){
+        Imprimir(" Hola");
+        num1:num1+25;
+        Si(num1==1150){
+            Detener;
+        }
+
+    }
 }
 
 Funcion testVariables(){

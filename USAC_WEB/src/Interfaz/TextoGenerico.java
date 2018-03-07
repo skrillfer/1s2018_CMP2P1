@@ -32,7 +32,7 @@ public class TextoGenerico extends JTextPane{
     public boolean minuscula=false;
     public boolean capital_t=false; 
     
-    Hashtable <String,Propiedad> propiedades;
+    public Hashtable <String,Propiedad> propiedades;
     Dimension tamPadre=null;
     public TextoGenerico(Hashtable<String, Propiedad> propiedades, Dimension tamPadre) {
         

@@ -20,7 +20,7 @@ import javax.swing.border.EtchedBorder;
  * @author fernando
  */
 public class PanelGenerico extends JPanel{
-    Hashtable<String,Propiedad> propiedades;
+    public Hashtable<String,Propiedad> propiedades;
 
     public PanelGenerico(Hashtable<String,Propiedad> propiedades) {
         this.propiedades=propiedades;
@@ -43,16 +43,19 @@ public class PanelGenerico extends JPanel{
     
     
     
-    public void setId(){
+    public boolean setId(){
         try {
                 setName(propiedades.get("id").valor.trim());
-            }catch(Exception ex){}
-        updateUI();
+                updateUI();
+                return true;
+            }catch(Exception ex){return false;}
+        
     }
     
     public void setGrupo() {
         try {
             propiedades.get("grupo").valor = propiedades.get("grupo").valor.trim();
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -66,31 +69,42 @@ public class PanelGenerico extends JPanel{
         updateUI();
     }
     
-    public void setAncho(){
+    public boolean setAncho(){
          try {
                 setPreferredSize(new Dimension(Integer.valueOf(propiedades.get("ancho").valor.trim()), getPreferredSize().height));
-            } catch (Exception e) {System.out.println(e.getMessage());}
-        updateUI();
-    }
-    public void setAlto(){
-        try {
-                setPreferredSize(new Dimension(getPreferredSize().width, Integer.valueOf(propiedades.get("alto").valor.trim())));
-            } catch (Exception e) {System.out.println(e.getMessage());}
-        updateUI();
+                updateUI();
+                return true;
+            } catch (Exception e) {System.out.println(e.getMessage()); return false;}
+        
     }
     
-    public void setFondo(){
+    public boolean setAlto(){
+        try {
+                setPreferredSize(new Dimension(getPreferredSize().width, Integer.valueOf(propiedades.get("alto").valor.trim())));
+                updateUI();
+                return true;
+            } catch (Exception e) {System.out.println(e.getMessage()); return false;}
+        
+    }
+    
+    public boolean setFondo(){
         try {
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
+            
             if(color!=null){
                 setBackground(color);
+                updateUI();
+                return true;
             }
-        } catch (Exception e) {}
-        updateUI();
+            updateUI();
+            return false;
+        } catch (Exception e) { return false;}
+        
     }
     
-    public void setAlineado(){
+    public boolean setAlineado(){
+        boolean flag=true;
         try {
             String alineado = propiedades.get("alineado").valor.trim();
             switch(alineado){
@@ -107,11 +121,16 @@ public class PanelGenerico extends JPanel{
                     break;
                 case "justificado":
                     setLayout(new FlowLayout(FlowLayout.LEADING));
-                    break;    
+                    break; 
+                default:
+                    flag=false;
+                    
             }
         } catch (Exception e) {}
         updateUI();
+        return flag;
     }
+    
     
     public void cambiarGrupo(String grupo){
         grupo=grupo.trim();
