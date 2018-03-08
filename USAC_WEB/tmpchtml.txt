@@ -32,8 +32,8 @@
             <BOTON id="boton1"; click="ejecutar()"; >boton1<FIN-BOTON>
             <BOTON id="boton222"; click="ejecutar()"; >boton222<FIN-BOTON>
 
-            <BOTON id="boton333"; click="ejecutar()"; >boton333<FIN-BOTON>
-            <BOTON id="boton333"; click="ejecutar()"; >botonRepetido 333<FIN-BOTON>
+            <BOTON grupo = "grupo_1"; click="ejecutar()"; >boton333<FIN-BOTON>
+            <BOTON id="boton12"; grupo = "grupo_1"; click="ejecutar()"; >botonRepetido 333<FIN-BOTON>
 
             <TEXTO fondo="white"; alineado="centrado";> Machine learning una tendencia tecnologica:
 Es una subdisciplina de la inteligencia artificial, todo surge a partir de la gran maquina de turin

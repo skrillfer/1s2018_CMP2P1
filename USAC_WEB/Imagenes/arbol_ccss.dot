@@ -1,10 +1,10 @@
 digraph G {
 node[shape=Mrecord]
-68[label="ccss | ",style=bold]
-67[label="bloque | Titular_ccss",style=bold]
-{68}->{67}
+104[label="ccss | ",style=bold]
+103[label="bloque | Titular_ccss",style=bold]
+{104}->{103}
 1[label="identificador | boton1",style=bold]
-{67}->{1}
+{103}->{1}
 4[label="alineado | ",style=bold]
 {1}->{4}
 3[label="derecha | ",style=bold]
@@ -52,7 +52,7 @@ node[shape=Mrecord]
 33[label="string_literal | white",style=bold]
 {34}->{33}
 36[label="identificador | opcion1",style=bold]
-{67}->{36}
+{103}->{36}
 38[label="alineado | ",style=bold]
 {36}->{38}
 37[label="izquierda | ",style=bold]
@@ -95,5 +95,57 @@ node[shape=Mrecord]
 {36}->{65}
 64[label="string_literal | white",style=bold]
 {65}->{64}
+67[label="grupo | grupo_1",style=bold]
+{103}->{67}
+69[label="alineado | ",style=bold]
+{67}->{69}
+68[label="centrado | ",style=bold]
+{69}->{68}
+75[label="formato | ",style=bold]
+{67}->{75}
+72[label="valores | ",style=bold]
+{75}->{72}
+71[label="mayuscula | ",style=bold]
+{72}->{71}
+73[label="negrilla | ",style=bold]
+{72}->{73}
+74[label="cursiva | ",style=bold]
+{72}->{74}
+78[label="letra | ",style=bold]
+{67}->{78}
+77[label="string_literal | Monospaced",style=bold]
+{78}->{77}
+81[label="tamtex | ",style=bold]
+{67}->{81}
+80[label="number | 6.5",style=bold]
+{81}->{80}
+84[label="fondoelemento | ",style=bold]
+{67}->{84}
+83[label="string_literal | cyan",style=bold]
+{84}->{83}
+87[label="visible | ",style=bold]
+{67}->{87}
+86[label="boolean | true",style=bold]
+{87}->{86}
+90[label="texto | ",style=bold]
+{67}->{90}
+89[label="string_literal | mi nina",style=bold]
+{90}->{89}
+95[label="borde | ",style=bold]
+{67}->{95}
+92[label="number | 10",style=bold]
+{95}->{92}
+93[label="string_literal | red",style=bold]
+{95}->{93}
+94[label="boolean | true",style=bold]
+{95}->{94}
+98[label="opaque | ",style=bold]
+{67}->{98}
+97[label="boolean | true",style=bold]
+{98}->{97}
+101[label="colortext | ",style=bold]
+{67}->{101}
+100[label="string_literal | black",style=bold]
+{101}->{100}
 
 }

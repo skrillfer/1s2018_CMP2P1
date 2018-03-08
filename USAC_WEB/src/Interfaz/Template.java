@@ -565,16 +565,33 @@ public class Template extends JPanel implements ActionListener{
                 if (!lista_grupos.containsKey(grupo) && !grupo.equals("")) {
                     Lista lt = new Lista();
                     lista_grupos.put(grupo, lt);
+                    System.out.println("AGREGE GRUPO  " + grupo);
                 }
 
                 if (lista_grupos.containsKey(grupo)) {
                     System.out.println("se agrego a GRUPO: [" + grupo + "] a [" + id+"]");
                     lista_grupos.get(grupo).getLista().add(chijo);
+                    
                 }
                 cmps_repetidos.put(id, new Lista());
             }else{
                 try {
-                    cmps_repetidos.get(id).getLista().add(chijo);
+                     // ahora se obtiene el grupo del chijo
+                String grupo = getProp_Componente(tipo, objeto, "grupo");
+                // si no existe el grupo entonces se agrega
+                if (!lista_grupos.containsKey(grupo) && !grupo.equals("")) {
+                    Lista lt = new Lista();
+                    lista_grupos.put(grupo, lt);
+                    System.out.println("AGREGE GRUPO  " + grupo);
+                }
+
+                if (lista_grupos.containsKey(grupo)) {
+                    System.out.println("se agrego a GRUPO: [" + grupo + "] a [" + id+"]");
+                    lista_grupos.get(grupo).getLista().add(chijo);
+                    
+                }
+                
+                cmps_repetidos.get(id).getLista().add(chijo);
                 } catch (Exception e) {
                     System.out.println("error al agregar REPETIDO:"+e.getMessage());
                 }
@@ -597,6 +614,7 @@ public class Template extends JPanel implements ActionListener{
                     if (!lista_grupos.containsKey(grupo) && !grupo.equals("")) {
                         Lista lt = new Lista();
                         lista_grupos.put(grupo, lt);
+                        System.out.println("AGREGE GRUPO  " + grupo);
                     }
 
                     if (lista_grupos.containsKey(grupo)) {
@@ -606,6 +624,20 @@ public class Template extends JPanel implements ActionListener{
                     cmps_repetidos.put(id, new Lista());
                 }else{
                     try {
+                        // ahora se obtiene el grupo del chijo
+                        String grupo = getProp_Componente(tipo, objeto, "grupo");
+                        // si no existe el grupo entonces se agrega
+                        if (!lista_grupos.containsKey(grupo) && !grupo.equals("")) {
+                            Lista lt = new Lista();
+                            lista_grupos.put(grupo, lt);
+                            System.out.println("AGREGE GRUPO  " + grupo);
+                        }
+
+                        if (lista_grupos.containsKey(grupo)) {
+                            System.out.println("se agrego a GRUPO: [" + grupo + "] a [" + id+"]");
+                            lista_grupos.get(grupo).getLista().add(chijo);
+
+                        }
                         cmps_repetidos.get(id).getLista().add(chijo);
                     } catch (Exception e) {
                         System.out.println("error al agregar REPETIDO:"+e.getMessage());
@@ -794,15 +826,18 @@ public class Template extends JPanel implements ActionListener{
                    for (NodoCSS nodo : bloque.hijos) {
                        switch (nodo.nombre) {
                            case "grupo":
-                               
+                               System.out.println("holaaa vot a aplicar grupo CCCSS  ->"+nodo.valor);
                                ArrayList<Componente> listaCOMP ;
-                               if(lista_grupos.contains(nodo.valor.trim())){
+                               if(lista_grupos.containsKey(nodo.valor.trim())){
+                                   System.out.println("existe :"+ nodo.valor);
                                    listaCOMP = lista_grupos.get(nodo.valor.trim()).getLista();
+                                   System.out.println("TAM lista GRUPO"+ listaCOMP.size());
                                    for (Componente componente : listaCOMP) {
+                                       System.out.println("si hay GRUPO:"+nodo.valor);
                                        NodoCSS nnn = new NodoCSS("identificador",componente.id.trim(), nodo.linea,nodo.columna, 1000);
                                        nnn.hijos=nodo.hijos;
                                        
-                                       aplicarCcss(nnn);
+                                       aplicarCcss(nnn,componente);
                                    }
                                }
                                
@@ -817,7 +852,7 @@ public class Template extends JPanel implements ActionListener{
                                break;
                            case "identificador":
                                System.out.println("voy a aplicar");
-                               aplicarCcss(nodo);
+                               aplicarCcss(nodo,null);
                                if(!lista_estilos_id.containsKey(nodo.valor.trim())){
                                    ArrayList<NodoCSS> lista = new ArrayList<>();
                                    lista.add(nodo);
@@ -849,22 +884,28 @@ public class Template extends JPanel implements ActionListener{
             }
         }
     }
-    public void aplicarCcss(NodoCSS raiz){
+    public void aplicarCcss(NodoCSS raiz, Componente componente){
         
         OperacionesARL opl = new OperacionesARL();
         for (NodoCSS nodo : raiz.hijos) {
             switch(nodo.nombre){
                 case "alineado":
-                    setAlineado(raiz, nodo, opl);
+                    setAlineado(raiz, nodo, opl,componente);
                     break;
                 case "texto":
-                    setTexto(raiz, nodo, opl);
+                    setTexto(raiz, nodo, opl,componente);
                     break;    
                 case "formato":
                     if(raiz.nombre.equals("identificador")){
                         Componente cmp = lista_componentes.get(raiz.valor.trim());
-                        if (cmp==null)
-                            break;
+                        if (cmp==null){
+                            if (componente!=null){
+                                cmp=componente;
+                            }else{
+                                break;
+                            }
+                        }
+                           
                         NodoCSS valores= nodo.hijos.get(0);
                         for (NodoCSS valor : valores.hijos) {
                             ResultadoG res = opl.ejecutar(valor);
@@ -1069,38 +1110,43 @@ public class Template extends JPanel implements ActionListener{
                     
                     break;   
                 case "letra":
-                    setLetra(raiz, nodo, opl);
+                    setLetra(raiz, nodo, opl,componente);
                     break; 
                 case "tamtex":
-                    setTamtex(raiz, nodo, opl);
+                    setTamtex(raiz, nodo, opl,componente);
                     break;    
                 case "fondoelemento":
-                    setFondoElemento(raiz, nodo, opl);
+                    setFondoElemento(raiz, nodo, opl,componente);
                     break;    
                 case "autoredimension":
                     // aqui no se que putas hacer
                     break;    
                 case "visible":
-                    setVisible(raiz, nodo, opl);
+                    setVisible(raiz, nodo, opl,componente);
                     break;        
                 case "borde":
-                    setBorde(raiz, nodo, opl);
+                    setBorde(raiz, nodo, opl,componente);
                     break;
                 case "opaque":
-                    setOpaque(raiz, nodo, opl);
+                    setOpaque(raiz, nodo, opl,componente);
                     break;
                 case "colortext":
-                    setColortext(raiz, nodo, opl);
+                    setColortext(raiz, nodo, opl,componente);
                     break;
             }
         }
     }
     
-    public void setAlineado(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setAlineado(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
+            
             if (cmp == null) {
-                cmp = new Componente("null", "null", new Object(), null);
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("null", "null", new Object(), null);
+                }
             }
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
@@ -1197,11 +1243,17 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public void setTexto(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setTexto(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp == null)
-                cmp = new Componente("null", "null", new Object(),null);
+            if (cmp == null){
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("null", "null", new Object(),null);
+                }
+            }
+            
 
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null)
@@ -1273,11 +1325,17 @@ public class Template extends JPanel implements ActionListener{
     }
     
     
-    public void setLetra(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setLetra(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp == null) 
-                cmp = new Componente("null", "null", new Object(), null);
+            if (cmp == null){
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("null", "null", new Object(), null);
+                }
+            } 
+                
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null)
@@ -1327,11 +1385,17 @@ public class Template extends JPanel implements ActionListener{
     }
     
     
-    public void setTamtex(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setTamtex(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp==null)
-                cmp = new Componente("", "",new Object(), null);
+            if (cmp==null){
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("", "",new Object(), null);
+                }
+            }
+                
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
@@ -1380,12 +1444,17 @@ public class Template extends JPanel implements ActionListener{
     }
     
     
-    public void setFondoElemento(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setFondoElemento(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl,Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp==null)
-                cmp = new Componente("", "",new Object(), null);
-            
+            if (cmp==null){
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("", "",new Object(), null);
+                }
+            }
+                
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res = new ResultadoG("ninguno",null);
@@ -1434,11 +1503,16 @@ public class Template extends JPanel implements ActionListener{
     }
     
     
-    public void setVisible(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setVisible(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp==null)
-                cmp = new Componente("", "",new Object(), null);
+            if (cmp==null){
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("", "",new Object(), null);
+                }
+            }
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
@@ -1481,11 +1555,13 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public void setBorde(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setBorde(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl,Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp==null)
+            if (cmp==null){
                 cmp = new Componente("", "",new Object(), null);
+            }
+                
             
             ResultadoG res1 = opl.ejecutar(nodo.hijos.get(0));
             ResultadoG res2 = opl.ejecutar(nodo.hijos.get(1));
@@ -1553,11 +1629,16 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public void setOpaque(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setOpaque(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp==null)
-                cmp = new Componente("", "",new Object(), null);
+            if (cmp==null){
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("", "",new Object(), null);
+                }
+            }
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
@@ -1600,11 +1681,16 @@ public class Template extends JPanel implements ActionListener{
     }
     
     
-    public void setColortext(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl){
+    public void setColortext(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
-            if (cmp==null)
-                cmp = new Componente("", "",new Object(), null);
+            if (cmp==null){
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("", "",new Object(), null);
+                }
+            }
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)

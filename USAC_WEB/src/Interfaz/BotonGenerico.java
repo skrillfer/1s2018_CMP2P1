@@ -138,7 +138,8 @@ public class BotonGenerico extends JButton {
                             
                             try {
                                 String metodo = propiedades.get("click").valor;
-                                metodo=metodo.substring(0,metodo.length()-2);
+                                //metodo=metodo.substring(0,metodo.length()-2);
+                                metodo=metodo.replace("(","").replace(")", "");
                                 Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
                             } catch (Exception ex) {}
                             

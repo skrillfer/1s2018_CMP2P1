@@ -22,4 +22,19 @@ Titular_ccss[
     borde := [10,"red",true];
     opaque := false;
     colortext := "white";
+
+
+
+   grupo(grupo_1);
+    alineado := centrado;
+    formato := mayuscula,negrilla,cursiva;
+    letra := "Monospaced";
+    tamtex := 6.5;
+    fondoelemento := "cyan";
+    visible := true;
+    texto := "mi nina";
+    borde := [10,"red",true];
+    opaque := true;
+    colortext := "black";
+
 ]
