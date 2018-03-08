@@ -295,7 +295,7 @@ public class Declaracion extends Compilador{
                 if (!tabla.setSimbolo(simbolo)) {
                     Template.reporteError_CJS.agregar("Error Semantico",raiz.linea, raiz.columna,"La variable " + nombre + " ya existe");
                 }else{
-                    System.out.println("se agrego correctamente  "+simbolo.nombre);
+                    System.out.println("se agrego correctamente  "+simbolo.nombre+"---"+simbolo.tipo);
                 }
                 
             }else{

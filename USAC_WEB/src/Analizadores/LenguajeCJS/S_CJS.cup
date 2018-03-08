@@ -306,12 +306,20 @@ Accion_Setear  ::= Accion_Obtener:x PtoSetElemento:h{:
                   :}
                   |I_D:w PtoSetElemento:h {:
                         RESULT = parser.crearNodo("Accion_Setear","",w.getLinea(),w.getColumna());
-                        RESULT.add(parser.crearNodo("id_componente",w.getCadena(),w.getLinea(),w.getColumna()));
+                        RESULT.add(parser.crearNodo("id_cmp",w.getCadena(),w.getLinea(),w.getColumna()));
                         RESULT.add(h);
                   :}
                   |I_D:w PtoObservador:h {:
                         RESULT = parser.crearNodo("Accion_Setear","",w.getLinea(),w.getColumna());
-                        RESULT.add(parser.crearNodo("id_componente",w.getCadena(),w.getLinea(),w.getColumna()));
+                        RESULT.add(parser.crearNodo("id_cmp",w.getCadena(),w.getLinea(),w.getColumna()));
+                        RESULT.add(h);
+                  :}
+                  |DOCUMENTO:w PtoSetElemento:h{:
+                        RESULT = parser.crearNodo("Accion_Setear","",w.getLinea(),w.getColumna());
+                        RESULT.add(h);
+                  :}
+                  |DOCUMENTO:w PtoObservador:h{:
+                        RESULT = parser.crearNodo("Accion_Setear","",w.getLinea(),w.getColumna());
                         RESULT.add(h);
                   :};
 

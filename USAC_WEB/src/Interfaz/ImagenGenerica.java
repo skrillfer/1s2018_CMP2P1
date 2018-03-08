@@ -5,6 +5,8 @@
  */
 package Interfaz;
 
+import Estructuras.Nodo;
+import Estructuras.NodoCSS;
 import Estructuras.Propiedad;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,6 +26,7 @@ import javax.swing.JTextField;
  * @author fernando
  */
 public  class ImagenGenerica extends JLabel implements MouseListener{
+    public Nodo metodo = null; 
     public Hashtable<String,Propiedad> propiedades;
     int alto=0;
     int ancho=0;
@@ -117,15 +120,17 @@ public  class ImagenGenerica extends JLabel implements MouseListener{
     }
     
    
-    public void setFondo(){
+    public boolean setFondo(){
+        boolean flag=true;
         try {
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
             if(color!=null){
                 setBackground(color);
-            }
-        } catch (Exception e) {}
+            }else{flag=false;}
+        } catch (Exception e) {flag=false;}
         updateUI();
+        return flag;
     }
     
     public String getRutaTexto(String ruta){
@@ -138,7 +143,8 @@ public  class ImagenGenerica extends JLabel implements MouseListener{
         return ruta;
     }
 
-    public void setAlineado(){
+    public boolean setAlineado(){
+        boolean flag=true;
        try{
             String alineado = propiedades.get("alineado").valor.trim();
            switch (alineado.toLowerCase()) {
@@ -156,11 +162,13 @@ public  class ImagenGenerica extends JLabel implements MouseListener{
                    //no aplica
                    break;
                default:
+                   flag=false;
                //error
 
            }
-        }catch(Exception e){}
+        }catch(Exception e){flag=false;}
         updateUI();
+        return flag;
     }
     
     @Override

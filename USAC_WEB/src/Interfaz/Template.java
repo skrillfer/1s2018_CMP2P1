@@ -5,6 +5,7 @@
  */
 package Interfaz;
 
+import CJS_Compilador.CJS;
 import CJS_Compilador.ResultadoG;
 import Estructuras.NodoCSS;
 import Estructuras.NodoDOM;
@@ -43,10 +44,13 @@ import Errores.Erro_r;
 import Errores.ReporteError;
 import Estructuras.Historia;
 import Estructuras.Lista_Cargadas;
+import Estructuras.Nodo;
 import java.awt.CardLayout;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
@@ -66,15 +70,24 @@ import javax.swing.border.LineBorder;
  * @author fernando
  */
 public class Template extends JPanel implements ActionListener{
+    //***************** lista de CJS clases*************************************/
+    int yahay=0;
+    public static CJS principal_cjs = new CJS();
     //******************* consola de salida ***/////////////////
     public static String CONSOLA="";
     //----------------------------------------------------//
     public static ReporteError reporteError_CJS = new ReporteError(); // este REPORTE es para CJS
     //**************************************************************************
+    //lista de COMPONENTES REPETIDOS
+    public static Hashtable<String,Lista> cmps_repetidos = new Hashtable<>();
+    
+    //componentes HTML
     public static Hashtable<String,Componente> lista_componentes= new Hashtable<>();
+    
+    //lista de GRUPOS un grupo tiene una lista de componentes
     static Hashtable<String,Lista> lista_grupos= new Hashtable<>();
     
-    
+    //lista de estilos ya sea por id o por grupo
     static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_id = new Hashtable<>();
     static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_grupo = new Hashtable<>();
     
@@ -96,6 +109,10 @@ public class Template extends JPanel implements ActionListener{
     //final JScrollPane scroll = new JScrollPane();
     //************ Atributos de la Barra Principal *****************************
     JPanel barraPrincipal = new JPanel();
+    
+    JButton agregarTab = new JButton("");
+    JButton quitarTab = new JButton("");
+    
     JButton atras = new JButton("");
     JButton adelante = new JButton("");
     JButton reload = new JButton("");
@@ -158,7 +175,16 @@ public class Template extends JPanel implements ActionListener{
             favoritos.setContentAreaFilled(false);
             favoritos.setBorderPainted(false);
             favoritos.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/Recursos/favoritos.png"))));
+            
+            agregarTab.setOpaque(false);
+            agregarTab.setContentAreaFilled(false);
+            agregarTab.setBorderPainted(false);
+            agregarTab.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/Recursos/add.png"))));
 
+            quitarTab.setOpaque(false);
+            quitarTab.setContentAreaFilled(false);
+            quitarTab.setBorderPainted(false);
+            quitarTab.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/Recursos/quit.png"))));
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -174,6 +200,12 @@ public class Template extends JPanel implements ActionListener{
         barraPrincipal.add(reload);
         
         barraPrincipal.add(campoURL);
+        
+        agregarTab.addActionListener(this);
+        barraPrincipal.add(agregarTab);
+        
+        quitarTab.addActionListener(this);
+        barraPrincipal.add(quitarTab);
         
         historial.addActionListener(this);
         barraPrincipal.add(historial);
@@ -199,16 +231,16 @@ public class Template extends JPanel implements ActionListener{
         add(favoritos);
          */
         //scroll.setBorder(new EtchedBorder(EtchedBorder.RAISED));
-        panel_P.setPreferredSize(new Dimension(750, 1000));
+        panel_P.setPreferredSize(new Dimension(1400, 1700));
         //panel_P.setLayout(new BoxLayout(panel_P, BoxLayout.Y_AXIS));
         //panel_P.setPreferredSize(this.getPreferredSize().getSize());
         //panel_P.setBackground(Color.red);
         add(barraPrincipal);
         
         JScrollPane jsp = new JScrollPane(panel_P);
-        jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 
-        jsp.setPreferredSize(new Dimension(970, 490));
+        jsp.setPreferredSize(new Dimension(1350, 550));
         
         add(jsp);
         
@@ -240,11 +272,16 @@ public class Template extends JPanel implements ActionListener{
                }
                
                try {
-                   //ejecutarArchivosCcss();
+                   ejecutarArchivosCcss();
                } catch (Exception e) {
                    reporteError_CJS.agregar("Error Ejecucion", dom.linea, dom.columna,"Ejecutando CCSS ->"+ e.getMessage(), path);
                }
                
+               try {
+                   ejecutarArchivosCjs();
+               } catch (Exception e) {
+                   reporteError_CJS.agregar("Error Ejecucion", dom.linea, dom.columna,"Ejecutando CJS ->"+ e.getMessage(), path);
+               }
            }
            
         } else {
@@ -266,10 +303,21 @@ public class Template extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         Object boton = e.getSource();
+        if(boton==agregarTab){
+            try {
+                VentanaPrincipal.agregarNuevaPagina("nuevo_"+VentanaPrincipal.controlTab1.getComponentCount());
+            } catch (Exception ex) {}
+            
+        }else if(boton==quitarTab){
+            try {
+                VentanaPrincipal.quitarPaginaActual();
+            } catch (Exception ex) {}
+         
+        }
         if(boton==opciones){
             String data=lista_cargadas.getPagina(lista_cargadas.getIndex());
             System.out.println("===>"+data);
-            new VentanaOpciones(data,obtenerListaArchivosCJS(),obtenerListaArchivosCCSS());
+            new VentanaOpciones(data,obtenerListaArchivosCJS(),obtenerListaArchivosCCSS(),CONSOLA);
         }else if(boton==reload){
             cargar_Recargar();
         }else if(boton==historial){
@@ -332,6 +380,15 @@ public class Template extends JPanel implements ActionListener{
                 }
                 //String link= lista_cargadas.getPagina(WIDTH);
             }
+        }else if(boton==plus){
+            int index = lista_cargadas.getIndex();
+            String link = lista_cargadas.getPagina(index);
+            if(!link.equals("")){
+                VentanaPrincipal.lista_favoritos.add(link);
+            }
+            
+        }else if(boton==favoritos){
+            presentarFavoritos();
         }
     }
 
@@ -367,33 +424,52 @@ public class Template extends JPanel implements ActionListener{
                     addCcss(hijo.propiedades.get("ruta").valor.trim());
                     break;
                 case "cuerpo":
-                    System.out.println("entre a cuerpo");
-                    setPropiedadesCuerpo(hijo.propiedades);
+                    //JPanel regenera= new JPanel();
+                    //regenera.setBackground(Color.green);
+                    //regenera.setName("");
+                    
+                    
+                    //this.panel_P.add(regenera);
                     GENERADOR_VISTA(hijo,panel_P);
+                    //this.panel_P.add(regenera);
+                    System.out.println("entre a cuerpo");
+                    //setPropiedadesCuerpo(hijo.propiedades);
+                    
                     break;
                 case "panel":
+                    
                     JPanel nuevopanel = new PanelGenerico(hijo.propiedades);
-                    addComponente(nuevopanel.getName(),"panel",nuevopanel,panel_P,"panel",panel_P.getName());
+                    nuevopanel.setLayout(new BoxLayout(nuevopanel, BoxLayout.Y_AXIS));
+                    try {
+                        addComponente(nuevopanel.getName(),"panel",nuevopanel,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
                     panel_P.add(nuevopanel);
-                    updateUI();
                     GENERADOR_VISTA(hijo,nuevopanel);
+                    updateUI();
+                    
                     //panel_P=pila_panels.pop();
                     break;
                 case "texto":
                     JTextPane texxto = new TextoGenerico(hijo.propiedades,panel_P.getPreferredSize());
-                    addComponente(texxto.getName(),"texto",texxto,panel_P,"panel",panel_P.getName());
+                    try {
+                        addComponente(texxto.getName(),"texto",texxto,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
                     panel_P.add(texxto);
                     updateUI();
                     break;
                 case "boton":                    
                     JButton btn=new BotonGenerico(hijo.propiedades);
-                    addComponente(btn.getName(),"boton",btn,panel_P,"panel",panel_P.getName());
+                    try {
+                        addComponente(btn.getName(),"boton",btn,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
                     panel_P.add(btn);                    
                     updateUI();
                     break;
                 case "caja_texto":
                     JTextField txt=new CajaTextoGenerica(hijo.propiedades);
-                    addComponente(txt.getName(),"cajatexto",txt,panel_P,"panel",panel_P.getName());
+                    try {
+                        addComponente(txt.getName(),"cajatexto",txt,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
                     panel_P.add(txt); 
                     updateUI();
                     break;
@@ -403,37 +479,56 @@ public class Template extends JPanel implements ActionListener{
                     JScrollPane scroll = new JScrollPane(txt_a,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                     scroll.setName("texto_a-"+txt_a.getName());
-                    addComponente(txt_a.getName(),"areatexto",txt_a,panel_P,"panel",panel_P.getName());
+                    try {
+                        addComponente(txt_a.getName(),"areatexto",txt_a,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
                     panel_P.add(scroll);  
                     updateUI();
                     break;
                 case "spinner":
                     JSpinner sp= new SpinnerGenerico(hijo.propiedades);
-                    addComponente(sp.getName(),"spinner",sp,panel_P,"panel",panel_P.getName());
+                    try {
+                        addComponente(sp.getName(),"spinner",sp,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
                     panel_P.add(sp);
                     updateUI();
                     break;
                 case "enlace":
                      JLabel enlac = new EnlaceGenerico(hijo.propiedades);
-                     addComponente(enlac.getName(),"enlace",enlac,panel_P,"panel",panel_P.getName());
+                     try {
+                        addComponente(enlac.getName(),"enlace",enlac,panel_P,"panel",panel_P.getName());
+                     } catch (Exception e) {}
+                     
                      panel_P.add(enlac);
                      updateUI();
                      break;
                 case "tabla":
+                    
                      JPanel tabla = new TablaGenerica2(hijo.propiedades, hijo);
-                     addComponente(tabla.getName(),"tabla",tabla,panel_P,"panel",panel_P.getName());
+                     
+                     try {
+                         addComponente(tabla.getName(),"tabla",tabla,panel_P,"panel",panel_P.getName());
+                     } catch (Exception e) {}
+                     
                      panel_P.add(tabla);
                      updateUI();
                      break;
                 case "imagen":
                     JLabel img = new ImagenGenerica(hijo.propiedades);
-                    addComponente(img.getName(),"imagen",img,panel_P,"panel",panel_P.getName());
+                    try {
+                        addComponente(img.getName(),"imagen",img,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
+                    
                     panel_P.add(img);
                     updateUI();
                     break;
                 case "caja":
-                    JComboBox combo = new CajaOpcionesGenerica(hijo.propiedades, hijo.hijos,meta_colores);
-                    addComponente(combo.getName(),"cajaopciones",combo,panel_P,"panel",panel_P.getName());
+                    CajaOpcionesGenerica combo = new CajaOpcionesGenerica(hijo.propiedades, hijo.hijos,meta_colores);
+                    try {
+                        addComponente(combo.getName(),"cajaopciones",combo,panel_P,"panel",panel_P.getName());
+                    } catch (Exception e) {}
+                    
+                    combo.agregarOpciones();
                     panel_P.add(combo);
                     updateUI();
                     break;
@@ -450,11 +545,13 @@ public class Template extends JPanel implements ActionListener{
         if (lista_componentes.containsKey(idpadre)) {
             cpadre = lista_componentes.get(idpadre);
         }
+        
         //si el padre no es nulo
         if (cpadre != null) {
+            Componente chijo = new Componente(id, tipo, objeto, cpadre);
             //se crea el componente hijo
             if (!lista_componentes.containsKey(id.trim())) {
-                Componente chijo = new Componente(id, tipo, objeto, cpadre);
+                
                 //se agrega el nuevo componente a la lista de componentes
                 if(!id.trim().equals("")){
                     lista_componentes.put(id, chijo);
@@ -474,13 +571,54 @@ public class Template extends JPanel implements ActionListener{
                     System.out.println("se agrego a GRUPO: [" + grupo + "] a [" + id+"]");
                     lista_grupos.get(grupo).getLista().add(chijo);
                 }
-
+                cmps_repetidos.put(id, new Lista());
+            }else{
+                try {
+                    cmps_repetidos.get(id).getLista().add(chijo);
+                } catch (Exception e) {
+                    System.out.println("error al agregar REPETIDO:"+e.getMessage());
+                }
             }
 
+        }else{
+            if(cpadre==null){
+                Componente chijo = new Componente(id, tipo, objeto, null);
+                if (!lista_componentes.containsKey(id.trim())) {
+                    
+                    //se agrega el nuevo componente a la lista de componentes
+                    if (!id.trim().equals("")) {
+                        lista_componentes.put(id, chijo);
+                        System.out.println("se agrego a lstComponentes a: [" + id + "] y padre [" + "" + "]");
+                    }
+
+                    // ahora se obtiene el grupo del chijo
+                    String grupo = getProp_Componente(tipo, objeto, "grupo");
+                    // si no existe el grupo entonces se agrega
+                    if (!lista_grupos.containsKey(grupo) && !grupo.equals("")) {
+                        Lista lt = new Lista();
+                        lista_grupos.put(grupo, lt);
+                    }
+
+                    if (lista_grupos.containsKey(grupo)) {
+                        System.out.println("se agrego a GRUPO: [" + grupo + "] a [" + id + "]");
+                        lista_grupos.get(grupo).getLista().add(chijo);
+                    }
+                    cmps_repetidos.put(id, new Lista());
+                }else{
+                    try {
+                        cmps_repetidos.get(id).getLista().add(chijo);
+                    } catch (Exception e) {
+                        System.out.println("error al agregar REPETIDO:"+e.getMessage());
+                    }
+                }
+            }
+            //System.out.println("el padre de "+id +" es null");
         }
     }
     
     public static String getProp_Componente(String tipo, Object objeto, String prop){
+        prop=prop.trim();
+                
         String propiedad="";
         BotonGenerico btn;
         EnlaceGenerico enl;
@@ -492,6 +630,7 @@ public class Template extends JPanel implements ActionListener{
         AreaTextoGenerica atxt;
         CajaOpcionesGenerica cop;
         TablaGenerica2 tbl;
+        OpcionGenerica opc;
         switch(tipo){
             case "boton":
                 try {
@@ -547,6 +686,13 @@ public class Template extends JPanel implements ActionListener{
                     propiedad=cop.propiedades.get(prop.toLowerCase()).valor.trim();
                 } catch (Exception e) {}
                 break;  
+            case "opcion":
+                try {
+                    opc = (OpcionGenerica)objeto;
+                    propiedad=opc.propiedades.get(prop.toLowerCase()).valor.trim();
+                } catch (Exception e) {
+                }
+                break;
             case "tabla":
                 try {
                     tbl = (TablaGenerica2)objeto;
@@ -636,7 +782,12 @@ public class Template extends JPanel implements ActionListener{
             String vruta = lista_ccss.get(llave).trim();
             
             //*** para cada una de las rutas guardadas, vento y compilo
-           NodoCSS dom=new USAC_WEB().compilarCCSS(leerArchivo(vruta));
+            NodoCSS dom=null;
+            try {
+                dom=new USAC_WEB().compilarCCSS(leerArchivo(vruta));
+            } catch (Exception e) {
+            }
+           
            
            if(dom!=null){
                for (NodoCSS bloque : dom.hijos) {
@@ -650,6 +801,7 @@ public class Template extends JPanel implements ActionListener{
                                    for (Componente componente : listaCOMP) {
                                        NodoCSS nnn = new NodoCSS("identificador",componente.id.trim(), nodo.linea,nodo.columna, 1000);
                                        nnn.hijos=nodo.hijos;
+                                       
                                        aplicarCcss(nnn);
                                    }
                                }
@@ -664,6 +816,7 @@ public class Template extends JPanel implements ActionListener{
                                
                                break;
                            case "identificador":
+                               System.out.println("voy a aplicar");
                                aplicarCcss(nodo);
                                if(!lista_estilos_id.containsKey(nodo.valor.trim())){
                                    ArrayList<NodoCSS> lista = new ArrayList<>();
@@ -681,6 +834,21 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
+    
+    public void ejecutarArchivosCjs() throws FileNotFoundException{
+        ArrayList<String> listacjs = obtenerListaArchivosCJS();
+        if(listacjs!=null){
+            for (String ruta : listacjs) {
+                try {
+                   Nodo root=new USAC_WEB().CompilarCJS(leerArchivo(ruta));     
+                   principal_cjs.ejecucionCJS(root, "", ruta);
+                } catch (Exception e) {
+                }
+                
+                
+            }
+        }
+    }
     public void aplicarCcss(NodoCSS raiz){
         
         OperacionesARL opl = new OperacionesARL();
@@ -1552,6 +1720,45 @@ public class Template extends JPanel implements ActionListener{
         ventana.setVisible(true);
     }
 
+    public void presentarFavoritos(){
+        ArrayList<String> ls=VentanaPrincipal.lista_favoritos;
+        JPanel panell= new JPanel();
+        panell.setLayout(new BoxLayout(panell, BoxLayout.PAGE_AXIS));
+        JScrollPane scroll = new JScrollPane(panell);
+        
+        for (String l : ls) {
+            JPanel historia = new JPanel();
+            historia.setLayout(new GridLayout(1, 2));
+            historia.setBackground(Color.ORANGE);
+            historia.setPreferredSize(new Dimension(900, 30));
+            
+            JLabel link = new JLabel(l);
+            link.setHorizontalAlignment(SwingConstants.CENTER);
+            link.setForeground(Color.BLUE);
+            link.setToolTipText("Click goto:"+l);
+
+            link.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    campoURL.setText(link.getText().trim());
+                    cargar_Recargar();
+                }
+                
+            });
+            historia.add(link);
+            panell.add(historia);
+        }
+        
+        JFrame ventana = new JFrame("FAVORITOS");
+        ventana.add(scroll);
+        //ventana.setBounds(WIDTH, WIDTH, WIDTH, HEIGHT);
+        ventana.setSize(1000, 300);
+        ventana.setLocationRelativeTo(this);
+
+        ventana.setVisible(true);
+    }
+    
+    
     public void cargar_Recargar(){
         if (!campoURL.getText().isEmpty()) {
                 

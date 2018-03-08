@@ -1,435 +1,89 @@
 digraph G {
 node[shape=Mrecord]
 5[label="contenido | ",style=bold]
-2[label="declara_vecF2 | ",style=bold]
-{5}->{2}
-3[label="nombre | arr1",style=bold]
-{2}->{3}
-4[label="dimensiones | ",style=bold]
-{2}->{4}
-1[label="number | 8",style=bold]
-{4}->{1}
-8[label="asigna_vecGlbF2 | ",style=bold]
-{5}->{8}
-9[label="nombre | arr1",style=bold]
+3[label="declara_var | ",style=bold]
+{5}->{3}
+4[label="nombre | var1",style=bold]
+{3}->{4}
+2[label="asigna_var | ",style=bold]
+{3}->{2}
+1[label="string | hola mundo",style=bold]
+{2}->{1}
+11[label="funcion | ",style=bold]
+{5}->{11}
+12[label="id | ejecutar",style=bold]
+{11}->{12}
+6[label="parametros | ",style=bold]
+{11}->{6}
+10[label="sentencias | ",style=bold]
+{11}->{10}
+8[label="llamadaFuncion | ",style=bold]
+{10}->{8}
+9[label="id | ejecutar2",style=bold]
 {8}->{9}
-10[label="indice | ",style=bold]
-{8}->{10}
-6[label="number | 0",style=bold]
-{10}->{6}
-7[label="number | 123",style=bold]
+7[label="envios | ",style=bold]
 {8}->{7}
-16[label="funcion | ",style=bold]
-{5}->{16}
-17[label="id | test",style=bold]
-{16}->{17}
-11[label="parametros | ",style=bold]
-{16}->{11}
-15[label="sentencias | ",style=bold]
+36[label="funcion | ",style=bold]
+{5}->{36}
+37[label="id | ejecutar2",style=bold]
+{36}->{37}
+13[label="parametros | ",style=bold]
+{36}->{13}
+20[label="sentencias | ",style=bold]
+{36}->{20}
+18[label="declara_var_L | ",style=bold]
+{20}->{18}
+19[label="nombre | boton1",style=bold]
+{18}->{19}
+17[label="asigna_var | ",style=bold]
+{18}->{17}
+16[label="Accion_Obtener | ",style=bold]
+{17}->{16}
+15[label="pto_obtener | ",style=bold]
 {16}->{15}
-13[label="llamadaFuncion | ",style=bold]
-{15}->{13}
-14[label="id | testAlerta",style=bold]
-{13}->{14}
-12[label="envios | ",style=bold]
-{13}->{12}
-24[label="funcion | ",style=bold]
-{5}->{24}
-25[label="id | testAlerta",style=bold]
+14[label="string | boton222",style=bold]
+{15}->{14}
+24[label="Accion_Setear | ",style=bold]
+{20}->{24}
+25[label="id_cmp | boton1",style=bold]
 {24}->{25}
-18[label="parametros | ",style=bold]
-{24}->{18}
-21[label="sentencias | ",style=bold]
-{24}->{21}
-20[label="mensaje | ",style=bold]
-{21}->{20}
-19[label="string | Perdiendo el control",style=bold]
-{20}->{19}
-23[label="imprimir | ",style=bold]
-{21}->{23}
-22[label="string | jodane",style=bold]
+23[label="pto_elemento | ",style=bold]
+{24}->{23}
+21[label="string | fondo",style=bold]
+{23}->{21}
+22[label="string | yellow",style=bold]
 {23}->{22}
-96[label="funcion | ",style=bold]
-{5}->{96}
-97[label="id | testVectores",style=bold]
-{96}->{97}
-26[label="parametros | ",style=bold]
-{96}->{26}
-30[label="sentencias | ",style=bold]
-{96}->{30}
-29[label="imprimir | ",style=bold]
-{30}->{29}
-28[label="accesoAr | arr1",style=bold]
+29[label="asignacionLocal | ",style=bold]
+{20}->{29}
+30[label="nombre | boton1",style=bold]
+{29}->{30}
+28[label="Accion_Obtener | ",style=bold]
 {29}->{28}
-27[label="number | 0",style=bold]
+27[label="pto_obtener | ",style=bold]
 {28}->{27}
-38[label="declara_vecF1_L | ",style=bold]
-{30}->{38}
-39[label="nombre | vector1",style=bold]
-{38}->{39}
-32[label="valores | ",style=bold]
-{38}->{32}
-31[label="string | Fernando nacio",style=bold]
-{32}->{31}
-33[label="string |  el ",style=bold]
-{32}->{33}
-34[label="date | 13/12/21",style=bold]
-{32}->{34}
-35[label="string |  y tiene ",style=bold]
-{32}->{35}
-36[label="number | 24",style=bold]
-{32}->{36}
-37[label="string |  anios",style=bold]
-{32}->{37}
-42[label="declara_var_L | ",style=bold]
-{30}->{42}
-43[label="nombre | tmp",style=bold]
+26[label="string | boton333",style=bold]
+{27}->{26}
+34[label="Accion_Setear | ",style=bold]
+{20}->{34}
+35[label="id_cmp | boton1",style=bold]
+{34}->{35}
+33[label="pto_elemento | ",style=bold]
+{34}->{33}
+31[label="string | fondo",style=bold]
+{33}->{31}
+32[label="string | green",style=bold]
+{33}->{32}
+42[label="funcion | ",style=bold]
+{5}->{42}
+43[label="id | ejecutar3",style=bold]
 {42}->{43}
-41[label="asigna_var | ",style=bold]
+38[label="parametros | ",style=bold]
+{42}->{38}
+41[label="sentencias | ",style=bold]
 {42}->{41}
-40[label="string |  tengo una cadena",style=bold]
+40[label="mensaje | ",style=bold]
 {41}->{40}
-45[label="imprimir | ",style=bold]
-{30}->{45}
-44[label="id | tmp",style=bold]
-{45}->{44}
-47[label="asignacionLocal | ",style=bold]
-{30}->{47}
-48[label="nombre | tmp",style=bold]
-{47}->{48}
-46[label="id | vector1",style=bold]
-{47}->{46}
-52[label="asigna_vecLocalF2 | ",style=bold]
-{30}->{52}
-53[label="nombre | arr1",style=bold]
-{52}->{53}
-54[label="indice | ",style=bold]
-{52}->{54}
-49[label="number | 0",style=bold]
-{54}->{49}
-51[label="accesoAr | vector1",style=bold]
-{52}->{51}
-50[label="number | 0",style=bold]
-{51}->{50}
-57[label="imprimir | ",style=bold]
-{30}->{57}
-56[label="accesoAr | arr1",style=bold]
-{57}->{56}
-55[label="number | 0",style=bold]
-{56}->{55}
-59[label="imprimir | ",style=bold]
-{30}->{59}
-58[label="string | Test Vectores",style=bold]
-{59}->{58}
-62[label="imprimir | ",style=bold]
-{30}->{62}
-61[label="accesoAr | arr1",style=bold]
-{62}->{61}
-60[label="number | 0",style=bold]
-{61}->{60}
-65[label="imprimir | ",style=bold]
-{30}->{65}
-63[label="funcion_aTexto | ",style=bold]
-{65}->{63}
-64[label="id | vector1",style=bold]
-{63}->{64}
-70[label="imprimir | ",style=bold]
-{30}->{70}
-69[label="MAS | ",style=bold]
-{70}->{69}
-66[label="string | tamano de vector1: ",style=bold]
-{69}->{66}
-67[label="funcion_Conteo | ",style=bold]
-{69}->{67}
-68[label="id | vector1",style=bold]
-{67}->{68}
-75[label="imprimir | ",style=bold]
-{30}->{75}
-74[label="MAS | ",style=bold]
-{75}->{74}
-72[label="accesoAr | vector1",style=bold]
-{74}->{72}
-71[label="number | 4",style=bold]
-{72}->{71}
-73[label="string |   que talega",style=bold]
-{74}->{73}
-80[label="imprimir | ",style=bold]
-{30}->{80}
-79[label="MAS | ",style=bold]
-{80}->{79}
-77[label="accesoAr | vector1",style=bold]
-{79}->{77}
-76[label="number | 4",style=bold]
-{77}->{76}
-78[label="number | 100",style=bold]
-{79}->{78}
-82[label="imprimir | ",style=bold]
-{30}->{82}
-81[label="string |  == == === = === ",style=bold]
-{82}->{81}
-95[label="imprimir | ",style=bold]
-{30}->{95}
-94[label="MAS | ",style=bold]
-{95}->{94}
-91[label="MAS | ",style=bold]
-{94}->{91}
-89[label="MAS | ",style=bold]
-{91}->{89}
-86[label="MAS | ",style=bold]
-{89}->{86}
-84[label="accesoAr | tmp",style=bold]
-{86}->{84}
-83[label="number | 2",style=bold]
-{84}->{83}
-85[label="string |  ",style=bold]
-{86}->{85}
-88[label="accesoAr | tmp",style=bold]
-{89}->{88}
-87[label="number | 4",style=bold]
-{88}->{87}
-90[label="string |  ",style=bold]
-{91}->{90}
-93[label="accesoAr | tmp",style=bold]
-{94}->{93}
-92[label="number | 0",style=bold]
-{93}->{92}
-147[label="funcion | ",style=bold]
-{5}->{147}
-148[label="id | testWhile",style=bold]
-{147}->{148}
-98[label="parametros | ",style=bold]
-{147}->{98}
-103[label="sentencias | ",style=bold]
-{147}->{103}
-101[label="declara_var_L | ",style=bold]
-{103}->{101}
-102[label="nombre | valor",style=bold]
-{101}->{102}
-100[label="asigna_var | ",style=bold]
-{101}->{100}
-99[label="number | 100",style=bold]
-{100}->{99}
-123[label="selecciona | ",style=bold]
-{103}->{123}
-104[label="id | valor",style=bold]
-{123}->{104}
-113[label="casos | ",style=bold]
-{123}->{113}
-112[label="caso | ",style=bold]
-{113}->{112}
-107[label="MAS | ",style=bold]
-{112}->{107}
-105[label="number | 50",style=bold]
-{107}->{105}
-106[label="number | 50",style=bold]
-{107}->{106}
-110[label="sentencias | ",style=bold]
-{112}->{110}
-109[label="imprimir | ",style=bold]
-{110}->{109}
-108[label="string | Es 100",style=bold]
-{109}->{108}
-111[label="detener | ",style=bold]
-{110}->{111}
-118[label="caso | ",style=bold]
-{113}->{118}
-114[label="number | 200",style=bold]
-{118}->{114}
-117[label="sentencias | ",style=bold]
-{118}->{117}
-116[label="imprimir | ",style=bold]
-{117}->{116}
-115[label="string | Es 200",style=bold]
-{116}->{115}
-122[label="defecto | ",style=bold]
-{113}->{122}
-121[label="sentencias | ",style=bold]
-{122}->{121}
-120[label="imprimir | ",style=bold]
-{121}->{120}
-119[label="string | Soy defecto",style=bold]
-{120}->{119}
-126[label="declara_var_L | ",style=bold]
-{103}->{126}
-127[label="nombre | num1",style=bold]
-{126}->{127}
-125[label="asigna_var | ",style=bold]
-{126}->{125}
-124[label="number | 100",style=bold]
-{125}->{124}
-146[label="mientras | ",style=bold]
-{103}->{146}
-130[label="MENQ | ",style=bold]
-{146}->{130}
-128[label="id | num1",style=bold]
-{130}->{128}
-129[label="number | 200",style=bold]
-{130}->{129}
-133[label="sentencias | ",style=bold]
-{146}->{133}
-132[label="imprimir | ",style=bold]
-{133}->{132}
-131[label="string |  Hola",style=bold]
-{132}->{131}
-137[label="asignacionLocal | ",style=bold]
-{133}->{137}
-138[label="nombre | num1",style=bold]
-{137}->{138}
-136[label="MAS | ",style=bold]
-{137}->{136}
-134[label="id | num1",style=bold]
-{136}->{134}
-135[label="number | 25",style=bold]
-{136}->{135}
-145[label="si | ",style=bold]
-{133}->{145}
-141[label="IG_IG | ",style=bold]
-{145}->{141}
-139[label="id | num1",style=bold]
-{141}->{139}
-140[label="number | 1150",style=bold]
-{141}->{140}
-143[label="sentencias | ",style=bold]
-{145}->{143}
-142[label="detener | ",style=bold]
-{143}->{142}
-144[label="sentencias | ",style=bold]
-{145}->{144}
-215[label="funcion | ",style=bold]
-{5}->{215}
-216[label="id | testVariables",style=bold]
-{215}->{216}
-149[label="parametros | ",style=bold]
-{215}->{149}
-156[label="sentencias | ",style=bold]
-{215}->{156}
-154[label="declara_var_L | ",style=bold]
-{156}->{154}
-155[label="nombre | test",style=bold]
-{154}->{155}
-153[label="asigna_var | ",style=bold]
-{154}->{153}
-152[label="POR | ",style=bold]
-{153}->{152}
-150[label="date | 12/12/12",style=bold]
-{152}->{150}
-151[label="date | 12/12/12",style=bold]
-{152}->{151}
-158[label="imprimir | ",style=bold]
-{156}->{158}
-157[label="string | testeando declaracion de variables",style=bold]
-{158}->{157}
-161[label="declara_var_L | ",style=bold]
-{156}->{161}
-162[label="nombre | txt1",style=bold]
-{161}->{162}
-160[label="asigna_var | ",style=bold]
-{161}->{160}
-159[label="string | hola me llamo fernando",style=bold]
-{160}->{159}
-164[label="asignacionLocal | ",style=bold]
-{156}->{164}
-165[label="nombre | txt1",style=bold]
-{164}->{165}
-163[label="id | test",style=bold]
-{164}->{163}
-167[label="imprimir | ",style=bold]
-{156}->{167}
-166[label="id | txt1",style=bold]
-{167}->{166}
-169[label="declara_var_L | ",style=bold]
-{156}->{169}
-170[label="nombre | num1",style=bold]
-{169}->{170}
-168[label="asigna_var | ",style=bold]
-{169}->{168}
-173[label="declara_var_L | ",style=bold]
-{156}->{173}
-174[label="nombre | fecha",style=bold]
-{173}->{174}
-172[label="asigna_var | ",style=bold]
-{173}->{172}
-171[label="date | 12/32/23",style=bold]
-{172}->{171}
-182[label="imprimir | ",style=bold]
-{156}->{182}
-181[label="MAS | ",style=bold]
-{182}->{181}
-179[label="MAS | ",style=bold]
-{181}->{179}
-177[label="MAS | ",style=bold]
-{179}->{177}
-175[label="id | fecha",style=bold]
-{177}->{175}
-176[label="string |  ",style=bold]
-{177}->{176}
-178[label="id | txt1",style=bold]
-{179}->{178}
-180[label="string |  <--> ",style=bold]
-{181}->{180}
-187[label="declara_var_L | ",style=bold]
-{156}->{187}
-188[label="nombre | test2",style=bold]
-{187}->{188}
-186[label="asigna_var | ",style=bold]
-{187}->{186}
-185[label="MAS | ",style=bold]
-{186}->{185}
-183[label="id | num1",style=bold]
-{185}->{183}
-184[label="number | 100",style=bold]
-{185}->{184}
-190[label="asignacionLocal | ",style=bold]
-{156}->{190}
-191[label="nombre | num1",style=bold]
-{190}->{191}
-189[label="number | 1234",style=bold]
-{190}->{189}
-193[label="asignacionLocal | ",style=bold]
-{156}->{193}
-194[label="nombre | test",style=bold]
-{193}->{194}
-192[label="string | matilda",style=bold]
-{193}->{192}
-198[label="imprimir | ",style=bold]
-{156}->{198}
-197[label="MAS | ",style=bold]
-{198}->{197}
-195[label="id | num1",style=bold]
-{197}->{195}
-196[label="number | 100",style=bold]
-{197}->{196}
-200[label="imprimir | ",style=bold]
-{156}->{200}
-199[label="string | fecha:",style=bold]
-{200}->{199}
-202[label="imprimir | ",style=bold]
-{156}->{202}
-201[label="id | fecha",style=bold]
-{202}->{201}
-204[label="imprimir | ",style=bold]
-{156}->{204}
-203[label="string | jasd:",style=bold]
-{204}->{203}
-206[label="imprimir | ",style=bold]
-{156}->{206}
-205[label="id | jasd",style=bold]
-{206}->{205}
-208[label="imprimir | ",style=bold]
-{156}->{208}
-207[label="string | test:",style=bold]
-{208}->{207}
-210[label="imprimir | ",style=bold]
-{156}->{210}
-209[label="id | test",style=bold]
-{210}->{209}
-212[label="imprimir | ",style=bold]
-{156}->{212}
-211[label="string | tests2:",style=bold]
-{212}->{211}
-214[label="imprimir | ",style=bold]
-{156}->{214}
-213[label="id | test2",style=bold]
-{214}->{213}
+39[label="string | PUTE si FUNCIONO",style=bold]
+{40}->{39}
 
 }

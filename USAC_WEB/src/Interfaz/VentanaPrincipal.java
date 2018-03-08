@@ -8,6 +8,7 @@ package Interfaz;
 import Estructuras.Historia;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -35,7 +36,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
     public VentanaPrincipal() {
         super("WEB - USAC [201213562]");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 600);
+        setSize(1400, 700);
         setLocationRelativeTo(null);
         setResizable(true);
         
@@ -78,8 +79,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
     }
     
     
-    public void agregarNuevaPagina(String tabname){
+    public static void agregarNuevaPagina(String tabname){
         Template pagina = new Template();
+        //pagina.setLayout(new GridBagLayout());
         //pagina.populateContentPane(this.getContentPane());
         
         //pagina.setBounds(10, 10, 800, 300);
@@ -89,6 +91,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
         
         controlTab1.add(tabname, pagina);
         controlTab1.setSelectedComponent(pagina);
+    }
+    
+    public static void quitarPaginaActual(){
+        try {
+            int index =controlTab1.getSelectedIndex();
+            if(index>0){
+                controlTab1.remove(index);
+            }
+        } catch (Exception e) {}
+        
     }
     
     public static void main(String[] args) {
@@ -104,15 +116,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
     public void componentResized(ComponentEvent e) {
         int height = this.getHeight();
         int width = this.getWidth();
-        if (controlTab1.getComponentCount() > 0) {
-                Template t=(Template)controlTab1.getComponent(controlTab1.getSelectedIndex());
+        /*if (controlTab1.getComponentCount() > 0) {
+                //Template t=(Template)controlTab1.getComponent(controlTab1.getSelectedIndex());
                 
                 
                 //JPanel bar=(JPanel)t.getComponent(0);
                 //bar.setPreferredSize(new Dimension(width, bar.getHeight()));
                 
                 
-                JScrollPane scroll = (JScrollPane)t.getComponent(1);
+                /*JScrollPane scroll = (JScrollPane)t.getComponent(1);
                 System.out.println(scroll.getViewport().getComponents().length);
                 
                 JPanel pp=(JPanel)scroll.getViewport().getComponents()[0];
@@ -123,7 +135,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
                 scroll.setPreferredSize(new Dimension(width, height));
                 //scroll.getViewport().add(pp);
                 scroll.updateUI();
-        }
+        }*/
     }
 
     @Override

@@ -5,6 +5,7 @@
  */
 package Interfaz;
 
+import Estructuras.Nodo;
 import Estructuras.NodoDOM;
 import Estructuras.Propiedad;
 import java.awt.Color;
@@ -27,6 +28,8 @@ import javax.swing.ListCellRenderer;
  * @author fernando
  */
 public class CajaOpcionesGenerica extends JComboBox {
+    public Nodo metodo = null; 
+    
     public boolean mayuscula=false;
     public boolean minuscula=false;
     public boolean capital_t=false; 
@@ -75,6 +78,7 @@ public class CajaOpcionesGenerica extends JComboBox {
         setFondo();
         setAlto();
         setAncho();
+        
         setDatos();
         
         ComboBoxRenderer renderer = new ComboBoxRenderer(this,mayuscula,minuscula,capital_t);
@@ -104,7 +108,8 @@ public class CajaOpcionesGenerica extends JComboBox {
         updateUI();
     }
     
-    public void setAlineado(){
+    public boolean setAlineado(){
+        boolean flag=true;
         try {
             String alineado = propiedades.get("alineado").valor.trim();
             switch(alineado){
@@ -122,9 +127,13 @@ public class CajaOpcionesGenerica extends JComboBox {
                 case "justificado":
                     setLayout(new FlowLayout(FlowLayout.LEADING));
                     break;    
+                default:
+                    flag=false;
+                    break;
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {flag=false;}
         updateUI();
+        return flag;
     }
     
     public void setTexto(){
@@ -145,15 +154,17 @@ public class CajaOpcionesGenerica extends JComboBox {
         updateUI();
     }
     
-     public void setFondo(){
+     public boolean setFondo(){
+         boolean flag=true;
         try {
             String fondo = propiedades.get("fondo").valor;
             Color color=meta_colores.obtenerColor(fondo);
             if (color!=null) {
                 setBackground(color);
                 
-            }
-        } catch (Exception e) {}
+            }else{flag=false;}
+        } catch (Exception e) {flag=false;}
+        return flag;
     }
     public void setDatos() {
         for (NodoDOM opcion : opciones) {
@@ -164,13 +175,15 @@ public class CajaOpcionesGenerica extends JComboBox {
             if(valor.equals("")){
                 valor=texto;
             }
+            
             OpcionGenerica opciong = new OpcionGenerica(opcion.propiedades);
+            System.out.println("OPCION :  "+opciong.getName());
             
             lista_opciones.add(new opcion(texto, valor));
             lista_generica.add(opciong);
             
             
-            Template.addComponente(opciong.getName(),"opcion",opciong,this,"cajaopciones",getName());
+            
             
             Color color=meta_colores.obtenerColor(fondo);
             if (color==null) {
@@ -182,6 +195,13 @@ public class CajaOpcionesGenerica extends JComboBox {
             
             addItem(lista_opciones.get(lista_opciones.size()-1).texto);
         }
+    }
+    
+    public void agregarOpciones(){
+        for (OpcionGenerica opciong : lista_generica) {
+            Template.addComponente(opciong.getName(),"opcion",opciong,this,"cajaopciones",getName());
+        }
+        
     }
     
     public void setMayu_Minu_Capital(int num){
@@ -208,6 +228,8 @@ public class CajaOpcionesGenerica extends JComboBox {
                 break;
         }
     }
+    
+    
     
 }
 
@@ -249,6 +271,7 @@ class ComboBoxRenderer extends JPanel implements ListCellRenderer
         textPanel.add(text);
     }
 
+    
     public void setColors(ArrayList<Color> col)
     {
         colors = col;
@@ -332,7 +355,7 @@ class ComboBoxRenderer extends JPanel implements ListCellRenderer
                 } else if (opcion.capital_t) {
                     txt = Template.toCapital_t(txt);
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {System.out.println("Error al aplicar formato a opcion"+ "  \n"+e.getMessage());}
             
             try{
                 String alineado = opcion.propiedades.get("alineado").valor;

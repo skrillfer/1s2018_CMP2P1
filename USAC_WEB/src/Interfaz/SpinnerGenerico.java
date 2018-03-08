@@ -115,7 +115,8 @@ public class SpinnerGenerico extends JSpinner{
         updateUI();
     }
     
-    public void setAlineado(){
+    public boolean setAlineado(){
+        boolean flag=true;
         try {
             String alineado = propiedades.get("alineado").valor;
             SimpleAttributeSet attribs = new SimpleAttributeSet();
@@ -132,9 +133,18 @@ public class SpinnerGenerico extends JSpinner{
                 case "izquierda":
                     spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
                     break;
+                case "justificado":
+                    spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEADING);
+                    break;    
+                default:
+                    flag=false;
+                    break;
             }
         } catch (Exception e) {
+            flag=false;
         }
+        updateUI();
+        return flag;
     }
     
     public void setTexto(){
@@ -148,15 +158,17 @@ public class SpinnerGenerico extends JSpinner{
         
     }
     
-    public void setFondo(){
+    public boolean setFondo(){
+        boolean flag=true;
         try {
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
             if(color!=null){
                 setBackground(color);
-            }
-        } catch (Exception e) {}
+            }else{flag=false;}
+        } catch (Exception e) {flag=false;}
         updateUI();
+        return flag;
     }
     
     public void setAlto(){

@@ -1,0 +1,31 @@
+Dimv var1:"hola mundo";
+'/ //////////////
+
+
+soy un comentario //////loco
+
+
+
+
+////////// /'
+
+Funcion ejecutar(){
+    ejecutar2();
+' hola chavales soy un comentario
+
+}
+
+
+Funcion ejecutar2(){
+    Dimv boton1:Documento.obtener("boton222");
+    
+    
+    boton1.setElemento("fondo","yellow");
+
+    boton1:Documento.obtener("boton333");
+    boton1.setElemento("fondo","green");
+}
+
+Funcion ejecutar3(){
+    Mensaje("PUTE si FUNCIONO");
+}

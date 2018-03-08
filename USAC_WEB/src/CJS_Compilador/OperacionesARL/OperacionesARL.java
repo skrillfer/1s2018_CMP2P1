@@ -190,6 +190,27 @@ public class OperacionesARL {
                     result=new ResultadoG("boolean", false);
                 }
                 break;
+            case "Accion_Obtener":
+                Nodo pto_Obtener = nodo.hijos.get(0);
+                Nodo id = pto_Obtener.hijos.get(0);
+                id.nombre="id_componente";
+                ResultadoG rrrr = ejecutar(id);
+                if(rrrr!=null){
+                    result=rrrr;
+                }
+                break;    
+            case "id_componente":
+                ResultadoG res_cmp=acceso(nodo);
+                if(res_cmp!=null){
+                    result=res_cmp;
+                }
+                break;
+            case "id_cmp":
+                ResultadoG re2s_cmp=acceso(nodo);
+                if(re2s_cmp!=null){
+                    result=re2s_cmp;
+                }
+                break;    
             case "funcion_Conteo":
                 ResultadoG res=acceso(nodo.hijos.get(0));
                 linea1=nodo.hijos.get(0).linea;
@@ -240,7 +261,6 @@ public class OperacionesARL {
                 ResultadoG res0=acceso(nodo);
                 linea1=nodo.linea;
                 columna1=nodo.columna;
-                //System.out.println("id:"+res0.tipo);
                 if(res0!=null){
                     result=res0;
                     if(result.tipo.equals("0")){
@@ -1262,6 +1282,37 @@ public class OperacionesARL {
                     tabla = tablaAux;
                     retorno = accesoAr(raiz, nivel, aux);
                     break;
+            case "id_cmp":
+                nombre =  raiz.valor;
+                simbolo = tabla.getSimbolo(nombre, aux);
+                if(simbolo!=null){
+                    if(simbolo.inicializado){
+                        switch(simbolo.tipo){
+                            case "opcion":
+                            case "imagen":
+                            case "boton":
+                            case "enlace":
+                            case "panel":
+                            case "spinner":    
+                            case "tabla":    
+                            case "caja":
+                            case "cajaopciones":
+                            case "cajatexto":    
+                            case "texto":
+                            case "areatexto":   
+                                retorno.valor=simbolo.valor;
+                                retorno.tipo=simbolo.tipo;
+                                retorno.simbolo=simbolo;
+                                break;
+                        }
+                    }else{
+                        retorno.tipo = "";
+                        retorno.valor = null;
+                        Template.reporteError_CJS.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " no ha sido inicializada");
+                        return retorno;
+                    }
+                }
+                break;
             case "id_componente":
                 nombre = raiz.valor;
                 if(Template.lista_componentes.containsKey(nombre)){

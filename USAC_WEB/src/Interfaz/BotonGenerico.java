@@ -5,6 +5,7 @@
  */
 package Interfaz;
 
+import Estructuras.Nodo;
 import Estructuras.Propiedad;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,6 +26,7 @@ import javax.swing.JTextField;
  * @author fernando
  */
 public class BotonGenerico extends JButton {
+    public Nodo metodo = null; 
     public boolean mayuscula=false;
     public boolean minuscula=false;
     public boolean capital_t=false; 
@@ -133,7 +135,14 @@ public class BotonGenerico extends JButton {
                 this.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println("me presionaron click :D");
+                            
+                            try {
+                                String metodo = propiedades.get("click").valor;
+                                metodo=metodo.substring(0,metodo.length()-2);
+                                Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                            } catch (Exception ex) {}
+                            
+                            //System.out.println("me presionaron click :D");
                         }
                     });
         }
@@ -173,6 +182,7 @@ public class BotonGenerico extends JButton {
     }
     
     public void setAncho(){
+        System.out.println("hare ancho en oboton");
          try {
                 setPreferredSize(new Dimension(Integer.valueOf(propiedades.get("ancho").valor.trim()), getPreferredSize().height));
             } catch (Exception e) {System.out.println(e.getMessage());}
@@ -185,18 +195,22 @@ public class BotonGenerico extends JButton {
         updateUI();
     }
     
-    public void setFondo(){
+    public boolean setFondo(){
+        boolean flag=true;
         try {
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
             if(color!=null){
                 setBackground(color);
-            }
-        } catch (Exception e) {}
+                updateUI();
+            }else{flag=false;} 
+        } catch (Exception e) {flag=false;}
         updateUI();
+        return flag;
     }
     
-    public void setAlineado(){
+    public boolean setAlineado(){
+        boolean flag=true;
        try{
             String alineado = propiedades.get("alineado").valor.trim();
            switch (alineado.toLowerCase()) {
@@ -214,11 +228,14 @@ public class BotonGenerico extends JButton {
                    //no aplica
                    break;
                default:
+                   flag=false;
+                   break;
                //error
 
            }
-        }catch(Exception e){}
+        }catch(Exception e){flag=false;}
         updateUI();
+        return flag;
     }
     
     

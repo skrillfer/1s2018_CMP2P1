@@ -59,9 +59,12 @@ hora    =  {Numero}[:]{Numero}[:]{Numero}
 
 fecha_hora = {fecha}[ ]+ {hora}
 
-cadena = [\"] [^(\")]* [\"]
+cadena = [\"] [^\"]* [\"]
 
-comm_multilinea = "'/" ~ "/'"
+
+
+comm_multilinea = "'/" ["/"]* [^/] ~"/'" | "'/" ["/"]* "/'"
+
 
 comm_linea = "'" [^\r\n]* [^\r\n]
 
@@ -155,4 +158,4 @@ comm_linea = "'" [^\r\n]* [^\r\n]
 
 {LineTerminator} {/* ignorar */}
 {WhiteSpace} {/* ignorar */}
-. {adderror(yyline,yycolumn,yytext()); System.out.println("error lexico:"+yytext());}
+. {adderror(yyline,yycolumn,yytext()); System.out.println("error lexico:"+yytext() +" =>" +yyline+"-"+yycolumn);}

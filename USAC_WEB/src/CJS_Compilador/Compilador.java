@@ -107,8 +107,8 @@ public abstract class Compilador {
                     opL = new OperacionesARL(global,tabla);
                     ResultadoG rs = opL.ejecutar(sentencia.hijos.get(0));
                     try {
-                        Template.CONSOLA+="\n"+rs.valor;
-                        System.out.println(rs.valor);
+                        Template.CONSOLA+="\n"+(String)rs.valor;
+                        System.out.println((String)rs.valor);
                     } catch (Exception e) {
                     }
                     break;
@@ -133,7 +133,11 @@ public abstract class Compilador {
                 case "Accion_Setear":
                     Accion_Setear setear = new Accion_Setear();
                     metodoActual = setear.ejecutar(sentencia);
-                    break;    
+                    break;   
+                case "Accion_Obtener":
+                    opL = new OperacionesARL(global,tabla);
+                    opL.ejecutar(sentencia);
+                    break;
             }
         }
         return metodoActual;

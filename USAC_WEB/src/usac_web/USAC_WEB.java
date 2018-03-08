@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import Estructuras.*;
 import Arboles_Generados.*;
 import CJS_Compilador.CJS;
+import Interfaz.AlertaGenerica;
 import Interfaz.Template;
 /**
  *
@@ -29,7 +30,10 @@ public class USAC_WEB {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        new USAC_WEB().CompilarCJS();
+        System.out.println("=======================");
+        AlertaGenerica sss = new AlertaGenerica("asasassaassa");
+        System.out.println("----------------------------");
+        
     }
     
     
@@ -55,20 +59,23 @@ public class USAC_WEB {
         return retorno;
     }
     
-    public void CompilarCJS() throws FileNotFoundException{
-        //escribir("programa.txt","100");
-        AL_CJS lex = new AL_CJS(new FileReader("entrada_cjs.txt"));//se le pasa al analizador lexico lo que se escribio
+    public Nodo CompilarCJS(String texto) throws FileNotFoundException{
+        escribir("tmpcjs.txt",texto);
+        AL_CJS lex = new AL_CJS(new FileReader("tmpcjs.txt"));//se le pasa al analizador lexico lo que se escribio
         AS_CJS parser = new AS_CJS(lex);
         
-       
+        Nodo retorno=null;
         try {
             parser.parse();
             Nodo raiz = parser.getRoot();
             Arbol_CJS genTcjs = new Arbol_CJS();
-            genTcjs.generacion_arbolCJS(raiz);
+            if(raiz!=null){
+                genTcjs.generacion_arbolCJS(raiz);
+            }
+            retorno=raiz;
             
-            CJS cj_s= new CJS();
-            cj_s.ejecucionCJS(raiz, "test","entrada_cjs.txt");
+            //CJS cj_s= new CJS();
+            //cj_s.ejecucionCJS(raiz, "test","entrada_cjs.txt");
             //Template.reporteError_CJS.generarHtml("Reporte de Errores", "CJS");
             
             //---------------------------Se le pasa la raiz a la clase CJS
@@ -77,7 +84,9 @@ public class USAC_WEB {
         } catch (Exception e) {
             // System.out.println(e.getMessage());
         }
+        return retorno;
     }
+    
     
     public NodoDOM CompilarCHTML(String texto) throws FileNotFoundException{
         NodoDOM retorno=null;

@@ -120,7 +120,8 @@ IENLACE,FENLACE,ITABLA,FTABLA,ITEXTO_A,FTEXTO_A,ICAJA_TEXTO,
 FCAJA_TEXTO,ICAJA,FCAJA,ISPINNER,FSPINNER,ISALTOF,ICHTML,FCHTML,ICUERPO,FCUERPO,
 IFIL_T,IFIL_T2,FFIL_T,FFIL_T2,ICB,ICB2,ICT2,FCB,FTABLA2,ICT,FCT,TBOTON,TIMAGEN,FCB2,
 FCT2,IOPCION,IOPCION2,FOPCION,FCAJA2,FCUERPO2,TPANEL,TTEXTO,TENLACE,TTEXTO_A,TCAJA_TEXTO,
-TCAJA,TSPINNER,TSALTOF,TTABLA,FPANEL2,ICJS,FCJS,ICCSS,FCCSS,IENCA,FENCA,ITITULO,FTITULO;
+TCAJA,TSPINNER,TSALTOF,TTABLA,FPANEL2,ICJS,FCJS,ICCSS,FCCSS,IENCA,FENCA,ITITULO,FTITULO,
+APERTURA1,APERTURA2,CIERRE,EXPLICIT_2;
 
 non terminal NodoDOM programa,raiz,atributo,
 list_atts,list_atts2,att_ruta,att_click,att_valor,att_id,att_grupo,att_alto,att_ancho,att_alineado,
@@ -181,7 +182,8 @@ et_cjs_ccss ::= ICJS:f  list_atts:LT EXPLICIT:P FCJS  {:
                 :}
                |ITITULO:f list_atts:LT EXPLICIT:P   FTITULO{:
                     RESULT = parser.crearNodo("titulo","",f.getLinea(),f.getColumna(),LT,P.getCadena());
-                :};
+                :}
+               |APERTURA2 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 
 etiqueta_cuerpo ::=ICUERPO:f list_atts:LT EXPLICIT:P contenidocuerpo:r {: 
@@ -219,9 +221,8 @@ et_cuerpo2 ::= IPANEL:x        list_atts:LT  EXPLICIT:P  contenido_panel:r      
              |ICAJA:x         list_atts:LT  EXPLICIT:P   contenido_caja:r         {: RESULT = parser.crearNodo("caja","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos;  :}
              |ISPINNER:x      list_atts:LT  EXPLICIT:P   FSPINNER      {: RESULT = parser.crearNodo("spinner","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
              |ISALTOF:x       {: RESULT = parser.crearNodo("salto","",x.getLinea(),x.getColumna(),"");  :}
-             |ITABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:
-                  RESULT = rz;
-            :};
+             |ITABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:  RESULT = rz;      :}
+             |APERTURA2  EXPLICIT_2  CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 et_cuerpo1 ::= TPANEL:x        list_atts:LT  EXPLICIT:P   contenido_panel:r        {: RESULT = parser.crearNodo("panel","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos; :}
               |TTEXTO:x        list_atts:LT  EXPLICIT:P   FTEXTO        {: RESULT = parser.crearNodo("texto","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
@@ -233,9 +234,8 @@ et_cuerpo1 ::= TPANEL:x        list_atts:LT  EXPLICIT:P   contenido_panel:r     
               |TCAJA:x         list_atts:LT  EXPLICIT:P   contenido_caja:r         {: RESULT = parser.crearNodo("caja","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos;  :}
               |TSPINNER:x      list_atts:LT  EXPLICIT:P   FSPINNER      {: RESULT = parser.crearNodo("spinner","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
               |TSALTOF:x       {: RESULT = parser.crearNodo("salto","",x.getLinea(),x.getColumna(),"");  :}
-              |TTABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:
-                  RESULT = rz;
-            :};
+              |TTABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:    RESULT = rz;    :}
+              |APERTURA1 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 contenido_panel ::= FPANEL {: RESULT = parser.crearNodo("cajaT","",0,0,""); :}
                    |etiquetas_cuerpo:r  FPANEL2 {: RESULT=r; :};
@@ -256,9 +256,11 @@ lista_opciones ::= lista_opciones:r opcion2:h{:
 
 
 
-opcion1 ::=  IOPCION:f list_atts:LT EXPLICIT:P FOPCION   {: RESULT = parser.crearNodo("opcion","",f.getLinea(),f.getColumna(),LT,P.getCadena()); :};
+opcion1 ::=  IOPCION:f list_atts:LT EXPLICIT:P FOPCION   {: RESULT = parser.crearNodo("opcion","",f.getLinea(),f.getColumna(),LT,P.getCadena()); :}
+             |APERTURA1 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :}   ;
 
-opcion2 ::= IOPCION2:f list_atts:LT EXPLICIT:P FOPCION    {: RESULT = parser.crearNodo("opcion","",f.getLinea(),f.getColumna(),LT,P.getCadena()); :};
+opcion2 ::= IOPCION2:f list_atts:LT EXPLICIT:P FOPCION    {: RESULT = parser.crearNodo("opcion","",f.getLinea(),f.getColumna(),LT,P.getCadena()); :}
+             |APERTURA2 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
  
 
 contenido_tabla ::=  FTABLA {: RESULT = parser.crearNodo("tabla","",0,0,""); :}
@@ -267,19 +269,32 @@ contenido_tabla ::=  FTABLA {: RESULT = parser.crearNodo("tabla","",0,0,""); :}
                   :};
 
 
-etiquetastabla ::= etiquetastabla:x  et_fila2:y {: x.add(y); RESULT = x;  :}
-                  |et_fila1:x  {:  RESULT = parser.crearNodo("tabla","",0,0,""); RESULT.add(x); :};
+etiquetastabla ::= etiquetastabla:x  et_fila2:y {: 
+                        if(!x.nombre.equals("ignorar")){
+                            x.add(y);
+                        }
+                        RESULT = x;  
+
+                  :}
+                  |et_fila1:x  {:  
+                        RESULT = parser.crearNodo("tabla","",0,0,""); 
+                        if(!x.nombre.equals("ignorar")){
+                            RESULT.add(x); 
+                        }
+                  :};
 
 
 et_fila2 ::= IFIL_T2:f list_atts:LT EXPLICIT:P contenido_fila:h  {: 
                     RESULT = parser.crearNodo("fila","",f.getLinea(),f.getColumna(),LT,P.getCadena());
                     RESULT.hijos=h.hijos;
-            :};
+            :}
+            |APERTURA1 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 et_fila1 ::= IFIL_T:f list_atts:LT EXPLICIT:P contenido_fila:h {: 
                     RESULT = parser.crearNodo("fila","",f.getLinea(),f.getColumna(),LT,P.getCadena());  
                     RESULT.hijos=h.hijos;
-            :};
+            :}
+            |APERTURA1 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 
 contenido_fila ::= FFIL_T {: RESULT = parser.crearNodo("filaT","",0,0,"");   :}
@@ -288,19 +303,27 @@ contenido_fila ::= FFIL_T {: RESULT = parser.crearNodo("filaT","",0,0,"");   :}
                   :};
 
 lista_cb_ct ::= lista_cb_ct:r etcb_ct2:x{:
-                    r.add(x);
+                    if(!x.nombre.equals("ignorar")){
+                        r.add(x);
+                    }
                     RESULT = r; 
               :} 
                |etcb_ct1:x {:
                     RESULT = parser.crearNodo("filaT","",0,0,"");  
-                    RESULT.add(x); 
+                    
+                    if(!x.nombre.equals("ignorar")){
+                        RESULT.add(x); 
+                    }
+                    
               :};
 
 etcb_ct1 ::= ICB:f list_atts:LT EXPLICIT:P  contenido_cb:h   {: RESULT = parser.crearNodo("cb","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :}
-             |ICT:f list_atts:LT EXPLICIT:P contenido_ct:h   {: RESULT = parser.crearNodo("ct","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :};
+             |ICT:f list_atts:LT EXPLICIT:P contenido_ct:h   {: RESULT = parser.crearNodo("ct","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :}
+             |APERTURA1 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 etcb_ct2 ::= ICB2:f list_atts:LT EXPLICIT:P  contenido_cb:h  {: RESULT = parser.crearNodo("cb","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :}
-             |ICT2:f list_atts:LT EXPLICIT:P contenido_ct:h  {: RESULT = parser.crearNodo("ct","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :};
+             |ICT2:f list_atts:LT EXPLICIT:P contenido_ct:h  {: RESULT = parser.crearNodo("ct","",f.getLinea(),f.getColumna(),LT,P.getCadena());  RESULT.add(h); :}
+             |APERTURA2 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
                     
 contenido_ct ::= FCT              {: RESULT = parser.crearNodo("texto","",0,0,""); :}
@@ -310,7 +333,8 @@ contenido_cb ::= FCB              {: RESULT = parser.crearNodo("texto","",0,0,""
                 |btn_img:r FCB2   {: RESULT=r; :};
 
 btn_img ::= TBOTON:f  list_atts:LT  EXPLICIT:P FBOTON   {: RESULT = parser.crearNodo("boton","",f.getLinea(),f.getColumna(),LT,P.getCadena());  :}
-           |TIMAGEN:f list_atts:LT  EXPLICIT:P FIMAGEN  {: RESULT = parser.crearNodo("imagen","",f.getLinea(),f.getColumna(),LT,P.getCadena());  :};
+           |TIMAGEN:f list_atts:LT  EXPLICIT:P FIMAGEN  {: RESULT = parser.crearNodo("imagen","",f.getLinea(),f.getColumna(),LT,P.getCadena());  :}
+           |APERTURA1 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("texto","",0,0,""); :}       ;
 
 
 list_atts ::= {:    RESULT = parser.crearNodo("propiedades","",0,0,"");   :}

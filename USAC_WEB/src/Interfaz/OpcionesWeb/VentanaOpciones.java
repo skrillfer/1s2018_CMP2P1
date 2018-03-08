@@ -34,13 +34,14 @@ public class VentanaOpciones extends JFrame {
     //***********CONTROL TABS***************//
     JPanel panelTabControl = new JPanel();
     JTabbedPane controlTab1 = new JTabbedPane();
+    String consola="";
 
-    public VentanaOpciones(String ruta_chtml, ArrayList<String> lista_cjs,ArrayList<String> lista_ccss) {
+    public VentanaOpciones(String ruta_chtml, ArrayList<String> lista_cjs,ArrayList<String> lista_ccss, String consola) {
         super(" Opciones");
         this.ruta_chtlm=ruta_chtml;
         this.lista_ccss=lista_ccss;
         this.lista_cjs=lista_cjs;
-        
+        this.consola=consola;
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setSize(1000, 300);
         setLocationRelativeTo(null);
@@ -160,6 +161,7 @@ public class VentanaOpciones extends JFrame {
             cod_area.setBackground(Color.BLACK);
             cod_area.setForeground(Color.LIGHT_GRAY);
             cod_area.setCaretColor(Color.WHITE);
+            cod_area.setText(consola);
         }
         
         return scroll;

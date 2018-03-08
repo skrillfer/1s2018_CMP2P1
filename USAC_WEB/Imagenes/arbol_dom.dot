@@ -1,27 +1,83 @@
 digraph G {
 node[shape=Mrecord]
-48[label="chtml | ",style=bold]
-47[label="encabezado | ",style=bold]
-{48}->{47}
-3[label="cjs | ",style=bold]
-{47}->{3}
+110[label="chtml | ",style=bold]
+109[label="encabezado | ",style=bold]
+{110}->{109}
+3[label="ccss | ",style=bold]
+{109}->{3}
 7[label="cjs | ",style=bold]
-{47}->{7}
-10[label="ccss | ",style=bold]
-{47}->{10}
-13[label="ccss | ",style=bold]
-{47}->{13}
-15[label="titulo | ",style=bold]
-{47}->{15}
-45[label="cuerpo | ",style=bold]
-{48}->{45}
-42[label="panel | ",style=bold]
-{45}->{42}
-28[label="boton | ",style=bold]
-{42}->{28}
-35[label="boton | ",style=bold]
-{42}->{35}
-41[label="boton | ",style=bold]
-{42}->{41}
+{109}->{7}
+9[label="titulo | ",style=bold]
+{109}->{9}
+107[label="cuerpo | ",style=bold]
+{110}->{107}
+11[label="ignorar | ",style=bold]
+{107}->{11}
+15[label="tabla | ",style=bold]
+{107}->{15}
+34[label="fila | ",style=bold]
+{15}->{34}
+21[label="ct | ",style=bold]
+{34}->{21}
+20[label="texto | ",style=bold]
+{21}->{20}
+24[label="ct | ",style=bold]
+{34}->{24}
+23[label="texto | ",style=bold]
+{24}->{23}
+27[label="ct | ",style=bold]
+{34}->{27}
+26[label="texto | ",style=bold]
+{27}->{26}
+33[label="ct | ",style=bold]
+{34}->{33}
+32[label="boton | ",style=bold]
+{33}->{32}
+37[label="fila | ",style=bold]
+{15}->{37}
+46[label="fila | ",style=bold]
+{15}->{46}
+41[label="cb | ",style=bold]
+{46}->{41}
+40[label="texto | ",style=bold]
+{41}->{40}
+45[label="cb | ",style=bold]
+{46}->{45}
+44[label="texto | ",style=bold]
+{45}->{44}
+50[label="boton | ",style=bold]
+{107}->{50}
+54[label="boton | ",style=bold]
+{107}->{54}
+58[label="boton | ",style=bold]
+{107}->{58}
+62[label="boton | ",style=bold]
+{107}->{62}
+66[label="texto | ",style=bold]
+{107}->{66}
+81[label="caja | ",style=bold]
+{107}->{81}
+73[label="opcion | ",style=bold]
+{81}->{73}
+77[label="opcion | ",style=bold]
+{81}->{77}
+80[label="opcion | ",style=bold]
+{81}->{80}
+100[label="panel | ",style=bold]
+{107}->{100}
+88[label="boton | ",style=bold]
+{100}->{88}
+91[label="boton | ",style=bold]
+{100}->{91}
+93[label="boton | ",style=bold]
+{100}->{93}
+95[label="boton | ",style=bold]
+{100}->{95}
+97[label="boton | ",style=bold]
+{100}->{97}
+99[label="boton | ",style=bold]
+{100}->{99}
+105[label="imagen | ",style=bold]
+{107}->{105}
 
 }

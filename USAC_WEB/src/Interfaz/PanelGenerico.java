@@ -126,7 +126,7 @@ public class PanelGenerico extends JPanel{
                     flag=false;
                     
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {flag=false;}
         updateUI();
         return flag;
     }

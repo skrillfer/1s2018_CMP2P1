@@ -1,27 +1,60 @@
 <CHTML>
     <ENCABEZADO>
-    <CJS ruta ="/home/fernando/Escritorio/a_cristina/Contenido/archivo_cjs1.cjs";> <FIN-CJS>
-    <CJS ruta ="/home/fernando/Escritorio/a_cristina/Contenido/archivo_cjs2.cjs";> <FIN-CJS>
-
-    <CCSS ruta="/home/fernando/Escritorio/a_cristina/Contenido/archivo_estilo1.ccss";> <FIN-CCSS>
-    <CCSS ruta="/home/fernando/Escritorio/a_cristina/Contenido/archivo_estilo2.ccss";> <FIN-CCSS>
-    <TITULO> PAGINA 1<FIN-TITULO>
+    <CCSS ruta="/home/fernando/Escritorio/a_cristina/Contenido/estilo.ccss";> <FIN-CCSS>
+    <CJS ruta="/home/fernando/Escritorio/a_cristina/Contenido/script.cjs";> <FIN-CJS>
+    <TITULO> PAGINA USAC<FIN-TITULO>
     <FIN-ENCABEZADO>
-    <CUERPO fondo="yellow";>
+    <CUERPO>
 
 
-    <PANEL id="panel_1"; grupo="panel_redireccion"; ancho="716"; alto="50";>
-        <BOTON grupo="boton_redireccion"; alto="35"; ancho="120"; ruta="/home/fernando/Escritorio/a_cristina/Contenido/informacion.chtml";>Informacion
-        <FIN-BOTON>
+    <//- -//>
+                     <TABLA>
+                        <//- souy un comentario-//>
+                        <FIL_T>
+                            <//- souy un comentario-//>
+                            <CT> hola me llamo fernando<FIN-CT>
+                            <//- souy un comentario-//>
+                            <CT> <FIN-CT>
+                            <CT> <FIN-CT>
+        
+                            <CT> <BOTON id="btn1Tbla"; fondo="red";>boton1 <FIN-BOTON> <FIN-CT>
+                                                    <//- souy un comentario-//>
+                        <FIN-FIL_T>         
+                        <//- souy un comentario-//>
+                        <FIL_T>
+                        <FIN-FIL_T>
+                        <FIL_T>
+                            <CB> <//- hola ruano-//><FIN-CB>
+                            <CB> <FIN-CB>
+                        <FIN-FIL_T>
+                    <FIN-TABLA>
 
-        <BOTON grupo="boton_redireccion"; alto="35"; ancho="160"; ruta="/home/fernando/Escritorio/a_cristina/Contenido/tabla.chtml";>Tabla Estudiante
-        <FIN-BOTON>
+            <BOTON id="boton1"; click="ejecutar()"; >boton1<FIN-BOTON>
+            <BOTON id="boton222"; click="ejecutar()"; >boton222<FIN-BOTON>
 
-        <BOTON grupo="boton_redireccion"; alto="35"; ancho="100"; ruta="/home/fernando/Escritorio/a_cristina/Contenido/home.chtml";>Principal
-        <FIN-BOTON>
-         
-    <FIN-PANEL>
+            <BOTON id="boton333"; click="ejecutar()"; >boton333<FIN-BOTON>
+            <BOTON id="boton333"; click="ejecutar()"; >botonRepetido 333<FIN-BOTON>
 
+            <TEXTO fondo="white"; alineado="centrado";> Machine learning una tendencia tecnologica:
+Es una subdisciplina de la inteligencia artificial, todo surge a partir de la gran maquina de turin
+creaada por Alan Turing, llamada la madre de todos los metodos, ya que cualquier poblema puede resumirse
+a un metodo de la maquina de turing.
+            <FIN-TEXTO>
+
+<CAJA fondo="blue"; id ="caja1"; > <OPCION id ="opcion1"; fondo="yellow";>opcion1<FIN-OPCION>  <OPCION fondo="green";>opcion2<FIN-OPCION> <OPCION fondo="pink";>opcion3<FIN-OPCION> <FIN-CAJA>
+
+
+<PANEL fondo="orange"; alto="150"; ancho="150"; alineado="izquierda";>
+    panel izquierda
+    <BOTON> boton2 <FIN-BOTON>
+    <BOTON> boton3 <FIN-BOTON>
+    <BOTON> boton4 <FIN-BOTON>
+    <BOTON> boton21 <FIN-BOTON>
+    <BOTON> boton31 <FIN-BOTON>
+    <BOTON> boton41 <FIN-BOTON>
+<FIN-PANEL>
+
+<IMAGEN ruta="/home/fernando/Escritorio/descarga.jpg"; alto="150"; ancho="150";> <FIN-IMAGEN>
 
     <FIN-CUERPO>
 <FIN-CHTML>

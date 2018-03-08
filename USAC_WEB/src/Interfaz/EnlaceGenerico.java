@@ -103,7 +103,8 @@ public class EnlaceGenerico extends JLabel{
     }
     
     
-    public void setAlineado(){
+    public boolean setAlineado(){
+        boolean flag=true;
        try{
                 String alineado = propiedades.get("alineado").valor.trim();
                 switch(alineado.toLowerCase()){
@@ -121,22 +122,26 @@ public class EnlaceGenerico extends JLabel{
                         //no aplica
                         break;
                     default:
+                        flag=false;
                         //error
                         
                 }
-            }catch(Exception e){}
+            }catch(Exception e){flag=false;}
         updateUI();
+        return flag;
     }
     
-    public void setFondo(){
+    public boolean setFondo(){
+        boolean flag=true;
         try {
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
             if(color!=null){
                 setBackground(color);
-            }
-        } catch (Exception e) {}
+            }else{flag=false;}
+        } catch (Exception e) {flag=false;}
         updateUI();
+        return flag;
     }
     
     public void setAncho(){

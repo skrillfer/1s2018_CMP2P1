@@ -72,6 +72,14 @@ Comentario1 = "<//-" [^-] ~"-//>" | "<//-" "-"* [^-] "-"* "-//>"
 <YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 
+<YYINITIAL> -([-]* [^-]* [-]*)-    {return new Symbol(sym.EXPLICIT_2, new token(yycolumn, yyline, yytext()));}
+
+
+<YYINITIAL> "//"  {return new Symbol(sym.APERTURA1, new token(yycolumn, yyline, yytext()));}
+
+<YYINITIAL> "<//"  {return new Symbol(sym.APERTURA2, new token(yycolumn, yyline, yytext()));}
+
+<YYINITIAL> "//>"  {return new Symbol(sym.CIERRE, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> "+" {return new Symbol(sym.MAS, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "-" {return new Symbol(sym.MENOS, new token(yycolumn, yyline, yytext()));}

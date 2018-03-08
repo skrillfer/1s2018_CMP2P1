@@ -52,23 +52,32 @@ public class AreaTextoGenerica extends JTextPane{
         setAlineado();
         setTexto();
         setFondo();
-        setAlto();
-        setAncho();
         
-        
-        if(getPreferredSize().height==21 || getPreferredSize().width==6){
-            setPreferredSize(new Dimension(150, 150));
+        if (!propiedades.get("alto").valor.trim().equals("") || !propiedades.get("ancho").valor.trim().equals("")){
+            if(!propiedades.get("alto").valor.trim().equals("")){
+                setAlto();
+            }else{
+                setAncho();
+            }
+        }else{
+            setPreferredSize(new Dimension(70, 90));  
         }
-            
+        
+        
+        
+        /*if(getPreferredSize().height==21 || getPreferredSize().width==6){
+            setPreferredSize(new Dimension(150, 150));
+        }*/
+        /*  
         try {
             if (getPreferredSize().width > tamPadre.width) {
                 System.out.println(tamPadre.width);
                 setPreferredSize(new Dimension(tamPadre.width - 15, getPreferredSize().height));
             }
         } catch (Exception e) {
-        }
+        }*/
         
-        
+        /*
         try {
             if (propiedades.get("alto").valor.trim().equals("")) {
                 String tamtex = propiedades.get("$text").valor;
@@ -78,10 +87,9 @@ public class AreaTextoGenerica extends JTextPane{
                 }
             }
         } catch (Exception e) {
-        }
+        }*/
         
-        
-        
+      
 
     
 
@@ -176,7 +184,8 @@ public class AreaTextoGenerica extends JTextPane{
         updateUI();
     }
     
-    public void setAlineado(){
+    public boolean setAlineado(){
+        boolean flag=true;
         try {
             String alineado = propiedades.get("alineado").valor.trim();
             
@@ -205,11 +214,14 @@ public class AreaTextoGenerica extends JTextPane{
                     StyleConstants.setAlignment(style, StyleConstants.ALIGN_JUSTIFIED);
                     document.insertString(document.getLength(), propiedades.get("$text").valor, style);
                     setDocument(document);    
-                    
+                    break;
+                default:
+                    flag=false;
                     break;
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {flag=false;}
         updateUI();
+        return flag;
     }
     
     
@@ -230,15 +242,17 @@ public class AreaTextoGenerica extends JTextPane{
          updateUI();
     }
     
-    public void setFondo(){
+    public boolean setFondo(){
+        boolean flag=true;
         try {
             String fondo = propiedades.get("fondo").valor.trim();
             Color color=Template.meta_colores.obtenerColor(fondo);
             if(color!=null){
                 setBackground(color);
-            }
-        } catch (Exception e) {}
+            }else{flag=false;}
+        } catch (Exception e) {flag=false;}
         updateUI();
+        return flag;
     }
     
     public void setAlto(){
