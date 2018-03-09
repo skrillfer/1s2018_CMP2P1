@@ -78,7 +78,7 @@ public class LlamadaMetodo extends Compilador{
             if (resultado.valor != null) {
                 if (resultado.valor.getClass().getSimpleName().equalsIgnoreCase("arreglo")) {
                     Arreglo arr = (Arreglo) resultado.valor;
-                    nombre += resultado.tipo + arr.dimensiones.size();
+                    nombre += "_1p";//resultado.tipo + arr.dimensiones.size();
                 } else {
                     nombre += "_1p";
                 }

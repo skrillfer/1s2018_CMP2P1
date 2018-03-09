@@ -81,14 +81,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
     
     public static void agregarNuevaPagina(String tabname){
         Template pagina = new Template();
-        //pagina.setLayout(new GridBagLayout());
-        //pagina.populateContentPane(this.getContentPane());
-        
-        //pagina.setBounds(10, 10, 800, 300);
-        
-        //JScrollPane jsp = new JScrollPane(pagina);
-        //frame.add(jsp);
-        
         controlTab1.add(tabname, pagina);
         controlTab1.setSelectedComponent(pagina);
     }
@@ -101,6 +93,21 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
             }
         } catch (Exception e) {}
         
+    }
+    
+    public static void lanzarPagina(String link){
+        agregarNuevaPagina("nuevo_"+VentanaPrincipal.controlTab1.getComponentCount());
+        
+        int index = controlTab1.getSelectedIndex();
+        if(index>0){
+            System.out.println("\n\n\n\n\n INDEX:"+index);
+            try {
+                Template ttt = (Template)controlTab1.getComponentAt(index);
+                ttt.campoURL.setText(link.trim());
+                ttt.buscarPagina(ttt.campoURL.getText());
+            } catch (Exception e) {
+            }
+        }
     }
     
     public static void main(String[] args) {

@@ -5,8 +5,11 @@
  */
 package Interfaz;
 
+import CJS_Compilador.Clase;
+import CJS_Compilador.TablaSimboloG;
 import Estructuras.Nodo;
 import Estructuras.NodoDOM;
+import Estructuras.Observador;
 import Estructuras.Propiedad;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,7 +31,12 @@ import javax.swing.ListCellRenderer;
  * @author fernando
  */
 public class CajaOpcionesGenerica extends JComboBox {
-    public Nodo metodo = null; 
+        
+    public Observador click=null;
+    public Observador modificado=null;
+    public Observador listo=null;
+    
+    
     
     public boolean mayuscula=false;
     public boolean minuscula=false;
@@ -52,23 +60,44 @@ public class CajaOpcionesGenerica extends JComboBox {
         
         setPropiedades();
 
-        addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox<String> combo = (JComboBox<String>) e.getSource();
-                String selectedBook = (String) combo.getSelectedItem();
-                System.out.println("fue seleccionado:"+combo.getSelectedIndex());
-                //System.out.println(lista_opciones.get(combo.getSelectedIndex()).valor);
-                
-                /*if (selectedBook.equals("Effective Java")) {
-                    System.out.println("Good choice!");
-                } else if (selectedBook.equals("Head First Java")) {
-                    System.out.println("Nice pick, too!");
-                }*/
-            }
-        });
+        
     }
 
+       public void setObservador(TablaSimboloG global,TablaSimboloG tabla, ArrayList<Nodo> sentencias, String tipo, Clase claseActual){
+        switch(tipo){
+            case "click":
+                click = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "modificado":        
+                modificado = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "listo":
+                listo = new Observador(global, tabla, sentencias,claseActual);
+                break;
+        }
+    }
+    
+    
+    
+    public void lanzarClick(){
+        if(click!=null){
+            Template.principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual);
+        }
+    }
+    
+    public void lanzarEditado(){
+        if(modificado!=null){
+            Template.principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual);
+        }
+    }
+    
+    public void lanzarFinalizado(){
+        if(listo!=null){
+            Template.principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual);
+        }
+    }
+    
+    
     public void setPropiedades() {
         
         setId();
@@ -87,6 +116,27 @@ public class CajaOpcionesGenerica extends JComboBox {
         renderer.setGenerica(lista_generica);
         setRenderer(renderer);
         
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox<String> combo = (JComboBox<String>) e.getSource();
+                String selectedBook = (String) combo.getSelectedItem();
+                //System.out.println("fue seleccionado:"+combo.getSelectedIndex());
+                //System.out.println(lista_opciones.get(combo.getSelectedIndex()).valor);
+                
+                try {
+                    String metodo = propiedades.get("click").valor;
+                    metodo = metodo.replace("(", "").replace(")", "");
+                    Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                } catch (Exception ex) {
+                }
+
+                try {
+                    lanzarClick();
+                } catch (Exception ex) {
+                }
+            }
+        });
     }
     
     

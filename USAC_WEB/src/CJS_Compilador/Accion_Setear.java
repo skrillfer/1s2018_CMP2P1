@@ -56,13 +56,14 @@ public class Accion_Setear extends Compilador{
     
     @Override
     public Metodo ejecutar(Nodo raiz) {
+        
         if(raiz.hijos.size()==2 && raiz.hijos.get(0).nombre.equals("id_cmp")){//I_D:w PtoSetElemento:h   |   I_D:w PtoObservador:h
             Nodo id  = raiz.hijos.get(0);
             Nodo pto = raiz.hijos.get(1);
             opL= new OperacionesARL(global, tabla);
             ResultadoG componente = opL.ejecutar(id);
             
-            System.out.println("quiero setear lo que hay en var:"+id.valor);
+            System.out.println("QUIERO setear lo que hay en var:"+id.valor);
             
             if(componente!=null){
                 System.out.println(((Componente)componente.valor).id);
@@ -72,6 +73,23 @@ public class Accion_Setear extends Compilador{
                     setElemento(pto.hijos.get(0), pto.hijos.get(1), (Componente)componente.valor, componente.tipo,((Componente)componente.valor).id);
                     break;
                 case "pto_observador":
+                    Nodo evento = pto.hijos.get(0);
+                    Nodo funcion_anonima = pto.hijos.get(1);
+                    
+                    try {
+                        setObservador(evento,funcion_anonima,(Componente)componente.valor,componente.tipo);
+                    } catch (Exception e) {
+                    }
+                    
+                    try { 
+                        String ID = ((Componente) componente.valor).id;
+                        ArrayList<Componente> lt = null;
+                        lt = Template.cmps_repetidos.get(ID.trim()).getLista();
+                        for (Componente componente1 : lt) {
+                            setObservador(evento, funcion_anonima, componente1, componente1.tipo);
+                        }
+                    } catch (Exception e) {}
+                    
                     break;    
                 }
             }
@@ -91,6 +109,23 @@ public class Accion_Setear extends Compilador{
                             setElemento(pto.hijos.get(0), pto.hijos.get(1), (Componente)componente.valor, componente.tipo,((Componente)componente.valor).id);
                             break;
                         case "pto_observador":
+                            
+                            Nodo evento = pto.hijos.get(0);
+                            Nodo funcion_anonima = pto.hijos.get(1);
+                            try {
+                                setObservador(evento, funcion_anonima, (Componente) componente.valor, componente.tipo);
+                            } catch (Exception e) {
+                            }
+                            
+                            
+                            try {
+                                String ID = ((Componente) componente.valor).id;
+                                ArrayList<Componente> lt = null;
+                                lt = Template.cmps_repetidos.get(ID.trim()).getLista();
+                                for (Componente componente1 : lt) {
+                                    setObservador(evento, funcion_anonima, componente1, componente1.tipo);
+                                }
+                            } catch (Exception e) {}
                             
                             break;    
                     }
@@ -164,8 +199,88 @@ public class Accion_Setear extends Compilador{
 
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=nuevopanel.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                nuevopanel.propiedades.get("id").valor=value;
+                                nuevopanel.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=nuevopanel.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                nuevopanel.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
 
@@ -257,8 +372,89 @@ public class Accion_Setear extends Compilador{
                 propiedades = texxto.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=texxto.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                texxto.propiedades.get("id").valor=value;
+                                texxto.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=texxto.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                texxto.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -347,20 +543,14 @@ public class Accion_Setear extends Compilador{
                 break;
             case "boton":
                 BotonGenerico btn = (BotonGenerico) comp.objeto;
-                System.out.println(" boton ::::: "+btn.getName() + " ::::: "+propiedad);
                 propiedades = btn.propiedades;
                 switch (propiedad) {
                     case "id":
-                        //1. Ver si existe ese ID en la tabla HASH, ya que es el primero
-                        //System.out.println("Viendo si eXISTE:"+(String)val.valor);
-                        
                         if(val.tipo.equals("string")){
                             String value=((String)val.valor).trim();
                             String actual=btn.propiedades.get("id").valor.trim();
                             
                             if(Template.lista_componentes.containsKey(actual)){
-                                System.out.println("2. Existe ID");
-                                //2. Si existe entonces, voy a traer repetidos con ese ID
                                 
                                 Componente inicial = Template.lista_componentes.get(actual);//inicial
                                 
@@ -385,39 +575,22 @@ public class Accion_Setear extends Compilador{
                                     lista_estilos= Template.lista_estilos_id.get(value);
                                 }
                                 
-                                
-                                //3. Cambio el ID para cada componente
-                                //4. Aplico CCSS para cada Componente 
-                                
                                 if(lista_estilos!=null){
-                                    System.out.println(",.,.,.,,.,.,.,.,.,.,.,...,.,.,.,.,.,.,.,.,.,");
                                     
-                                    //System.out.println("TAM LISTA ESTILOS:"+lista_estilos.size());
                                     for (NodoCSS estilo : lista_estilos) {
-                                        System.out.println("APLICO ESTILO: "+estilo.valor);
-                                        System.out.println("1Aestilos size:"+estilo.hijos.size());
                                         aplicarCcss(estilo, inicial,false);
-                                        System.out.println("2Destilos size:"+estilo.hijos.size());
                                     }
                                     
-                                    System.out.println("LISTA REPETIDA:"+lt.size());
                                     for (Componente componente : lt.getLista()) {
-                                        System.out.println("COMPONENTE:"+componente.id);
                                         String jjeje=((JComponent)componente.objeto).getName();
-                                        System.out.println(" $# --> "+jjeje);
-                                        //5. recorrer la lista CCSS para ese ID
-                                        //System.out.println("TAM LISTA ESTILOS:"+lista_estilos.size());
-                                        
                                         for (int i = 0; i < lista_estilos.size(); i++) {
                                             NodoCSS estilo1 = lista_estilos.get(i);
-                                            System.out.println("APLICO ESTILO: "+estilo1.valor);
-                                            System.out.println("1Aestilos size:"+estilo1.hijos.size());
                                             aplicarCcss(estilo1, componente,true);
-                                            System.out.println("2Destilos size:"+estilo1.hijos.size());
+                                            
                                         }
                                         
                                     }
-                                    System.out.println("TERMINEEEEEEEEEEEEEEEEEEEEEE");
+                                    
                                 }
                                 
                             }
@@ -427,9 +600,7 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=btn.propiedades.get("grupo").valor.trim();
-                            System.out.println(" VOY A SETEAR GRUPO");
                             if(Template.lista_grupos.containsKey(actual)){
-                                System.out.println("EXISTE EL GRUPO:" + actual);
                                 Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
                                 if(!Template.lista_grupos.containsKey(value)){
@@ -439,17 +610,14 @@ public class Accion_Setear extends Compilador{
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
-                                    System.out.println("HE REMOVIDO: "+comp.id);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
                                 if(Template.lista_estilos_grupo.containsKey(value)){
-                                    System.out.println(" LISTA DE GRUPOS CONTIENE A:"+value);
                                     lista_estilos= Template.lista_estilos_grupo.get(value);
                                 }
-                                //System.out.println(lista_estilos.size());
+                                btn.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
-                                    //System.out.println(" cantidadEstilos de  "+value + " es " +lista_estilos.size());
                                     for (int i = 0; i < lista_estilos.size(); i++) {
                                         NodoCSS nod = lista_estilos.get(i);
                                         NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
@@ -507,7 +675,6 @@ public class Accion_Setear extends Compilador{
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
-                            //btn.setClick();
                             btn.propiedades.get("click").valor = (String) val.valor;
                         } else {
                             Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
@@ -552,8 +719,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = ctxt.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=ctxt.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                ctxt.propiedades.get("id").valor=value;
+                                ctxt.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=ctxt.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                ctxt.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -645,8 +892,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = txt_a.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=txt_a.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                txt_a.propiedades.get("id").valor=value;
+                                txt_a.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=txt_a.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                txt_a.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -737,8 +1064,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = sp.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=sp.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                sp.propiedades.get("id").valor=value;
+                                sp.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=sp.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                sp.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -829,8 +1236,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = enlac.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=enlac.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                enlac.propiedades.get("id").valor=value;
+                                enlac.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=enlac.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                enlac.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -921,8 +1408,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = tabla1.propiedadesTabla;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=tabla1.propiedadesTabla.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                tabla1.propiedadesTabla.get("id").valor=value;
+                                tabla1.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=tabla1.propiedadesTabla.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                tabla1.propiedadesTabla.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -1007,8 +1574,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = img.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=img.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                img.propiedades.get("id").valor=value;
+                                img.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=img.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                img.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -1099,8 +1746,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = combo.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=combo.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                combo.propiedades.get("id").valor=value;
+                                combo.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=combo.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                combo.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -1191,8 +1918,88 @@ public class Accion_Setear extends Compilador{
                 propiedades = opcion.propiedades;
                 switch (propiedad) {
                     case "id":
+                        if(val.tipo.equals("string")){
+                            String value=((String)val.valor).trim();
+                            String actual=opcion.propiedades.get("id").valor.trim();
+                            
+                            if(Template.lista_componentes.containsKey(actual)){
+                                
+                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                
+                                opcion.propiedades.get("id").valor=value;
+                                opcion.setName(value);
+                                
+                                inicial.id=value;
+                                
+                                Template.lista_componentes.put(value, inicial);
+                                
+                                Template.lista_componentes.remove(actual);
+                                
+                                
+                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                lt.cambiarId(value);
+                                
+                                Template.cmps_repetidos.put(value, lt);
+                                Template.cmps_repetidos.remove(actual);
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                }
+                                
+                                if(lista_estilos!=null){
+                                    
+                                    for (NodoCSS estilo : lista_estilos) {
+                                        aplicarCcss(estilo, inicial,false);
+                                    }
+                                    
+                                    for (Componente componente : lt.getLista()) {
+                                        String jjeje=((JComponent)componente.objeto).getName();
+                                        for (int i = 0; i < lista_estilos.size(); i++) {
+                                            NodoCSS estilo1 = lista_estilos.get(i);
+                                            aplicarCcss(estilo1, componente,true);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
                         break;
                     case "grupo":
+                        if (val.tipo.equals("string")) {
+                            String value=((String)val.valor).trim();
+                            String actual=opcion.propiedades.get("grupo").valor.trim();
+                            if(Template.lista_grupos.containsKey(actual)){
+                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                                
+                                if(!Template.lista_grupos.containsKey(value)){
+                                    Template.lista_grupos.put(value,new Lista());
+                                }
+                                Template.lista_grupos.get(value).getLista().add(comp);
+                                
+                                try {
+                                    lt.removeListaGrupo(comp);
+                                } catch (Exception e) {}
+                                
+                                ArrayList<NodoCSS> lista_estilos =null;
+                                if(Template.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                }
+                                opcion.propiedades.get("grupo").valor=value;
+                                if(lista_estilos!=null){
+                                    for (int i = 0; i < lista_estilos.size(); i++) {
+                                        NodoCSS nod = lista_estilos.get(i);
+                                        NodoCSS nnn = new NodoCSS("identificador","", nod.linea,nod.columna, 1000);
+                                        nnn.hijos=nod.hijos;
+                                       
+                                        aplicarCcss(nnn, comp, true);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "alto":
                         if (val.tipo.equals("string")) {
@@ -1291,29 +2098,205 @@ public class Accion_Setear extends Compilador{
                 evt_string=evt_string.toLowerCase().trim();
                 switch(evt_string){
                     case "listo":
-                        break;
-                    case "modificado":
-                        break;    
+                    case "modificado":   
                     case "clic":
                     case "click":
                     case "cliqueado":
                         switch(tipo_comp){
-                            case "boton":
-                                
-                                break;
-                            case "enlace":
+                            case "opcion":
                                 break;
                             case "imagen":
-                                break;  
+                                ArrayList<Nodo> sentenciasI = null;
+                                Nodo metodoI=funcion.hijos.get(0);
+                                if(!metodoI.nombre.equals("id")){
+                                    sentenciasI = funcion.hijos.get(0).hijos;
+                                    if(sentenciasI!=null){
+                                        ((ImagenGenerica)comp.objeto).setObservador(global, tabla, sentenciasI, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoI.valor;
+                                    sentenciasI=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasI!=null){
+                                        ((ImagenGenerica)comp.objeto).setObservador(global, null, sentenciasI, obtenerEventoString(evt_string),claseActual);
+                                  
+                                    }
+                                }
+                                break;
+                                
+                            case "boton":
+                                ArrayList<Nodo> sentencias = null;
+                                Nodo metodo=funcion.hijos.get(0);
+                                if(!metodo.nombre.equals("id")){
+                                    sentencias = funcion.hijos.get(0).hijos;
+                                    if(sentencias!=null){
+                                        ((BotonGenerico)comp.objeto).setObservador(global, tabla, sentencias, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodo.valor;
+                                    sentencias=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentencias!=null){
+                                        ((BotonGenerico)comp.objeto).setObservador(global, null, sentencias, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
+                            case "enlace":
+                                ArrayList<Nodo> sentenciasE = null;
+                                Nodo metodoE=funcion.hijos.get(0);
+                                if(!metodoE.nombre.equals("id")){
+                                    sentenciasE = funcion.hijos.get(0).hijos;
+                                    if(sentenciasE!=null){
+                                        ((EnlaceGenerico)comp.objeto).setObservador(global, tabla, sentenciasE, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoE.valor;
+                                    sentenciasE=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasE!=null){
+                                        ((EnlaceGenerico)comp.objeto).setObservador(global, null, sentenciasE, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
+                            case "panel":
+                                ArrayList<Nodo> sentenciasP = null;
+                                Nodo metodoP=funcion.hijos.get(0);
+                                if(!metodoP.nombre.equals("id")){
+                                    sentenciasP = funcion.hijos.get(0).hijos;
+                                    if(sentenciasP!=null){
+                                        ((PanelGenerico)comp.objeto).setObservador(global, tabla, sentenciasP, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoP.valor;
+                                    sentenciasP=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasP!=null){
+                                        ((PanelGenerico)comp.objeto).setObservador(global, null, sentenciasP, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
+                            case "spinner":    
+                                ArrayList<Nodo> sentenciasSP = null;
+                                Nodo metodoSP=funcion.hijos.get(0);
+                                if(!metodoSP.nombre.equals("id")){
+                                    sentenciasSP = funcion.hijos.get(0).hijos;
+                                    if(sentenciasSP!=null){
+                                        ((SpinnerGenerico)comp.objeto).setObservador(global, tabla, sentenciasSP, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoSP.valor;
+                                    sentenciasSP=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasSP!=null){
+                                        ((SpinnerGenerico)comp.objeto).setObservador(global, null, sentenciasSP, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
+                            case "tabla":    
+                                ArrayList<Nodo> sentenciasT = null;
+                                Nodo metodoT=funcion.hijos.get(0);
+                                if(!metodoT.nombre.equals("id")){
+                                    sentenciasT = funcion.hijos.get(0).hijos;
+                                    if(sentenciasT!=null){
+                                        ((TablaGenerica2)comp.objeto).setObservador(global, tabla, sentenciasT, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoT.valor;
+                                    sentenciasT=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasT!=null){
+                                        ((TablaGenerica2)comp.objeto).setObservador(global, null, sentenciasT, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
                             case "cajaopciones":
-                                break;  
-                            default:
+                                ArrayList<Nodo> sentenciasCO = null;
+                                Nodo metodoCO=funcion.hijos.get(0);
+                                if(!metodoCO.nombre.equals("id")){
+                                    sentenciasCO = funcion.hijos.get(0).hijos;
+                                    if(sentenciasCO!=null){
+                                        ((CajaOpcionesGenerica)comp.objeto).setObservador(global, tabla, sentenciasCO, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoCO.valor;
+                                    sentenciasCO=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasCO!=null){
+                                        ((CajaOpcionesGenerica)comp.objeto).setObservador(global, null, sentenciasCO, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
+                            case "cajatexto":    
+                                ArrayList<Nodo> sentenciasCT = null;
+                                Nodo metodoCt=funcion.hijos.get(0);
+                                if(!metodoCt.nombre.equals("id")){
+                                    sentenciasCT = funcion.hijos.get(0).hijos;
+                                    if(sentenciasCT!=null){
+                                        ((CajaTextoGenerica)comp.objeto).setObservador(global, tabla, sentenciasCT, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoCt.valor;
+                                    sentenciasCT=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasCT!=null){
+                                        ((CajaTextoGenerica)comp.objeto).setObservador(global, null, sentenciasCT, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
+                            case "texto":
+                                ArrayList<Nodo> sentenciasTEX = null;
+                                Nodo metodoTEX=funcion.hijos.get(0);
+                                if(!metodoTEX.nombre.equals("id")){
+                                    sentenciasTEX = funcion.hijos.get(0).hijos;
+                                    if(sentenciasTEX!=null){
+                                        ((TextoGenerico)comp.objeto).setObservador(global, tabla, sentenciasTEX, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoTEX.valor;
+                                    sentenciasTEX=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasTEX!=null){
+                                        ((TextoGenerico)comp.objeto).setObservador(global, null, sentenciasTEX, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
+                                break;
+                            case "areatexto":  
+                                ArrayList<Nodo> sentenciasATEX = null;
+                                Nodo metodoATEX=funcion.hijos.get(0);
+                                if(!metodoATEX.nombre.equals("id")){
+                                    sentenciasATEX = funcion.hijos.get(0).hijos;
+                                    if(sentenciasATEX!=null){
+                                        ((AreaTextoGenerica)comp.objeto).setObservador(global, tabla, sentenciasATEX, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoATEX.valor;
+                                    sentenciasATEX=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasATEX!=null){
+                                        ((AreaTextoGenerica)comp.objeto).setObservador(global, null, sentenciasATEX, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
                                 break;
                         }
                         break;      
                 }
             }
         }
+    }
+    
+    public String obtenerEventoString(String evt){
+        evt=evt.toLowerCase();
+        switch(evt){
+            case "clic":
+            case "click":
+            case "cliqueado":
+                return "click";
+            case "modificado":
+                return "modificado";
+            case "listo":;
+                return "listo";
+        }
+        return "";
     }
     
     

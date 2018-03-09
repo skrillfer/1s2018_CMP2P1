@@ -5,17 +5,25 @@
  */
 package Interfaz;
 
+import CJS_Compilador.Clase;
+import CJS_Compilador.TablaSimboloG;
+import Estructuras.Nodo;
+import Estructuras.Observador;
 import Estructuras.Propiedad;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.AncestorListener;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
@@ -28,6 +36,11 @@ import javax.swing.text.StyledDocument;
  * @author fernando
  */
 public class TextoGenerico extends JTextPane{
+    
+    public Observador click=null;
+    public Observador modificado=null;
+    public Observador listo=null;
+    
     public boolean mayuscula=false;
     public boolean minuscula=false;
     public boolean capital_t=false; 
@@ -79,14 +92,61 @@ public class TextoGenerico extends JTextPane{
         } catch (Exception e) {
         }
         
-        /*
-        System.out.println("queeee:"+tam);
-        if(tam>getPreferredSize().height){
-            
-        }*/
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    String metodo = propiedades.get("click").valor;
+                    metodo = metodo.replace("(", "").replace(")", "");
+                    Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                } catch (Exception ex) {
+                }
+
+                try {
+                    lanzarClick();
+                } catch (Exception ex) {
+                }
+            }
+       });
         
         
         
+        
+    }
+    
+    
+    public void setObservador(TablaSimboloG global,TablaSimboloG tabla, ArrayList<Nodo> sentencias, String tipo, Clase claseActual){
+        switch(tipo){
+            case "click":
+                click = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "modificado":        
+                modificado = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "listo":
+                listo = new Observador(global, tabla, sentencias,claseActual);
+                break;
+        }
+    }
+    
+    
+    
+    public void lanzarClick(){
+        if(click!=null){
+            Template.principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual);
+        }
+    }
+    
+    public void lanzarEditado(){
+        if(modificado!=null){
+            Template.principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual);
+        }
+    }
+    
+    public void lanzarFinalizado(){
+        if(listo!=null){
+            Template.principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual);
+        }
     }
     
     public void setId(){

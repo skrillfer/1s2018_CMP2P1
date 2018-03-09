@@ -5,29 +5,76 @@
  */
 package Interfaz;
 
+import CJS_Compilador.Clase;
+import CJS_Compilador.TablaSimboloG;
 import Estructuras.*;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 /**
  *
  * @author fernando
  */
 public class PanelGenerico extends JPanel{
+        
+    public Observador click=null;
+    public Observador modificado=null;
+    public Observador listo=null;
+    
     public Hashtable<String,Propiedad> propiedades;
 
     public PanelGenerico(Hashtable<String,Propiedad> propiedades) {
         this.propiedades=propiedades;
         setPropiedades();
+  
+        
+        
+
+    }
+    
+    public void setObservador(TablaSimboloG global,TablaSimboloG tabla, ArrayList<Nodo> sentencias, String tipo, Clase claseActual){
+        switch(tipo){
+            case "click":
+                click = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "modificado":        
+                modificado = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "listo":
+                listo = new Observador(global, tabla, sentencias,claseActual);
+                break;
+        }
     }
     
     
+    
+    public void lanzarClick(){
+        if(click!=null){
+            Template.principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual);
+        }
+    }
+    
+    public void lanzarEditado(){
+        if(modificado!=null){
+            Template.principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual);
+        }
+    }
+    
+    public void lanzarFinalizado(){
+        if(listo!=null){
+            Template.principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual);
+        }
+    }
     public void setPropiedades(){
         
         setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -39,6 +86,23 @@ public class PanelGenerico extends JPanel{
         setAlto();
         setAncho();
         
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    String metodo = propiedades.get("click").valor;
+                    metodo = metodo.replace("(", "").replace(")", "");
+                    Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                } catch (Exception ex) {
+                }
+
+                try {
+                    lanzarClick();
+                } catch (Exception ex) {
+                }
+            }
+
+        });
     }
     
     

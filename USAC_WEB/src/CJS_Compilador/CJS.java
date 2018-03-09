@@ -34,12 +34,25 @@ public class CJS extends Compilador{
         TablaSimboloG tmpGlobal = n_clase.global;
         TablaSimboloG tmpLocal = n_clase.tabla;
         
-        n_clase.ejecutar(); //se ejecutan las declaraciones globales 
-        
+        //n_clase.ejecutar(); //se ejecutan las declaraciones globales 
         pilaNivelCiclo = new Stack<>();
         pilaClases = new Stack<>();
         pilaMetodos = new Stack<>();
         pilaTablas = new Stack<>();
+        
+        for (Nodo atributo : n_clase.atributos) {
+            if (atributo.nombre.equalsIgnoreCase("declara_var") || atributo.nombre.equalsIgnoreCase("declara_vecF1")
+                    || atributo.nombre.equalsIgnoreCase("declara_vecF2") || atributo.nombre.equalsIgnoreCase("asigna_vecGlbF1")
+                    || atributo.nombre.equalsIgnoreCase("asigna_vecGlbF2") || atributo.nombre.equalsIgnoreCase("asignacionGlb")) {
+                new Declaracion(atributo, global, tabla);
+            } else {
+                Nodo padre = new Nodo("Sentencias", "", 0, 0, 898);
+                padre.hijos.add(atributo);
+                ejecutarSentencias(padre);
+            }
+        }
+        
+        
         
         metodoActual = getInicio(metodoInicio);
         global = claseActual.global;
@@ -56,18 +69,35 @@ public class CJS extends Compilador{
         
     }
     
+    public void ejecutarMETODO1(TablaSimboloG global1,TablaSimboloG local,ArrayList<Nodo> Sentencias,Clase claseActual1){
+        claseActual=claseActual1;
+        global=global1;
+        if(local==null){
+            tabla = new TablaSimboloG();
+        }else{
+            tabla =local;
+        }
+        
+        pilaNivelCiclo = new Stack<>();
+        pilaClases = new Stack<>();
+        pilaMetodos = new Stack<>();
+        pilaTablas = new Stack<>();
+        
+        if (Sentencias != null) {
+            Nodo nnnn= new Nodo("sentencias", "", 0, 0, 11222);
+            nnnn.hijos=Sentencias;
+            ejecutarSentencias(nnnn);// se ejecutan las sentencias del metodo que inicia la compilacion   
+        }
+    }
+    
     public void ejecutarMetodo(String nombre, int linea, int columna){
         for (Clase clase : lista_Clases) {
             //se busca el metodo
             claseActual=clase;
-            
-            clase.global = new TablaSimboloG();   //La tabla de simbolos global
             clase.tabla = new TablaSimboloG();    
-            clase.pilaTablas=pilaTablas = new Stack<>();
-            
             global=clase.global;
             tabla =clase.tabla;
-            clase.ejecutar(); //se ejecutan las declaraciones globales
+            
             
             pilaNivelCiclo = new Stack<>();
             pilaClases = new Stack<>();
@@ -88,7 +118,7 @@ public class CJS extends Compilador{
     }
     
     public Metodo getInicio(String nombre){
-         for (Metodo metodo : claseActual.metodos) {
+        for (Metodo metodo : claseActual.metodos) {
             if (metodo.nombre.equalsIgnoreCase(nombre)) {
                 return metodo;
             }

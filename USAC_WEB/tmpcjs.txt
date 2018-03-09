@@ -1,39 +1,19 @@
-Dimv var1:"hola mundo";
-'/ //////////////
+dimv num1:10;
+dimv cad1:"cadena1";
 
+dimv flag1 : "false" ;
 
-soy un comentario //////loco
+dimv date:"12/12/12";
+date:date+"";
+dimv datetime:"12/78/78 12:23:23";
+datetime: datetime+"";
 
+'Mensaje("num1:"+ num1 + "\ncad1:" + cad1 + "\\nflag:" + flag1 + "\\ndate:" + date + "\\ndatetime:"+datetime);
 
+dimv vector1 : {"1","2","3","4","5","6"};
 
+Mensaje(devolverIndice(vector1));
 
-////////// /'
-
-Funcion ejecutar(){
-    ejecutar2();
-' hola chavales soy un comentario
-
-}
-
-
-Funcion ejecutar2(){
-    Dimv boton1;
-    boton1:Documento.obtener("boton1");
-    
-    
-  
-
-    
-    'Documento.Obtener("boton1").setElemento("fondo","black");
-
-    boton1.setElemento("id","opcion1");
-
-    boton1 : Documento.obtener("opcion1");
-
-    boton1.setElementO("fondo","green");
-    
-}
-
-Funcion ejecutar3(){
-    Mensaje("PUTE si FUNCIONO");
+Funcion devolverIndice(x){
+    retornar x.atexto();
 }

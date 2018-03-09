@@ -62,8 +62,10 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollBar;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.PanelUI;
 
 /**
  *
@@ -91,6 +93,7 @@ public class Template extends JPanel implements ActionListener{
     public static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_id = new Hashtable<>();
     public static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_grupo = new Hashtable<>();
     
+    public static Template instance;
     
     static ArrayList<Erro_r> lista_errores = new ArrayList<>();
     //**************************************************************************
@@ -138,6 +141,13 @@ public class Template extends JPanel implements ActionListener{
             }
         });
        
+    }
+    
+    
+    public static Template getInstance(){
+        if(instance==null)
+            instance = new Template();
+        return instance;
     }
 
     public void crearBarraPrincipal() {
@@ -824,6 +834,7 @@ public class Template extends JPanel implements ActionListener{
            if(dom!=null){
                for (NodoCSS bloque : dom.hijos) {
                    for (NodoCSS nodo : bloque.hijos) {
+                       
                        switch (nodo.nombre) {
                            case "grupo":
                                System.out.println("holaaa vot a aplicar grupo CCCSS  ->"+nodo.valor);
@@ -871,9 +882,7 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public static void  SetearCSS(){
-       
-    }
+   
     
     public void ejecutarArchivosCjs() throws FileNotFoundException{
         ArrayList<String> listacjs = obtenerListaArchivosCJS();
@@ -884,7 +893,6 @@ public class Template extends JPanel implements ActionListener{
                    principal_cjs.ejecucionCJS(root, "", ruta);
                 } catch (Exception e) {
                 }
-                
                 
             }
         }
@@ -1389,8 +1397,10 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
+  
     
-    public void setTamtex(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
+    
+    public  void setTamtex(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl, Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
             if (cmp==null){
@@ -1439,6 +1449,7 @@ public class Template extends JPanel implements ActionListener{
                             System.out.println("error al aplico tamtext");
                         }
                         updateUI();
+                        //getInstance().updateUI();
                     }
                     break;
                 default:

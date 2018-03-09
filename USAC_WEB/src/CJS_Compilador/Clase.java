@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package CJS_Compilador;
+import static CJS_Compilador.Compilador.claseActual;
 import Estructuras.*;
+import Interfaz.Template;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -22,12 +24,13 @@ public class Clase {
     public String visibilidad;
     public ArrayList<Metodo> metodos;
     public ArrayList<Nodo> atributos;
-    
+    public ArrayList<Nodo> sentenciasGlobales;
     
      public Clase() {
         global = new TablaSimboloG();   //La tabla de simbolos global
         tabla = new TablaSimboloG();    
         atributos = new ArrayList<>();
+        sentenciasGlobales = new ArrayList<>();
         metodos = new ArrayList<>();
         pilaTablas = new Stack<>();
     }
@@ -38,6 +41,7 @@ public class Clase {
         tabla = new TablaSimboloG();
         atributos = new ArrayList<>();
         metodos = new ArrayList<>();
+        sentenciasGlobales = new ArrayList<>();
         pilaTablas = new Stack<>();
      
         //----------------------------------------------------------------------
@@ -68,30 +72,49 @@ public class Clase {
     private Boolean existeMetodo(String id, Nodo raiz) {
         for (Metodo metodo : metodos) {
             if (metodo.id.equalsIgnoreCase(id)) {
-                //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "El metodo " + metodo.nombre + " ya existe en la clase " + nombre);
+                Template.reporteError_CJS.agregar("Semantico", raiz.linea, raiz.columna, "El metodo " + metodo.nombre + " ya existe en la clase " + nombre);
                 return true;
             }
         }
         return false;
     }
 
+     public Metodo getMetodo(String id){
+        for (Metodo metodo : metodos) {
+            if (metodo.id.equalsIgnoreCase(id)) {
+                return metodo;
+            }
+        }
+        return null;
+    }
+    
     private ArrayList<Nodo> getAtributos(Nodo raiz) {
         ArrayList<Nodo> atributos = new ArrayList<>();
         for (Nodo hijo : raiz.hijos) {
-            if ( hijo.nombre.equalsIgnoreCase("declara_var")  || hijo.nombre.equalsIgnoreCase("declara_vecF1") 
-              || hijo.nombre.equalsIgnoreCase("declara_vecF2") || hijo.nombre.equalsIgnoreCase("asigna_vecGlbF1")
-              || hijo.nombre.equalsIgnoreCase("asigna_vecGlbF2") || hijo.nombre.equalsIgnoreCase("asignacionGlb")    ) {
+            if (!hijo.nombre.equalsIgnoreCase("funcion")  ) {
                 atributos.add(hijo);
             }
         }
         return atributos;
     }
 
+    
+    
     public void ejecutar() {
-        
+        /*
         for (Nodo atributo : atributos) {
-            new Declaracion(atributo, global, tabla);
+            if ( atributo.nombre.equalsIgnoreCase("declara_var")  || atributo.nombre.equalsIgnoreCase("declara_vecF1") 
+              || atributo.nombre.equalsIgnoreCase("declara_vecF2") || atributo.nombre.equalsIgnoreCase("asigna_vecGlbF1")
+              || atributo.nombre.equalsIgnoreCase("asigna_vecGlbF2") || atributo.nombre.equalsIgnoreCase("asignacionGlb")    )
+            {
+                new Declaracion(atributo, global, tabla);
+            }else{
+                
+            }
+            
         }
-        
+        */
     }
+    
+    
 }

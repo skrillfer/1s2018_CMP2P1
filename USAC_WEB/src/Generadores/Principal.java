@@ -50,11 +50,11 @@ public class Principal {
         
         */
         //new Principal().CompilarCHTML("");
-        
+        new Principal().CompilarCCSS("");
         
         //new Principal().CompilarCCSS("");
         String texto = "hola mundo";
-        new usac_web.USAC_WEB().CompilarCJS("");
+       // new usac_web.USAC_WEB().CompilarCJS("");
         
         /*String dato ="_hola";
         String d[]=dato.split("_");
@@ -63,7 +63,7 @@ public class Principal {
 
     public NodoCSS CompilarCCSS(String texto) throws FileNotFoundException{
         NodoCSS retorno = null;
-        AL_CCSS lex = new AL_CCSS(new FileReader("estilos.txt"));
+        AL_CCSS lex = new AL_CCSS(new FileReader("estilos2.txt"));
         AS_CCSS parser  = new AS_CCSS(lex);
         
         try {
@@ -71,6 +71,24 @@ public class Principal {
             NodoCSS raiz = parser.getRoot();
             Arbol_CCSS gen_arbol = new Arbol_CCSS();
             if (raiz != null) {
+                NodoCSS nuevoBloque = new NodoCSS("bloque", "$Afuera", 0, 0, 10110);
+                int tam=raiz.hijos.size();
+                for (int x=0; x<tam;x++) {
+                    NodoCSS nodocss = raiz.hijos.get(x);
+                    if(nodocss.nombre.equals("identificador") || nodocss.nombre.equals("grupo")){
+                        try {
+                            nuevoBloque.add(nodocss);
+                            raiz.hijos.remove(nodocss);
+                        } catch (Exception e) {
+                        }
+                    }
+                    try {
+                        tam=raiz.hijos.size();
+                    } catch (Exception e) {
+                        tam=0;
+                    }
+                }
+                raiz.add(nuevoBloque);
                 gen_arbol.generacion_arbolCCSS(raiz);
             }else{
                 System.out.println("raiz e nula");

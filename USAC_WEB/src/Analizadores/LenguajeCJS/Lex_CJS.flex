@@ -53,18 +53,21 @@ Decimal = ([:digit:][[:digit:]]*)? ([.][:digit:][[:digit:]]*)?
 Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 
-
+bbbb = "true" | "false"
 fecha   =  {Numero}[/]{Numero}[/]{Numero}
-hora    =  {Numero}[:]{Numero}[:]{Numero}
 
-fecha_hora = {fecha}[ ]+ {hora}
+date    =  ["] {fecha} ["]
+hora    =  {Numero}[:]{Numero}[:]{Numero}
+bool_ean =   ["] {bbbb}["]
+
+fecha_hora = ["] {fecha}[ ]+ {hora} ["]
+
 
 cadena = [\"] [^\"]* [\"]
 
 
 
 comm_multilinea = "'/" ["/"]* [^/] ~"/'" | "'/" ["/"]* "/'"
-
 
 comm_linea = "'" [^\r\n]* [^\r\n]
 
@@ -94,7 +97,6 @@ comm_linea = "'" [^\r\n]* [^\r\n]
 <YYINITIAL> "||" {return new Symbol(sym.OR, new token(yycolumn, yyline, yytext()));} 
 <YYINITIAL> "!" {return new Symbol(sym.NOT, new token(yycolumn, yyline, yytext()));} 
 
-<YYINITIAL> "\'" {return new Symbol(sym.COMS, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> ";" {return new Symbol(sym.PYC, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "," {return new Symbol(sym.COMA, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "." {return new Symbol(sym.PTO, new token(yycolumn, yyline, yytext()));}
@@ -129,8 +131,7 @@ comm_linea = "'" [^\r\n]* [^\r\n]
 <YYINITIAL> "Observador" {return new Symbol(sym.OBSERVADOR, new token(yycolumn, yyline, yytext()));}
 <YYINITIAL> "setElemento" {return new Symbol(sym.SETELEMENTO, new token(yycolumn, yyline, yytext()));}
 
-<YYINITIAL> {comm_multilinea} {}
-<YYINITIAL> {comm_linea}      {}
+
 <YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 
@@ -139,7 +140,7 @@ comm_linea = "'" [^\r\n]* [^\r\n]
 //*************************************Palabras reservadas****************************************
 <YYINITIAL> "DimV" {return new Symbol(sym.DIMV, new token(yycolumn, yyline, yytext()));}
 
-<YYINITIAL> "true"|"false" {return new Symbol(sym.BOOLEAN_LITERAL, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> {bool_ean} {return new Symbol(sym.BOOLEAN_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 //********************************************************************************************************
 
@@ -152,9 +153,13 @@ comm_linea = "'" [^\r\n]* [^\r\n]
 
 <YYINITIAL> {Id} {return new Symbol(sym.I_D, new token(yycolumn, yyline, yytext()));}
 
-<YYINITIAL> {fecha} {return new Symbol(sym.DATE_LITERAL, new token(yycolumn, yyline, yytext()));}
+<YYINITIAL> {date} {return new Symbol(sym.DATE_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> {fecha_hora} {return new Symbol(sym.DATETIME_LITERAL, new token(yycolumn, yyline, yytext()));}
+
+<YYINITIAL> {comm_multilinea} {}
+<YYINITIAL> {comm_linea}      {}
+
 
 {LineTerminator} {/* ignorar */}
 {WhiteSpace} {/* ignorar */}

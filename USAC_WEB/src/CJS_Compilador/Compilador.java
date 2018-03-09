@@ -42,11 +42,17 @@ public abstract class Compilador {
                 case "declara_vecF2_L":
                 case "asignacionLocal":
                 case "asigna_vecLocalF2":    
-                    new Declaracion(sentencia, global, tabla);
+                    try {
+                        new Declaracion(sentencia, global, tabla);
+                    } catch (Exception e) {
+                    }
                     break;
                 case "llamadaFuncion":
-                    opL = new OperacionesARL(global, tabla);
-                    opL.acceso(sentencia);
+                    try {
+                        opL = new OperacionesARL(global, tabla);
+                        opL.acceso(sentencia);
+                    } catch (Exception e) {
+                    }
                     break;    
                 case "retornar":
                     Retornar retorno = new Retornar();
@@ -55,51 +61,69 @@ public abstract class Compilador {
                     //System.out.println(metodoActual.retorno.valor);
                     return metodoActual;
                 case "si":
-                    Si si = new Si();
-                    metodoActual = si.ejecutar(sentencia);
-                    if (metodoActual.estadoRetorno) {
-                        return metodoActual;
-                    }
-                    if (metodoActual.estadoTerminar) {
-                        //metodoActual.estadoTerminar=false;
-                        return metodoActual;
-                    }
+                    try {
+                        Si si = new Si();
+                        metodoActual = si.ejecutar(sentencia);
+                        if (metodoActual.estadoRetorno) {
+                            return metodoActual;
+                        }
+                        if (metodoActual.estadoTerminar) {
+                            //metodoActual.estadoTerminar=false;
+                            return metodoActual;
+                        }
 
-                    if (metodoActual.estadoContinuar) {
-                        return metodoActual;
+                        if (metodoActual.estadoContinuar) {
+                            return metodoActual;
+                        }
+                    } catch (Exception e) {
                     }
                     break;
                 case "mientras":
-                    Mientras mientras = new Mientras();
                     nivelCiclo++;
-                    metodoActual = mientras.ejecutar(sentencia);
-                    if (metodoActual.estadoRetorno) {
-                        nivelCiclo--;
-                        return metodoActual;
+                    try {
+                        Mientras mientras = new Mientras();
+                        
+                        metodoActual = mientras.ejecutar(sentencia);
+                        if (metodoActual.estadoRetorno) {
+                            nivelCiclo--;
+                            return metodoActual;
+                        }
+                        
+                    } catch (Exception e) {
                     }
                     nivelCiclo--;
                     break;
                  case "selecciona":
-                    nivelCiclo++;
-                    Selecciona seleccion = new Selecciona();
-                    metodoActual = seleccion.ejecutar(sentencia);
-                    if (metodoActual.estadoRetorno) {
-                        nivelCiclo--;
-                        return metodoActual;
-                    }
-                    if (metodoActual.estadoContinuar) {
-                        nivelCiclo--;
-                        return metodoActual;
-                    }
-                    nivelCiclo--;
+                     nivelCiclo++;
+                     try {
+                         
+                         Selecciona seleccion = new Selecciona();
+                         metodoActual = seleccion.ejecutar(sentencia);
+                         if (metodoActual.estadoRetorno) {
+                             nivelCiclo--;
+                             return metodoActual;
+                         }
+                         if (metodoActual.estadoContinuar) {
+                             nivelCiclo--;
+                             return metodoActual;
+                         }
+                         
+                     } catch (Exception e) {
+                     }
+                     nivelCiclo--;
                     break;    
                 case "para":
                     nivelCiclo++;
-                    Para para = new Para();
-                    metodoActual = para.ejecutar(sentencia);
-                    if (metodoActual.estadoRetorno) {
-                        nivelCiclo--;
-                        return metodoActual;
+                    try {
+                        
+                        Para para = new Para();
+                        metodoActual = para.ejecutar(sentencia);
+                        if (metodoActual.estadoRetorno) {
+                            nivelCiclo--;
+                            return metodoActual;
+                        }
+                        
+                    } catch (Exception e) {
                     }
                     nivelCiclo--;
                     break;    
@@ -116,7 +140,10 @@ public abstract class Compilador {
                     opL = new OperacionesARL(global,tabla);
                     ResultadoG r1s = opL.ejecutar(sentencia.hijos.get(0));
                     try {
-                        AlertaGenerica alert = new AlertaGenerica(r1s.valor.toString());
+                        String texto=r1s.valor.toString();
+                        System.out.println(texto);
+                        //texto=texto.replaceAll("\\n", Ja);
+                        AlertaGenerica alert = new AlertaGenerica(texto);
                         //Template.CONSOLA+="\n"+r1s.valor;
                         //System.out.println(r1s.valor);
                     } catch (Exception e) {
@@ -138,6 +165,26 @@ public abstract class Compilador {
                     opL = new OperacionesARL(global,tabla);
                     opL.ejecutar(sentencia);
                     break;
+                case "ADD":
+                case "SUB":
+                    opL = new OperacionesARL(global, global);
+                    ResultadoG resp=opL.ejecutar(sentencia);
+                    if(resp!=null){
+                        if(!sentencia.valor.equals("")){
+                            try {
+                                Nodo raizz = new Nodo("asignacionLocal","",sentencia.linea,sentencia.columna,11222);
+                                raizz.add(new Nodo("id", sentencia.valor, sentencia.linea, sentencia.columna, 8889));
+                                raizz.add(new Nodo(resp.tipo,resp.valor.toString(),sentencia.linea,sentencia.columna,666));
+                                new Declaracion(raizz, global, tabla);
+                            } catch (Exception e) {}
+                            
+                            //System.out.println(resp.valor.toString());
+                        }
+                        //System.out.println(resp.valor.toString());
+                        //System.out.println("ADD|SUB:"+resp.tipo);
+                    }
+                    break;
+                    
             }
         }
         return metodoActual;

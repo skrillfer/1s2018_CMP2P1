@@ -61,11 +61,25 @@ programa ::= {: root= parser.crearNodo("ccss","",0,0); :}
 lista_bloques ::= lista_bloques:r bloque:h{:
                     r.add(h);
                     RESULT=r;
+                    n_r=null;
                 :}
+                | lista_bloques:r contenido:h{:
+                    if(!h.nombre.equals("##no")){
+                        r.add(h);
+                    }
+                    RESULT=r;
+               :}
                 |bloque:h{:
                     RESULT = parser.crearNodo("ccss","",0,0);
                     RESULT.add(h);
-                :};
+                    n_r=null;
+                :}
+                |contenido:h{:
+                    RESULT = parser.crearNodo("ccss","",0,0);
+                    if(!h.nombre.equals("##no")){
+                        RESULT.add(h);    
+                    }
+               :};
 
 bloque ::= I_D:x ACORCH  cont_bloque:h CCORCH{:
                 RESULT = parser.crearNodo("bloque",x.getCadena(),x.getLinea(),x.getColumna());
@@ -88,7 +102,6 @@ lista_cont ::= lista_cont:r contenido:h{:
                 if(!h.nombre.equals("##no")){
                     RESULT.add(h);    
                 }
-                
               :};
 
 

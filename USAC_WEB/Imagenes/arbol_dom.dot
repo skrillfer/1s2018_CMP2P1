@@ -1,87 +1,87 @@
 digraph G {
 node[shape=Mrecord]
-121[label="chtml | ",style=bold]
-120[label="encabezado | ",style=bold]
-{121}->{120}
+123[label="chtml | ",style=bold]
+122[label="encabezado | ",style=bold]
+{123}->{122}
 3[label="ccss | ",style=bold]
-{120}->{3}
+{122}->{3}
 7[label="cjs | ",style=bold]
-{120}->{7}
+{122}->{7}
 9[label="titulo | ",style=bold]
-{120}->{9}
-118[label="cuerpo | ",style=bold]
-{121}->{118}
-11[label="ignorar | ",style=bold]
-{118}->{11}
-15[label="tabla | ",style=bold]
-{118}->{15}
-34[label="fila | ",style=bold]
-{15}->{34}
-21[label="ct | ",style=bold]
-{34}->{21}
-20[label="texto | ",style=bold]
-{21}->{20}
-24[label="ct | ",style=bold]
-{34}->{24}
-23[label="texto | ",style=bold]
-{24}->{23}
-27[label="ct | ",style=bold]
-{34}->{27}
-26[label="texto | ",style=bold]
-{27}->{26}
-33[label="ct | ",style=bold]
-{34}->{33}
-32[label="boton | ",style=bold]
-{33}->{32}
-37[label="fila | ",style=bold]
-{15}->{37}
-46[label="fila | ",style=bold]
-{15}->{46}
-41[label="cb | ",style=bold]
-{46}->{41}
-40[label="texto | ",style=bold]
-{41}->{40}
-45[label="cb | ",style=bold]
-{46}->{45}
-44[label="texto | ",style=bold]
-{45}->{44}
-50[label="boton | ",style=bold]
-{118}->{50}
-54[label="boton | ",style=bold]
-{118}->{54}
-58[label="boton | ",style=bold]
-{118}->{58}
-63[label="boton | ",style=bold]
-{118}->{63}
-68[label="boton | ",style=bold]
-{118}->{68}
-73[label="boton | ",style=bold]
-{118}->{73}
-77[label="texto | ",style=bold]
-{118}->{77}
-92[label="caja | ",style=bold]
-{118}->{92}
-84[label="opcion | ",style=bold]
-{92}->{84}
-88[label="opcion | ",style=bold]
-{92}->{88}
-91[label="opcion | ",style=bold]
-{92}->{91}
-111[label="panel | ",style=bold]
-{118}->{111}
-99[label="boton | ",style=bold]
-{111}->{99}
-102[label="boton | ",style=bold]
-{111}->{102}
+{122}->{9}
+120[label="cuerpo | ",style=bold]
+{123}->{120}
+13[label="enlace | ",style=bold]
+{120}->{13}
+17[label="tabla | ",style=bold]
+{120}->{17}
+36[label="fila | ",style=bold]
+{17}->{36}
+23[label="ct | ",style=bold]
+{36}->{23}
+22[label="texto | ",style=bold]
+{23}->{22}
+26[label="ct | ",style=bold]
+{36}->{26}
+25[label="texto | ",style=bold]
+{26}->{25}
+29[label="ct | ",style=bold]
+{36}->{29}
+28[label="texto | ",style=bold]
+{29}->{28}
+35[label="ct | ",style=bold]
+{36}->{35}
+34[label="boton | ",style=bold]
+{35}->{34}
+39[label="fila | ",style=bold]
+{17}->{39}
+48[label="fila | ",style=bold]
+{17}->{48}
+43[label="cb | ",style=bold]
+{48}->{43}
+42[label="texto | ",style=bold]
+{43}->{42}
+47[label="cb | ",style=bold]
+{48}->{47}
+46[label="texto | ",style=bold]
+{47}->{46}
+52[label="boton | ",style=bold]
+{120}->{52}
+56[label="boton | ",style=bold]
+{120}->{56}
+60[label="boton | ",style=bold]
+{120}->{60}
+65[label="boton | ",style=bold]
+{120}->{65}
+70[label="boton | ",style=bold]
+{120}->{70}
+75[label="boton | ",style=bold]
+{120}->{75}
+79[label="texto | ",style=bold]
+{120}->{79}
+94[label="caja | ",style=bold]
+{120}->{94}
+86[label="opcion | ",style=bold]
+{94}->{86}
+90[label="opcion | ",style=bold]
+{94}->{90}
+93[label="opcion | ",style=bold]
+{94}->{93}
+113[label="panel | ",style=bold]
+{120}->{113}
+101[label="boton | ",style=bold]
+{113}->{101}
 104[label="boton | ",style=bold]
-{111}->{104}
+{113}->{104}
 106[label="boton | ",style=bold]
-{111}->{106}
+{113}->{106}
 108[label="boton | ",style=bold]
-{111}->{108}
+{113}->{108}
 110[label="boton | ",style=bold]
-{111}->{110}
-116[label="imagen | ",style=bold]
-{118}->{116}
+{113}->{110}
+112[label="boton | ",style=bold]
+{113}->{112}
+118[label="imagen | ",style=bold]
+{120}->{118}
 
 }

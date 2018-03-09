@@ -35,7 +35,7 @@ public class Declaracion extends Compilador{
     }
     
     private SimboloG declararParametro(ResultadoG resultado) {
-
+        
         switch (raiz.nombre) {
             case "parametro":
                 return parametro(resultado);
@@ -95,7 +95,7 @@ public class Declaracion extends Compilador{
                 declara_vecF2_L();
                 break;
             case "asigna_vecLocalF1":
-                //asignacionLocal();
+                asigna_vecLocalF1();
                 break;
             case "asigna_vecLocalF2":
                 asigna_vecLocalF2();
@@ -120,7 +120,9 @@ public class Declaracion extends Compilador{
         if(raiz.hijos.get(1).hijos.size()>0){
             Nodo exp = raiz.hijos.get(1).hijos.get(0);//se obtiene el nodo de la expresion
             //----------ejecuto la parte de la expresion
+            System.out.println("ASIGNO a " + nombre);
             ResultadoG resultado = opL.ejecutar(exp);
+            
             if(resultado!=null ){
                 // la variable toma el tipo del valor que le es asignado
                 tipo=resultado.tipo;
@@ -192,8 +194,6 @@ public class Declaracion extends Compilador{
             }else{
                 System.out.println("cantidad de valores a agregar es mayor a el tamano del vector");
             }
-            
-            
             System.out.println("");
         }
     }
@@ -342,6 +342,29 @@ public class Declaracion extends Compilador{
             //Inicio.reporteError.agregar("Semantico", raiz.linea, raiz.columna, "La variable " + nombre + " ya existe");
         }
     }
+    
+    public void asigna_vecLocalF1(){
+        String nombre = raiz.hijos.get(0).valor;
+        String tipo="";
+        SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
+        if(sim.esArreglo){            
+            Arreglo arreglo = (Arreglo)sim.valor;
+            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones);
+            //************como es de una sola dimension
+            // si la cantidad de datos es menor o igual al tamanio unidimensional
+            if(arr1.getDatos().size()<=arreglo.getDatos().size()){
+
+                for (int i = 0; i < arr1.getDatos().size(); i++) {
+                    arreglo.getDatos().set(i, arr1.getDatos().get(i));
+                }
+                
+            }else{
+                System.out.println("cantidad de valores a agregar es mayor a el tamano del vector");
+            }
+        }
+    }
+    
+    
     
     public void asigna_vecLocalF2(){
         String nombre = raiz.hijos.get(0).valor;

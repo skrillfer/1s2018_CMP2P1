@@ -5,8 +5,11 @@
  */
 package Interfaz;
 
+import CJS_Compilador.Clase;
+import CJS_Compilador.TablaSimboloG;
 import Estructuras.Nodo;
 import Estructuras.NodoCSS;
+import Estructuras.Observador;
 import Estructuras.Propiedad;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -26,11 +29,16 @@ import javax.swing.JTextField;
  * @author fernando
  */
 public  class ImagenGenerica extends JLabel implements MouseListener{
+    public Observador click=null;
+    public Observador modificado=null;
+    public Observador listo=null;
+    
+    
     public Nodo metodo = null; 
     public Hashtable<String,Propiedad> propiedades;
     int alto=0;
     int ancho=0;
-    String click="";
+    String click1="";
     public ImagenGenerica(Hashtable<String, Propiedad> propiedades) {
         this.propiedades = propiedades;
         setPropiedades();
@@ -52,14 +60,57 @@ public  class ImagenGenerica extends JLabel implements MouseListener{
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println(click);
-                // aqui se busca el motodo al cual hace click
+                try {
+                    String metodo = propiedades.get("click").valor;
+                    metodo = metodo.replace("(", "").replace(")", "");
+                    Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                } catch (Exception ex) {
+                }
+
+                try {
+                    lanzarClick();
+                } catch (Exception ex) {
+                }
             }
         });
         
         
     }
     
+    public void lanzarClick(){
+        if(click!=null){
+            Template.principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual);
+        }
+    }
+    
+    public void lanzarEditado(){
+        if(modificado!=null){
+            Template.principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual);
+        }
+    }
+    
+    public void lanzarFinalizado(){
+        if(listo!=null){
+            Template.principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual);
+        }
+    }
+    
+     public void setObservador(TablaSimboloG global,TablaSimboloG tabla, ArrayList<Nodo> sentencias, String tipo, Clase claseActual){
+        switch(tipo){
+            case "click":
+                click = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "modificado":        
+                modificado = new Observador(global, tabla, sentencias,claseActual);
+                break;
+            case "listo":
+                listo = new Observador(global, tabla, sentencias,claseActual);
+                break;
+        }
+    }
+    
+    
+       
     public void renderizarImagen(){
         ImageIcon img=null;
         String ruta=getRutaTexto(propiedades.get("$text").valor.trim());
@@ -93,7 +144,7 @@ public  class ImagenGenerica extends JLabel implements MouseListener{
     
     public void setClick(){
         try {
-            click= propiedades.get("click").valor.trim();
+           //propiedades.get("click").valor.trim();
         } catch (Exception e) {}
         
     }

@@ -126,7 +126,7 @@ public class OperacionesARL {
                 linea1=nodo.hijos.get(0).linea;         columna1=nodo.hijos.get(0).columna;
                 linea2=0;        columna2=0;
                 ResultadoG r_sub1 = ejecutar(nodo.hijos.get(0));
-                System.out.println("voy a DECREMENTAR:"+r_sub1.valor);
+                //System.out.println("voy a DECREMENTAR:"+r_sub1.valor);
                 result = operacionesSimplificadas(r_sub1, "SUB");
                 //System.out.println("===>"+result.valor);
                 //imprimirResultado(result.valor);

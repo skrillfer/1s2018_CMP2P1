@@ -1,12 +1,12 @@
 <CHTML>
     <ENCABEZADO>
     <CCSS ruta="/home/fernando/Escritorio/a_cristina/Contenido/estilo.ccss";> <FIN-CCSS>
-    <CJS ruta="/home/fernando/Escritorio/a_cristina/Contenido/script.cjs";> <FIN-CJS>
+    <CJS ruta="/home/fernando/Escritorio/a_cristina/Contenido/script2.cjs";> <FIN-CJS>
     <TITULO> PAGINA USAC<FIN-TITULO>
     <FIN-ENCABEZADO>
     <CUERPO>
 
-
+<ENLACE ruta="/home/fernando/Escritorio/a_cristina/Contenido/home.chtml";> <Fin-enlace>
     <//- -//>
                      <TABLA>
                         <//- souy un comentario-//>
@@ -30,13 +30,13 @@
                     <FIN-TABLA>
 
             <BOTON id="boton1"; click="ejecutar()"; >boton1<FIN-BOTON>
-            <BOTON id="boton222"; click="ejecutar()"; >boton222<FIN-BOTON>
+            <BOTON id="boton222"; click="metodo()"; >boton222<FIN-BOTON>
 
             <BOTON grupo = "grupo_1"; click="ejecutar()"; >boton333<FIN-BOTON>
             
             <BOTON id="boton333"; grupo = "grupo_1"; click="ejecutar()"; >botonRepetido 333 1<FIN-BOTON>
             <BOTON id="boton333"; grupo = "grupo_1"; click="ejecutar()"; >botonRepetido 333 2<FIN-BOTON>
-            <BOTON id="boton1"; grupo = "grupo_1"; click="ejecutar()"; >botonRepetido 333 3<FIN-BOTON>
+            <BOTON id="boton222"; grupo = "grupo_1"; click="ejecutar()"; >botonRepetido 333 3<FIN-BOTON>
 
             <TEXTO fondo="white"; alineado="centrado";> Machine learning una tendencia tecnologica:
 Es una subdisciplina de la inteligencia artificial, todo surge a partir de la gran maquina de turin
