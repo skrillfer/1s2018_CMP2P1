@@ -138,14 +138,14 @@ public class AreaTextoGenerica extends JTextPane{
                     }
                 } catch (Exception ex) {
                 }
-
+   
                 try {
                     lanzarClick();
                 } catch (Exception ex) {
                 }
             }
-            
         });
+        
     }
     
     
