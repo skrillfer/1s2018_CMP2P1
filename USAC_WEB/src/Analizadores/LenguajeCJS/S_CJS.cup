@@ -509,9 +509,18 @@ dato ::= I_D:a                          {: RESULT = parser.crearNodo("id",a.getC
                           :}
         |NUM:a                          {: RESULT = parser.crearNodo("number",a.getCadena(),a.getLinea(),a.getColumna());    :}
         |DECIMAL:a                      {: RESULT = parser.crearNodo("number",a.getCadena(),a.getLinea(),a.getColumna());    :}
-        | BOOLEAN_LITERAL:a     {: RESULT = parser.crearNodo("boolean",a.getCadena(),a.getLinea(),a.getColumna());   :}
-        | DATE_LITERAL:a        {: RESULT = parser.crearNodo("date",a.getCadena(),a.getLinea(),a.getColumna());      :}
-        | DATETIME_LITERAL:a    {: RESULT = parser.crearNodo("datetime",a.getCadena(),a.getLinea(),a.getColumna());  :}
+        | BOOLEAN_LITERAL:a     {: 
+                String cad = a.getCadena(); cad= cad.substring(1,cad.length()-1);
+                RESULT = parser.crearNodo("boolean",cad,a.getLinea(),a.getColumna());   
+        :}
+        | DATE_LITERAL:a        {: 
+                String cad = a.getCadena(); cad= cad.substring(1,cad.length()-1);
+                RESULT = parser.crearNodo("date",cad,a.getLinea(),a.getColumna());      
+        :}
+        | DATETIME_LITERAL:a    {: 
+                String cad = a.getCadena(); cad= cad.substring(1,cad.length()-1);
+                RESULT = parser.crearNodo("datetime",cad,a.getLinea(),a.getColumna());  
+        :}
         |funcion_conteo:a               {: RESULT = a;  :}
         |funcion_acadena:a              {: RESULT = a;  :}
         |LlamadaFuncion:a               {: RESULT = a;  :};

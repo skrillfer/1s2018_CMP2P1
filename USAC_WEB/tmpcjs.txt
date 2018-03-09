@@ -8,12 +8,29 @@ date:date+"";
 dimv datetime:"12/78/78 12:23:23";
 datetime: datetime+"";
 
-'Mensaje("num1:"+ num1 + "\ncad1:" + cad1 + "\\nflag:" + flag1 + "\\ndate:" + date + "\\ndatetime:"+datetime);
+Mensaje("num1:"+ num1 + "\ncad1:" + cad1 + "\\nflag:" + flag1 + "\\ndate:" + date + "\\ndatetime:"+datetime);
 
 dimv vector1 : {"1","2","3","4","5","6"};
 
 Mensaje(devolverIndice(vector1));
 
+dimv prr:"true";
+
+Mensaje (prr + 10);
+
 Funcion devolverIndice(x){
     retornar x.atexto();
+}
+
+setear();
+
+Funcion setear(){
+    Dimv var1:"sexo";
+    var22:"sss";
+    Dimv boton1;
+    boton1:Documento.obtener("boton1");
+    boton1.observador("click",funcion(){
+                   Mensaje(var1);  
+        });
+    
 }

@@ -79,6 +79,7 @@ public class Template extends JPanel implements ActionListener{
     public static String CONSOLA="";
     //----------------------------------------------------//
     public static ReporteError reporteError_CJS = new ReporteError(); // este REPORTE es para CJS
+    
     //**************************************************************************
     //lista de COMPONENTES REPETIDOS
     public static Hashtable<String,Lista> cmps_repetidos = new Hashtable<>();
@@ -145,6 +146,7 @@ public class Template extends JPanel implements ActionListener{
     
     
     public static Template getInstance(){
+        
         if(instance==null)
             instance = new Template();
         return instance;
@@ -327,7 +329,7 @@ public class Template extends JPanel implements ActionListener{
         if(boton==opciones){
             String data=lista_cargadas.getPagina(lista_cargadas.getIndex());
             System.out.println("===>"+data);
-            new VentanaOpciones(data,obtenerListaArchivosCJS(),obtenerListaArchivosCCSS(),CONSOLA);
+            new VentanaOpciones(data,obtenerListaArchivosCJS(),obtenerListaArchivosCCSS(),CONSOLA,reporteError_CJS.generarHtml("Errores ", "CJS y CSS"));
         }else if(boton==reload){
             cargar_Recargar();
         }else if(boton==historial){
@@ -918,7 +920,9 @@ public class Template extends JPanel implements ActionListener{
                                 break;
                             }
                         }
-                           
+                        try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {}    
                         NodoCSS valores= nodo.hijos.get(0);
                         for (NodoCSS valor : valores.hijos) {
                             ResultadoG res = opl.ejecutar(valor);
@@ -1161,7 +1165,9 @@ public class Template extends JPanel implements ActionListener{
                     cmp = new Componente("null", "null", new Object(), null);
                 }
             }
-            
+            try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {} 
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null) {
                 res = new ResultadoG("null", null);
@@ -1266,7 +1272,9 @@ public class Template extends JPanel implements ActionListener{
                     cmp = new Componente("null", "null", new Object(),null);
                 }
             }
-            
+            try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {} 
 
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null)
@@ -1349,7 +1357,9 @@ public class Template extends JPanel implements ActionListener{
                 }
             } 
                 
-            
+            try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {} 
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null)
                 res = new ResultadoG("ninguno", null);
@@ -1410,7 +1420,9 @@ public class Template extends JPanel implements ActionListener{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-                
+            try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {}     
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
@@ -1470,7 +1482,9 @@ public class Template extends JPanel implements ActionListener{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-                
+            try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {}     
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res = new ResultadoG("ninguno",null);
@@ -1529,7 +1543,9 @@ public class Template extends JPanel implements ActionListener{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-            
+            try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {} 
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res = new ResultadoG("ninguno",null);
@@ -1584,7 +1600,9 @@ public class Template extends JPanel implements ActionListener{
                 //cmp = new Componente("", "",new Object(), null);
             }
                 
-            
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {} 
             ResultadoG res1 = opl.ejecutar(nodo.hijos.get(0));
             ResultadoG res2 = opl.ejecutar(nodo.hijos.get(1));
             ResultadoG res3 = opl.ejecutar(nodo.hijos.get(2));
@@ -1661,7 +1679,9 @@ public class Template extends JPanel implements ActionListener{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-            
+            try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {} 
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res= new ResultadoG("ninguno", null);
@@ -1713,7 +1733,10 @@ public class Template extends JPanel implements ActionListener{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-            
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {} 
+
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res= new ResultadoG("ninguno", null);
@@ -1885,6 +1908,45 @@ public class Template extends JPanel implements ActionListener{
     }
     
     
+    public void lanzarEditado(Componente compo){
+        if(compo!=null){
+            switch(compo.tipo){
+                case "boton":
+                    ((BotonGenerico)compo.objeto).lanzarEditado();
+                    break;
+                case "opcion":
+                    ((OpcionGenerica)compo.objeto).lanzarEditado();
+                    break;  
+                case "cajatexto":
+                    ((CajaTextoGenerica)compo.objeto).lanzarEditado();
+                    break; 
+                case "cajaopciones":
+                    ((CajaOpcionesGenerica)compo.objeto).lanzarEditado();
+                    break; 
+                case "areatexto":
+                    ((AreaTextoGenerica)compo.objeto).lanzarEditado();
+                    break;    
+                case "texto":
+                    ((TextoGenerico)compo.objeto).lanzarEditado();
+                    break; 
+                case "spinner":
+                    ((SpinnerGenerico)compo.objeto).lanzarEditado();
+                    break;   
+                case "tabla":
+                    ((TablaGenerica2)compo.objeto).lanzarEditado();
+                    break;   
+                case "enlace":
+                    ((EnlaceGenerico)compo.objeto).lanzarEditado();
+                    break;  
+                case "imagen":
+                    ((ImagenGenerica)compo.objeto).lanzarEditado();
+                    break;    
+                case "panel":
+                    ((PanelGenerico)compo.objeto).lanzarEditado();
+                    break;      
+            }
+        }
+    }
 }
 
 

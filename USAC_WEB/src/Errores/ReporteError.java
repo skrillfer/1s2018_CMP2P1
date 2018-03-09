@@ -47,7 +47,8 @@ public class ReporteError {
         listaErrores.add(error);
     }
 
-    public void generarHtml(String titulo, String lenguaje) {
+    public String generarHtml(String titulo, String lenguaje) {
+        
         titulo += ".html";
         Date date = new Date();
         DateFormat hourdateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss");
@@ -98,8 +99,8 @@ public class ReporteError {
         html += "</center>";
         html += "</body>";
         html += "</html>";
-
-        try {
+        return html;
+        /*try {
             FileWriter archivo = new FileWriter(titulo);
             PrintWriter escritura = new PrintWriter(archivo);
             escritura.println(html);
@@ -108,7 +109,7 @@ public class ReporteError {
             File file = new File(titulo);
             Desktop.getDesktop().open(file);
         } catch (Exception e) {
-        }
+        }*/
     }
 
 }

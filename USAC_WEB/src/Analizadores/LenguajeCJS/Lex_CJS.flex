@@ -53,14 +53,14 @@ Decimal = ([:digit:][[:digit:]]*)? ([.][:digit:][[:digit:]]*)?
 Id = [:jletter:]["�"|"�"|"�"|"�"|"�"|[:jletterdigit:]|"_"|]*
 
 
-bbbb = "true" | "false"
+bbbb = "\"" (true) "\"" | "\"" (false)"\""
 fecha   =  {Numero}[/]{Numero}[/]{Numero}
 
-date    =  ["] {fecha} ["]
+date    =  "\"" {fecha} "\""
 hora    =  {Numero}[:]{Numero}[:]{Numero}
-bool_ean =   ["] {bbbb}["]
+bool_ean =   {bbbb}
 
-fecha_hora = ["] {fecha}[ ]+ {hora} ["]
+fecha_hora = "\"" {fecha}[ ]+ {hora} "\""
 
 
 cadena = [\"] [^\"]* [\"]
@@ -132,7 +132,6 @@ comm_linea = "'" [^\r\n]* [^\r\n]
 <YYINITIAL> "setElemento" {return new Symbol(sym.SETELEMENTO, new token(yycolumn, yyline, yytext()));}
 
 
-<YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 
 
@@ -156,6 +155,9 @@ comm_linea = "'" [^\r\n]* [^\r\n]
 <YYINITIAL> {date} {return new Symbol(sym.DATE_LITERAL, new token(yycolumn, yyline, yytext()));}
 
 <YYINITIAL> {fecha_hora} {return new Symbol(sym.DATETIME_LITERAL, new token(yycolumn, yyline, yytext()));}
+
+<YYINITIAL> {cadena} {return new Symbol(sym.STRING_LITERAL, new token(yycolumn, yyline, yytext()));}
+
 
 <YYINITIAL> {comm_multilinea} {}
 <YYINITIAL> {comm_linea}      {}

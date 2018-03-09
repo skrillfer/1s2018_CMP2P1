@@ -61,8 +61,10 @@ public class SpinnerGenerico extends JSpinner{
             public void mouseClicked(MouseEvent e) {
                 try {
                     String metodo = propiedades.get("click").valor;
-                    metodo = metodo.replace("(", "").replace(")", "");
-                    Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                    if(!metodo.equals("")){
+                        metodo = metodo.replace("(", "").replace(")", "");
+                        Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                    }
                 } catch (Exception ex) {
                 }
 

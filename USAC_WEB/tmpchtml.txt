@@ -44,7 +44,7 @@ creaada por Alan Turing, llamada la madre de todos los metodos, ya que cualquier
 a un metodo de la maquina de turing.
             <FIN-TEXTO>
 
-<CAJA fondo="blue"; id ="caja1"; > <OPCION id ="opcion1"; fondo="yellow";>opcion1<FIN-OPCION>  <OPCION fondo="green";>opcion2<FIN-OPCION> <OPCION fondo="pink";>opcion3<FIN-OPCION> <FIN-CAJA>
+<CAJA fondo="blue"; id ="caja1"; click="cliqueame()";> <OPCION id ="opcion1"; fondo="yellow";>opcion1<FIN-OPCION>  <OPCION fondo="green";>opcion2<FIN-OPCION> <OPCION fondo="pink";>opcion3<FIN-OPCION> <FIN-CAJA>
 
 
 <PANEL fondo="orange"; alto="150"; ancho="150"; alineado="izquierda";>

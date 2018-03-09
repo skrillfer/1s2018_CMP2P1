@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -28,6 +29,7 @@ import javax.swing.text.DefaultCaret;
  * @author fernando
  */
 public class VentanaOpciones extends JFrame {
+    String HTML="";
     String ruta_chtlm="";
     ArrayList<String> lista_cjs=null;
     ArrayList<String> lista_ccss=null;
@@ -36,9 +38,10 @@ public class VentanaOpciones extends JFrame {
     JTabbedPane controlTab1 = new JTabbedPane();
     String consola="";
 
-    public VentanaOpciones(String ruta_chtml, ArrayList<String> lista_cjs,ArrayList<String> lista_ccss, String consola) {
+    public VentanaOpciones(String ruta_chtml, ArrayList<String> lista_cjs,ArrayList<String> lista_ccss, String consola, String html_Errores) {
         super(" Opciones");
         this.ruta_chtlm=ruta_chtml;
+        this.HTML=html_Errores;
         this.lista_ccss=lista_ccss;
         this.lista_cjs=lista_cjs;
         this.consola=consola;
@@ -66,7 +69,8 @@ public class VentanaOpciones extends JFrame {
         // 4.area de la consola salida
         controlTab1.add(crearTextArea(4), "Consola de salida");
         // 5.area de la consola de errores
-
+        controlTab1.add(crearTabErrores(),"Errores");
+        //controlTab1.add():
         controlTab1.setSelectedIndex(0);
 
         //pagina.populateContentPane(this.getContentPane());
@@ -126,6 +130,18 @@ public class VentanaOpciones extends JFrame {
         }
         
         return controlTab;
+    }
+    
+    public JScrollPane crearTabErrores(){
+        JEditorPane cod_area = new JEditorPane("text/html",HTML);
+        JScrollPane scroll = new JScrollPane(cod_area,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        cod_area.setEditable(false);
+
+        DefaultCaret caret = (DefaultCaret) cod_area.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+        
+        return scroll;
     }
     public JScrollPane crearTextArea(int num) {
 

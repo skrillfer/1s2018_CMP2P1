@@ -23,7 +23,7 @@ node[shape=Mrecord]
 {12}->{13}
 11[label="asigna_var | ",style=bold]
 {12}->{11}
-10[label="boolean | 'false'",style=bold]
+10[label="boolean | false",style=bold]
 {11}->{10}
 16[label="declara_var | ",style=bold]
 {5}->{16}
@@ -31,7 +31,7 @@ node[shape=Mrecord]
 {16}->{17}
 15[label="asigna_var | ",style=bold]
 {16}->{15}
-14[label="date | '12/12/12'",style=bold]
+14[label="date | 12/12/12",style=bold]
 {15}->{14}
 21[label="asignacionGlb | ",style=bold]
 {5}->{21}
@@ -49,7 +49,7 @@ node[shape=Mrecord]
 {25}->{26}
 24[label="asigna_var | ",style=bold]
 {25}->{24}
-23[label="datetime | '12/78/78 12:23:23'",style=bold]
+23[label="datetime | 12/78/78 12:23:23",style=bold]
 {24}->{23}
 30[label="asignacionGlb | ",style=bold]
 {5}->{30}
@@ -61,51 +61,167 @@ node[shape=Mrecord]
 {29}->{27}
 28[label="string | ",style=bold]
 {29}->{28}
-39[label="declara_vecF1 | ",style=bold]
-{5}->{39}
-40[label="nombre | vector1",style=bold]
-{39}->{40}
-33[label="valores | ",style=bold]
-{39}->{33}
-32[label="string | 1",style=bold]
-{33}->{32}
-34[label="string | 2",style=bold]
-{33}->{34}
-35[label="string | 3",style=bold]
-{33}->{35}
-36[label="string | 4",style=bold]
-{33}->{36}
-37[label="string | 5",style=bold]
-{33}->{37}
-38[label="string | 6",style=bold]
-{33}->{38}
-45[label="mensaje | ",style=bold]
-{5}->{45}
-43[label="llamadaFuncion | ",style=bold]
-{45}->{43}
-44[label="id | devolverIndice",style=bold]
-{43}->{44}
-42[label="envios | ",style=bold]
-{43}->{42}
-41[label="id | vector1",style=bold]
+51[label="mensaje | ",style=bold]
+{5}->{51}
+50[label="MAS | ",style=bold]
+{51}->{50}
+48[label="MAS | ",style=bold]
+{50}->{48}
+46[label="MAS | ",style=bold]
+{48}->{46}
+44[label="MAS | ",style=bold]
+{46}->{44}
+42[label="MAS | ",style=bold]
+{44}->{42}
+40[label="MAS | ",style=bold]
+{42}->{40}
+38[label="MAS | ",style=bold]
+{40}->{38}
+36[label="MAS | ",style=bold]
+{38}->{36}
+34[label="MAS | ",style=bold]
+{36}->{34}
+32[label="string | num1:",style=bold]
+{34}->{32}
+33[label="id | num1",style=bold]
+{34}->{33}
+35[label="string | \ncad1:",style=bold]
+{36}->{35}
+37[label="id | cad1",style=bold]
+{38}->{37}
+39[label="string | \\nflag:",style=bold]
+{40}->{39}
+41[label="id | flag1",style=bold]
 {42}->{41}
-53[label="funcion | ",style=bold]
-{5}->{53}
-54[label="id | devolverIndice",style=bold]
-{53}->{54}
-46[label="parametros | ",style=bold]
-{53}->{46}
-47[label="parametro | ",style=bold]
-{46}->{47}
-48[label="id | x",style=bold]
-{47}->{48}
-52[label="sentencias | ",style=bold]
+43[label="string | \\ndate:",style=bold]
+{44}->{43}
+45[label="id | date",style=bold]
+{46}->{45}
+47[label="string | \\ndatetime:",style=bold]
+{48}->{47}
+49[label="id | datetime",style=bold]
+{50}->{49}
+59[label="declara_vecF1 | ",style=bold]
+{5}->{59}
+60[label="nombre | vector1",style=bold]
+{59}->{60}
+53[label="valores | ",style=bold]
+{59}->{53}
+52[label="string | 1",style=bold]
 {53}->{52}
-51[label="retornar | ",style=bold]
-{52}->{51}
-49[label="funcion_aTexto | ",style=bold]
-{51}->{49}
-50[label="id | x",style=bold]
-{49}->{50}
+54[label="string | 2",style=bold]
+{53}->{54}
+55[label="string | 3",style=bold]
+{53}->{55}
+56[label="string | 4",style=bold]
+{53}->{56}
+57[label="string | 5",style=bold]
+{53}->{57}
+58[label="string | 6",style=bold]
+{53}->{58}
+65[label="mensaje | ",style=bold]
+{5}->{65}
+63[label="llamadaFuncion | ",style=bold]
+{65}->{63}
+64[label="id | devolverIndice",style=bold]
+{63}->{64}
+62[label="envios | ",style=bold]
+{63}->{62}
+61[label="id | vector1",style=bold]
+{62}->{61}
+68[label="declara_var | ",style=bold]
+{5}->{68}
+69[label="nombre | prr",style=bold]
+{68}->{69}
+67[label="asigna_var | ",style=bold]
+{68}->{67}
+66[label="boolean | true",style=bold]
+{67}->{66}
+73[label="mensaje | ",style=bold]
+{5}->{73}
+72[label="MAS | ",style=bold]
+{73}->{72}
+70[label="id | prr",style=bold]
+{72}->{70}
+71[label="number | 10",style=bold]
+{72}->{71}
+81[label="funcion | ",style=bold]
+{5}->{81}
+82[label="id | devolverIndice",style=bold]
+{81}->{82}
+74[label="parametros | ",style=bold]
+{81}->{74}
+75[label="parametro | ",style=bold]
+{74}->{75}
+76[label="id | x",style=bold]
+{75}->{76}
+80[label="sentencias | ",style=bold]
+{81}->{80}
+79[label="retornar | ",style=bold]
+{80}->{79}
+77[label="funcion_aTexto | ",style=bold]
+{79}->{77}
+78[label="id | x",style=bold]
+{77}->{78}
+84[label="llamadaFuncion | ",style=bold]
+{5}->{84}
+85[label="id | setear",style=bold]
+{84}->{85}
+83[label="envios | ",style=bold]
+{84}->{83}
+111[label="funcion | ",style=bold]
+{5}->{111}
+112[label="id | setear",style=bold]
+{111}->{112}
+86[label="parametros | ",style=bold]
+{111}->{86}
+91[label="sentencias | ",style=bold]
+{111}->{91}
+89[label="declara_var_L | ",style=bold]
+{91}->{89}
+90[label="nombre | var1",style=bold]
+{89}->{90}
+88[label="asigna_var | ",style=bold]
+{89}->{88}
+87[label="string | sexo",style=bold]
+{88}->{87}
+93[label="asignacionLocal | ",style=bold]
+{91}->{93}
+94[label="nombre | var22",style=bold]
+{93}->{94}
+92[label="string | sss",style=bold]
+{93}->{92}
+96[label="declara_var_L | ",style=bold]
+{91}->{96}
+97[label="nombre | boton1",style=bold]
+{96}->{97}
+95[label="asigna_var | ",style=bold]
+{96}->{95}
+101[label="asignacionLocal | ",style=bold]
+{91}->{101}
+102[label="nombre | boton1",style=bold]
+{101}->{102}
+100[label="Accion_Obtener | ",style=bold]
+{101}->{100}
+99[label="pto_obtener | ",style=bold]
+{100}->{99}
+98[label="string | boton1",style=bold]
+{99}->{98}
+109[label="Accion_Setear | ",style=bold]
+{91}->{109}
+110[label="id_cmp | boton1",style=bold]
+{109}->{110}
+108[label="pto_observador | ",style=bold]
+{109}->{108}
+103[label="string | click",style=bold]
+{108}->{103}
+107[label="f_anonima | ",style=bold]
+{108}->{107}
+106[label="sentencias | ",style=bold]
+{107}->{106}
+105[label="mensaje | ",style=bold]
+{106}->{105}
+104[label="id | var1",style=bold]
+{105}->{104}
 
 }

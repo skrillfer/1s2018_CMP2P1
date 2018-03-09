@@ -125,9 +125,13 @@ public class CajaOpcionesGenerica extends JComboBox {
                 //System.out.println(lista_opciones.get(combo.getSelectedIndex()).valor);
                 
                 try {
+                    
                     String metodo = propiedades.get("click").valor;
-                    metodo = metodo.replace("(", "").replace(")", "");
-                    Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                    if(!metodo.equals("")){
+                        metodo = metodo.replace("(", "").replace(")", "");
+                        Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                    }
+                    
                 } catch (Exception ex) {
                 }
 

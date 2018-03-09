@@ -109,7 +109,6 @@ public class Accion_Setear extends Compilador{
                             setElemento(pto.hijos.get(0), pto.hijos.get(1), (Componente)componente.valor, componente.tipo,((Componente)componente.valor).id);
                             break;
                         case "pto_observador":
-                            
                             Nodo evento = pto.hijos.get(0);
                             Nodo funcion_anonima = pto.hijos.get(1);
                             try {
@@ -196,7 +195,7 @@ public class Accion_Setear extends Compilador{
             case "panel":
                 PanelGenerico nuevopanel = (PanelGenerico) comp.objeto;
                 propiedades = nuevopanel.propiedades;
-
+                nuevopanel.lanzarEditado();
                 switch (propiedad) {
                     case "id":
                         if(val.tipo.equals("string")){
@@ -369,6 +368,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "texto":
                 TextoGenerico texxto = (TextoGenerico) comp.objeto;
+                texxto.lanzarEditado();
                 propiedades = texxto.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -543,6 +543,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "boton":
                 BotonGenerico btn = (BotonGenerico) comp.objeto;
+                btn.lanzarEditado();
                 propiedades = btn.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -716,6 +717,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "cajatexto":
                 CajaTextoGenerica ctxt = (CajaTextoGenerica) comp.objeto;
+                ctxt.lanzarEditado();
                 propiedades = ctxt.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -889,6 +891,7 @@ public class Accion_Setear extends Compilador{
             case "areatexto":
                 //VER BIEN
                 AreaTextoGenerica txt_a = (AreaTextoGenerica) comp.objeto;
+                txt_a.lanzarEditado();
                 propiedades = txt_a.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -1061,6 +1064,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "spinner":
                 SpinnerGenerico sp = (SpinnerGenerico) comp.objeto;
+                sp.lanzarEditado();
                 propiedades = sp.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -1233,6 +1237,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "enlace":
                 EnlaceGenerico enlac = (EnlaceGenerico) comp.objeto;
+                enlac.lanzarEditado();
                 propiedades = enlac.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -1405,6 +1410,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "tabla":
                 TablaGenerica2 tabla1 = (TablaGenerica2) comp.objeto;
+                tabla1.lanzarEditado();
                 propiedades = tabla1.propiedadesTabla;
                 switch (propiedad) {
                     case "id":
@@ -1571,6 +1577,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "imagen":
                 ImagenGenerica img = (ImagenGenerica) comp.objeto;
+                img.lanzarEditado();
                 propiedades = img.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -1743,6 +1750,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "cajaopciones":
                 CajaOpcionesGenerica combo = (CajaOpcionesGenerica) comp.objeto;
+                combo.lanzarEditado();
                 propiedades = combo.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -1915,6 +1923,7 @@ public class Accion_Setear extends Compilador{
                 break;
             case "opcion":
                 OpcionGenerica opcion = (OpcionGenerica) comp.objeto;
+                opcion.lanzarEditado();
                 propiedades = opcion.propiedades;
                 switch (propiedad) {
                     case "id":
@@ -2104,8 +2113,25 @@ public class Accion_Setear extends Compilador{
                     case "cliqueado":
                         switch(tipo_comp){
                             case "opcion":
+                                ((OpcionGenerica)comp.objeto).lanzarEditado();
+                                ArrayList<Nodo> sentenciasOPCION = null;
+                                Nodo metodoOPCION=funcion.hijos.get(0);
+                                if(!metodoOPCION.nombre.equals("id")){
+                                    sentenciasOPCION = funcion.hijos.get(0).hijos;
+                                    if(sentenciasOPCION!=null){
+                                        ((OpcionGenerica)comp.objeto).setObservador(global, tabla, sentenciasOPCION, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }else{
+                                  
+                                    String nm=metodoOPCION.valor;
+                                    sentenciasOPCION=claseActual.getMetodo(nm).sentencias.hijos;
+                                    if(sentenciasOPCION!=null){
+                                        ((OpcionGenerica)comp.objeto).setObservador(global, null, sentenciasOPCION, obtenerEventoString(evt_string),claseActual);
+                                    }
+                                }
                                 break;
                             case "imagen":
+                                ((ImagenGenerica)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasI = null;
                                 Nodo metodoI=funcion.hijos.get(0);
                                 if(!metodoI.nombre.equals("id")){
@@ -2125,6 +2151,7 @@ public class Accion_Setear extends Compilador{
                                 break;
                                 
                             case "boton":
+                                ((BotonGenerico)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentencias = null;
                                 Nodo metodo=funcion.hijos.get(0);
                                 if(!metodo.nombre.equals("id")){
@@ -2142,6 +2169,7 @@ public class Accion_Setear extends Compilador{
                                 }
                                 break;
                             case "enlace":
+                                ((EnlaceGenerico)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasE = null;
                                 Nodo metodoE=funcion.hijos.get(0);
                                 if(!metodoE.nombre.equals("id")){
@@ -2159,6 +2187,7 @@ public class Accion_Setear extends Compilador{
                                 }
                                 break;
                             case "panel":
+                                ((PanelGenerico)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasP = null;
                                 Nodo metodoP=funcion.hijos.get(0);
                                 if(!metodoP.nombre.equals("id")){
@@ -2175,7 +2204,8 @@ public class Accion_Setear extends Compilador{
                                     }
                                 }
                                 break;
-                            case "spinner":    
+                            case "spinner": 
+                                ((SpinnerGenerico)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasSP = null;
                                 Nodo metodoSP=funcion.hijos.get(0);
                                 if(!metodoSP.nombre.equals("id")){
@@ -2192,7 +2222,8 @@ public class Accion_Setear extends Compilador{
                                     }
                                 }
                                 break;
-                            case "tabla":    
+                            case "tabla": 
+                                ((TablaGenerica2)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasT = null;
                                 Nodo metodoT=funcion.hijos.get(0);
                                 if(!metodoT.nombre.equals("id")){
@@ -2210,6 +2241,7 @@ public class Accion_Setear extends Compilador{
                                 }
                                 break;
                             case "cajaopciones":
+                                ((CajaOpcionesGenerica)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasCO = null;
                                 Nodo metodoCO=funcion.hijos.get(0);
                                 if(!metodoCO.nombre.equals("id")){
@@ -2226,7 +2258,8 @@ public class Accion_Setear extends Compilador{
                                     }
                                 }
                                 break;
-                            case "cajatexto":    
+                            case "cajatexto":
+                                ((CajaTextoGenerica)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasCT = null;
                                 Nodo metodoCt=funcion.hijos.get(0);
                                 if(!metodoCt.nombre.equals("id")){
@@ -2244,6 +2277,7 @@ public class Accion_Setear extends Compilador{
                                 }
                                 break;
                             case "texto":
+                                ((TextoGenerico)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasTEX = null;
                                 Nodo metodoTEX=funcion.hijos.get(0);
                                 if(!metodoTEX.nombre.equals("id")){
@@ -2261,6 +2295,7 @@ public class Accion_Setear extends Compilador{
                                 }
                                 break;
                             case "areatexto":  
+                                ((AreaTextoGenerica)comp.objeto).lanzarEditado();
                                 ArrayList<Nodo> sentenciasATEX = null;
                                 Nodo metodoATEX=funcion.hijos.get(0);
                                 if(!metodoATEX.nombre.equals("id")){
@@ -2299,7 +2334,45 @@ public class Accion_Setear extends Compilador{
         return "";
     }
     
-    
+    public void lanzarEditado(Componente compo){
+        if(compo!=null){
+            switch(compo.tipo){
+                case "boton":
+                    ((BotonGenerico)compo.objeto).lanzarEditado();
+                    break;
+                case "opcion":
+                    ((OpcionGenerica)compo.objeto).lanzarEditado();
+                    break;  
+                case "cajatexto":
+                    ((CajaTextoGenerica)compo.objeto).lanzarEditado();
+                    break; 
+                case "cajaopciones":
+                    ((CajaOpcionesGenerica)compo.objeto).lanzarEditado();
+                    break; 
+                case "areatexto":
+                    ((AreaTextoGenerica)compo.objeto).lanzarEditado();
+                    break;    
+                case "texto":
+                    ((TextoGenerico)compo.objeto).lanzarEditado();
+                    break; 
+                case "spinner":
+                    ((SpinnerGenerico)compo.objeto).lanzarEditado();
+                    break;   
+                case "tabla":
+                    ((TablaGenerica2)compo.objeto).lanzarEditado();
+                    break;   
+                case "enlace":
+                    ((EnlaceGenerico)compo.objeto).lanzarEditado();
+                    break;  
+                case "imagen":
+                    ((ImagenGenerica)compo.objeto).lanzarEditado();
+                    break;    
+                case "panel":
+                    ((PanelGenerico)compo.objeto).lanzarEditado();
+                    break;      
+            }
+        }
+    }
     
     public void aplicarCcss(NodoCSS raiz, Componente componente, boolean pasada){
         
@@ -2328,7 +2401,9 @@ public class Accion_Setear extends Compilador{
                                 break;
                             }
                         }
-                           
+                        try {
+                            lanzarEditado(cmp);
+                        } catch (Exception e) {}   
                         NodoCSS valores= nodo.hijos.get(0);
                         for (NodoCSS valor : valores.hijos) {
                             ResultadoG res = opl.ejecutar(valor);
@@ -2575,6 +2650,10 @@ public class Accion_Setear extends Compilador{
                 }
             }
             
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
+            
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null) {
                 res = new ResultadoG("null", null);
@@ -2687,7 +2766,9 @@ public class Accion_Setear extends Compilador{
                 }
             }
             
-
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null)
                 res = new ResultadoG("ninguno", null);
@@ -2773,7 +2854,9 @@ public class Accion_Setear extends Compilador{
                     cmp = new Componente("null", "null", new Object(), null);
                 }
             } 
-                
+                try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res == null)
@@ -2839,7 +2922,9 @@ public class Accion_Setear extends Compilador{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-                
+              try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}  
             
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
@@ -2902,7 +2987,9 @@ public class Accion_Setear extends Compilador{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-                
+                try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res = new ResultadoG("ninguno",null);
@@ -2964,7 +3051,9 @@ public class Accion_Setear extends Compilador{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-            
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res = new ResultadoG("ninguno",null);
@@ -3021,7 +3110,9 @@ public class Accion_Setear extends Compilador{
                 }
             }
                 
-            
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
             ResultadoG res1 = opl.ejecutar(nodo.hijos.get(0));
             ResultadoG res2 = opl.ejecutar(nodo.hijos.get(1));
             ResultadoG res3 = opl.ejecutar(nodo.hijos.get(2));
@@ -3101,7 +3192,9 @@ public class Accion_Setear extends Compilador{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-            
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res= new ResultadoG("ninguno", null);
@@ -3156,7 +3249,9 @@ public class Accion_Setear extends Compilador{
                     cmp = new Componente("", "",new Object(), null);
                 }
             }
-            
+            try {
+                lanzarEditado(cmp);
+            } catch (Exception e) {}
             ResultadoG res = opl.ejecutar(nodo.hijos.get(0));
             if (res==null)
                 res= new ResultadoG("ninguno", null);
