@@ -85,11 +85,11 @@ public class Template extends JPanel implements ActionListener{
     public static Hashtable<String,Componente> lista_componentes= new Hashtable<>();
     
     //lista de GRUPOS un grupo tiene una lista de componentes
-    static Hashtable<String,Lista> lista_grupos= new Hashtable<>();
+    public static Hashtable<String,Lista> lista_grupos= new Hashtable<>();
     
     //lista de estilos ya sea por id o por grupo
-    static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_id = new Hashtable<>();
-    static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_grupo = new Hashtable<>();
+    public static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_id = new Hashtable<>();
+    public static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_grupo = new Hashtable<>();
     
     
     static ArrayList<Erro_r> lista_errores = new ArrayList<>();
@@ -828,13 +828,14 @@ public class Template extends JPanel implements ActionListener{
                            case "grupo":
                                System.out.println("holaaa vot a aplicar grupo CCCSS  ->"+nodo.valor);
                                ArrayList<Componente> listaCOMP ;
+                               
                                if(lista_grupos.containsKey(nodo.valor.trim())){
                                    System.out.println("existe :"+ nodo.valor);
                                    listaCOMP = lista_grupos.get(nodo.valor.trim()).getLista();
                                    System.out.println("TAM lista GRUPO"+ listaCOMP.size());
                                    for (Componente componente : listaCOMP) {
                                        System.out.println("si hay GRUPO:"+nodo.valor);
-                                       NodoCSS nnn = new NodoCSS("identificador",componente.id.trim(), nodo.linea,nodo.columna, 1000);
+                                       NodoCSS nnn = new NodoCSS("identificador","", nodo.linea,nodo.columna, 1000);
                                        nnn.hijos=nodo.hijos;
                                        
                                        aplicarCcss(nnn,componente);
@@ -845,6 +846,7 @@ public class Template extends JPanel implements ActionListener{
                                    ArrayList<NodoCSS> lista = new ArrayList<>();
                                    lista.add(nodo);
                                    lista_estilos_grupo.put(nodo.valor.trim(),lista);
+                                   System.out.println("HE AGREGADO EL GRUPO:"+nodo.valor);
                                }else{
                                    lista_estilos_grupo.get(nodo.valor.trim()).add(nodo);
                                }
@@ -869,6 +871,9 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
+    public static void  SetearCSS(){
+       
+    }
     
     public void ejecutarArchivosCjs() throws FileNotFoundException{
         ArrayList<String> listacjs = obtenerListaArchivosCJS();
@@ -1558,8 +1563,14 @@ public class Template extends JPanel implements ActionListener{
     public void setBorde(NodoCSS raiz, NodoCSS nodo, OperacionesARL opl,Componente porGrupo){
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = lista_componentes.get(raiz.valor.trim());
+            
             if (cmp==null){
-                cmp = new Componente("", "",new Object(), null);
+                if(porGrupo!=null){
+                    cmp=porGrupo;
+                }else{
+                    cmp = new Componente("", "",new Object(), null);
+                }
+                //cmp = new Componente("", "",new Object(), null);
             }
                 
             

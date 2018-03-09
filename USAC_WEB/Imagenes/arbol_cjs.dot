@@ -23,81 +23,71 @@ node[shape=Mrecord]
 {8}->{9}
 7[label="envios | ",style=bold]
 {8}->{7}
-43[label="funcion | ",style=bold]
-{5}->{43}
-44[label="id | ejecutar2",style=bold]
-{43}->{44}
+38[label="funcion | ",style=bold]
+{5}->{38}
+39[label="id | ejecutar2",style=bold]
+{38}->{39}
 13[label="parametros | ",style=bold]
-{43}->{13}
-20[label="sentencias | ",style=bold]
-{43}->{20}
-18[label="declara_var_L | ",style=bold]
-{20}->{18}
-19[label="nombre | boton1",style=bold]
-{18}->{19}
-17[label="asigna_var | ",style=bold]
-{18}->{17}
-16[label="Accion_Obtener | ",style=bold]
-{17}->{16}
-15[label="pto_obtener | ",style=bold]
-{16}->{15}
-14[label="string | boton222",style=bold]
+{38}->{13}
+17[label="sentencias | ",style=bold]
+{38}->{17}
+15[label="declara_var_L | ",style=bold]
+{17}->{15}
+16[label="nombre | boton1",style=bold]
+{15}->{16}
+14[label="asigna_var | ",style=bold]
 {15}->{14}
-24[label="Accion_Setear | ",style=bold]
-{20}->{24}
-25[label="id_cmp | boton1",style=bold]
-{24}->{25}
-23[label="pto_elemento | ",style=bold]
-{24}->{23}
-21[label="string | fondo",style=bold]
-{23}->{21}
-22[label="string | yellow",style=bold]
-{23}->{22}
-29[label="asignacionLocal | ",style=bold]
-{20}->{29}
-30[label="nombre | boton1",style=bold]
-{29}->{30}
-28[label="Accion_Obtener | ",style=bold]
+21[label="asignacionLocal | ",style=bold]
+{17}->{21}
+22[label="nombre | boton1",style=bold]
+{21}->{22}
+20[label="Accion_Obtener | ",style=bold]
+{21}->{20}
+19[label="pto_obtener | ",style=bold]
+{20}->{19}
+18[label="string | boton1",style=bold]
+{19}->{18}
+26[label="Accion_Setear | ",style=bold]
+{17}->{26}
+27[label="id_cmp | boton1",style=bold]
+{26}->{27}
+25[label="pto_elemento | ",style=bold]
+{26}->{25}
+23[label="string | id",style=bold]
+{25}->{23}
+24[label="string | opcion1",style=bold]
+{25}->{24}
+31[label="asignacionLocal | ",style=bold]
+{17}->{31}
+32[label="nombre | boton1",style=bold]
+{31}->{32}
+30[label="Accion_Obtener | ",style=bold]
+{31}->{30}
+29[label="pto_obtener | ",style=bold]
+{30}->{29}
+28[label="string | opcion1",style=bold]
 {29}->{28}
-27[label="pto_obtener | ",style=bold]
-{28}->{27}
-26[label="string | boton333",style=bold]
-{27}->{26}
-34[label="Accion_Setear | ",style=bold]
-{20}->{34}
-35[label="id_cmp | boton1",style=bold]
-{34}->{35}
-33[label="pto_elemento | ",style=bold]
-{34}->{33}
-31[label="string | fondo",style=bold]
-{33}->{31}
-32[label="string | green",style=bold]
-{33}->{32}
-42[label="Accion_Setear | ",style=bold]
-{20}->{42}
-38[label="Accion_Obtener | ",style=bold]
-{42}->{38}
-37[label="pto_obtener | ",style=bold]
-{38}->{37}
-36[label="string | boton1",style=bold]
-{37}->{36}
-41[label="pto_elemento | ",style=bold]
+36[label="Accion_Setear | ",style=bold]
+{17}->{36}
+37[label="id_cmp | boton1",style=bold]
+{36}->{37}
+35[label="pto_elemento | ",style=bold]
+{36}->{35}
+33[label="string | fondo",style=bold]
+{35}->{33}
+34[label="string | green",style=bold]
+{35}->{34}
+44[label="funcion | ",style=bold]
+{5}->{44}
+45[label="id | ejecutar3",style=bold]
+{44}->{45}
+40[label="parametros | ",style=bold]
+{44}->{40}
+43[label="sentencias | ",style=bold]
+{44}->{43}
+42[label="mensaje | ",style=bold]
+{43}->{42}
+41[label="string | PUTE si FUNCIONO",style=bold]
 {42}->{41}
-39[label="string | fondo",style=bold]
-{41}->{39}
-40[label="string | black",style=bold]
-{41}->{40}
-49[label="funcion | ",style=bold]
-{5}->{49}
-50[label="id | ejecutar3",style=bold]
-{49}->{50}
-45[label="parametros | ",style=bold]
-{49}->{45}
-48[label="sentencias | ",style=bold]
-{49}->{48}
-47[label="mensaje | ",style=bold]
-{48}->{47}
-46[label="string | PUTE si FUNCIONO",style=bold]
-{47}->{46}
 
 }

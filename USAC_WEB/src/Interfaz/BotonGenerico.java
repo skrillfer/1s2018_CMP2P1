@@ -99,22 +99,9 @@ public class BotonGenerico extends JButton {
     }
     
     public void cambiarId(String id){
-        // cuando cambia el id debe de sacarse de la hash de lista de componentens y
-        // verificar si el nuevo id se puede cambiar
         id=id.trim();
         if(!id.equals("")){
-            if(!Template.lista_componentes.containsKey(id)){
-                // se saca el anterior y se mete el nuevo
-                Componente cmp = Template.lista_componentes.get(getName());
-                
-                if(cmp!=null){
-                    Template.lista_componentes.remove(id);
-                    Template.lista_componentes.put(id, cmp);
-                    setName(id);
-                    propiedades.get("id").valor=getName();
-                            
-                }
-            }
+            setName(id);
         }
     }
     

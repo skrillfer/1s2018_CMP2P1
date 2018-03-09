@@ -1,10 +1,10 @@
 digraph G {
 node[shape=Mrecord]
-104[label="ccss | ",style=bold]
-103[label="bloque | Titular_ccss",style=bold]
-{104}->{103}
+125[label="ccss | ",style=bold]
+124[label="bloque | Titular_ccss",style=bold]
+{125}->{124}
 1[label="identificador | boton1",style=bold]
-{103}->{1}
+{124}->{1}
 4[label="alineado | ",style=bold]
 {1}->{4}
 3[label="derecha | ",style=bold]
@@ -52,7 +52,7 @@ node[shape=Mrecord]
 33[label="string_literal | white",style=bold]
 {34}->{33}
 36[label="identificador | opcion1",style=bold]
-{103}->{36}
+{124}->{36}
 38[label="alineado | ",style=bold]
 {36}->{38}
 37[label="izquierda | ",style=bold]
@@ -89,63 +89,95 @@ node[shape=Mrecord]
 {59}->{58}
 62[label="opaque | ",style=bold]
 {36}->{62}
-61[label="boolean | false",style=bold]
+61[label="boolean | true",style=bold]
 {62}->{61}
 65[label="colortext | ",style=bold]
 {36}->{65}
 64[label="string_literal | white",style=bold]
 {65}->{64}
-67[label="grupo | grupo_1",style=bold]
-{103}->{67}
-69[label="alineado | ",style=bold]
+67[label="grupo | grupo_2",style=bold]
+{124}->{67}
+69[label="texto | ",style=bold]
 {67}->{69}
-68[label="centrado | ",style=bold]
+68[label="string_literal | modificacion en grupo",style=bold]
 {69}->{68}
-75[label="formato | ",style=bold]
-{67}->{75}
-72[label="valores | ",style=bold]
-{75}->{72}
-71[label="mayuscula | ",style=bold]
+72[label="tamtex | ",style=bold]
+{67}->{72}
+71[label="number | 15.5",style=bold]
 {72}->{71}
-73[label="negrilla | ",style=bold]
-{72}->{73}
-74[label="cursiva | ",style=bold]
-{72}->{74}
-78[label="letra | ",style=bold]
-{67}->{78}
-77[label="string_literal | Monospaced",style=bold]
-{78}->{77}
-81[label="tamtex | ",style=bold]
-{67}->{81}
-80[label="number | 6.5",style=bold]
-{81}->{80}
-84[label="fondoelemento | ",style=bold]
-{67}->{84}
-83[label="string_literal | cyan",style=bold]
-{84}->{83}
-87[label="visible | ",style=bold]
-{67}->{87}
-86[label="boolean | true",style=bold]
-{87}->{86}
-90[label="texto | ",style=bold]
-{67}->{90}
-89[label="string_literal | mi nina",style=bold]
+75[label="fondoelemento | ",style=bold]
+{67}->{75}
+74[label="string_literal | blue",style=bold]
+{75}->{74}
+80[label="borde | ",style=bold]
+{67}->{80}
+77[label="number | 12",style=bold]
+{80}->{77}
+78[label="string_literal | red",style=bold]
+{80}->{78}
+79[label="boolean | true",style=bold]
+{80}->{79}
+86[label="formato | ",style=bold]
+{67}->{86}
+83[label="valores | ",style=bold]
+{86}->{83}
+82[label="mayuscula | ",style=bold]
+{83}->{82}
+84[label="negrilla | ",style=bold]
+{83}->{84}
+85[label="cursiva | ",style=bold]
+{83}->{85}
+88[label="grupo | grupo_1",style=bold]
+{124}->{88}
+90[label="alineado | ",style=bold]
+{88}->{90}
+89[label="centrado | ",style=bold]
 {90}->{89}
-95[label="borde | ",style=bold]
-{67}->{95}
-92[label="number | 10",style=bold]
-{95}->{92}
-93[label="string_literal | red",style=bold]
-{95}->{93}
-94[label="boolean | true",style=bold]
-{95}->{94}
-98[label="opaque | ",style=bold]
-{67}->{98}
-97[label="boolean | true",style=bold]
-{98}->{97}
-101[label="colortext | ",style=bold]
-{67}->{101}
-100[label="string_literal | black",style=bold]
-{101}->{100}
+96[label="formato | ",style=bold]
+{88}->{96}
+93[label="valores | ",style=bold]
+{96}->{93}
+92[label="mayuscula | ",style=bold]
+{93}->{92}
+94[label="negrilla | ",style=bold]
+{93}->{94}
+95[label="cursiva | ",style=bold]
+{93}->{95}
+99[label="letra | ",style=bold]
+{88}->{99}
+98[label="string_literal | Monospaced",style=bold]
+{99}->{98}
+102[label="tamtex | ",style=bold]
+{88}->{102}
+101[label="number | 6.5",style=bold]
+{102}->{101}
+105[label="fondoelemento | ",style=bold]
+{88}->{105}
+104[label="string_literal | cyan",style=bold]
+{105}->{104}
+108[label="visible | ",style=bold]
+{88}->{108}
+107[label="boolean | true",style=bold]
+{108}->{107}
+111[label="texto | ",style=bold]
+{88}->{111}
+110[label="string_literal | grupo 1",style=bold]
+{111}->{110}
+116[label="borde | ",style=bold]
+{88}->{116}
+113[label="number | 10",style=bold]
+{116}->{113}
+114[label="string_literal | red",style=bold]
+{116}->{114}
+115[label="boolean | true",style=bold]
+{116}->{115}
+119[label="opaque | ",style=bold]
+{88}->{119}
+118[label="boolean | true",style=bold]
+{119}->{118}
+122[label="colortext | ",style=bold]
+{88}->{122}
+121[label="string_literal | black",style=bold]
+{122}->{121}
 
 }

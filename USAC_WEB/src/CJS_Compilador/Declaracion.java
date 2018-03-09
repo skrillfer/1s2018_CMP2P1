@@ -255,6 +255,7 @@ public class Declaracion extends Compilador{
             if(resultado!=null){                
                 //System.out.println("        asignare:"+nombre+" Tipo:"+resultado.tipo + " Esarreglo:"+resultado.valor);
                 if(!resultado.tipo.equals("")){
+                    System.out.println("\n\n\n\n\nASIGNO a "+sim.nombre + "  -> " + resultado.tipo);
                     sim.inicializado=true;
                     if(resultado.simbolo!=null){
                         if(resultado.simbolo.esArreglo==false){

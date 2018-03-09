@@ -20,10 +20,16 @@ Titular_ccss[
     visible := true;
  
     borde := [10,"red",true];
-    opaque := false;
+    opaque := true;
     colortext := "white";
 
 
+    grupo(grupo_2);
+    texto := "modificacion en grupo";
+    tamtex := 15.5;
+    fondoelemento := "blue";
+    borde := [12,"red",true];
+    formato := mayuscula,negrilla,cursiva;
 
    grupo(grupo_1);
     alineado := centrado;
@@ -32,7 +38,7 @@ Titular_ccss[
     tamtex := 6.5;
     fondoelemento := "cyan";
     visible := true;
-    texto := "mi nina";
+    texto := "grupo 1";
     borde := [10,"red",true];
     opaque := true;
     colortext := "black";

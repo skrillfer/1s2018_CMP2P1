@@ -1,20 +1,20 @@
 digraph G {
 node[shape=Mrecord]
-111[label="chtml | ",style=bold]
-110[label="encabezado | ",style=bold]
-{111}->{110}
+121[label="chtml | ",style=bold]
+120[label="encabezado | ",style=bold]
+{121}->{120}
 3[label="ccss | ",style=bold]
-{110}->{3}
+{120}->{3}
 7[label="cjs | ",style=bold]
-{110}->{7}
+{120}->{7}
 9[label="titulo | ",style=bold]
-{110}->{9}
-108[label="cuerpo | ",style=bold]
-{111}->{108}
+{120}->{9}
+118[label="cuerpo | ",style=bold]
+{121}->{118}
 11[label="ignorar | ",style=bold]
-{108}->{11}
+{118}->{11}
 15[label="tabla | ",style=bold]
-{108}->{15}
+{118}->{15}
 34[label="fila | ",style=bold]
 {15}->{34}
 21[label="ct | ",style=bold]
@@ -46,38 +46,42 @@ node[shape=Mrecord]
 44[label="texto | ",style=bold]
 {45}->{44}
 50[label="boton | ",style=bold]
-{108}->{50}
+{118}->{50}
 54[label="boton | ",style=bold]
-{108}->{54}
+{118}->{54}
 58[label="boton | ",style=bold]
-{108}->{58}
+{118}->{58}
 63[label="boton | ",style=bold]
-{108}->{63}
-67[label="texto | ",style=bold]
-{108}->{67}
-82[label="caja | ",style=bold]
-{108}->{82}
-74[label="opcion | ",style=bold]
-{82}->{74}
-78[label="opcion | ",style=bold]
-{82}->{78}
-81[label="opcion | ",style=bold]
-{82}->{81}
-101[label="panel | ",style=bold]
-{108}->{101}
-89[label="boton | ",style=bold]
-{101}->{89}
-92[label="boton | ",style=bold]
-{101}->{92}
-94[label="boton | ",style=bold]
-{101}->{94}
-96[label="boton | ",style=bold]
-{101}->{96}
-98[label="boton | ",style=bold]
-{101}->{98}
-100[label="boton | ",style=bold]
-{101}->{100}
-106[label="imagen | ",style=bold]
-{108}->{106}
+{118}->{63}
+68[label="boton | ",style=bold]
+{118}->{68}
+73[label="boton | ",style=bold]
+{118}->{73}
+77[label="texto | ",style=bold]
+{118}->{77}
+92[label="caja | ",style=bold]
+{118}->{92}
+84[label="opcion | ",style=bold]
+{92}->{84}
+88[label="opcion | ",style=bold]
+{92}->{88}
+91[label="opcion | ",style=bold]
+{92}->{91}
+111[label="panel | ",style=bold]
+{118}->{111}
+99[label="boton | ",style=bold]
+{111}->{99}
+102[label="boton | ",style=bold]
+{111}->{102}
+104[label="boton | ",style=bold]
+{111}->{104}
+106[label="boton | ",style=bold]
+{111}->{106}
+108[label="boton | ",style=bold]
+{111}->{108}
+110[label="boton | ",style=bold]
+{111}->{110}
+116[label="imagen | ",style=bold]
+{118}->{116}
 
 }
