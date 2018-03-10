@@ -1,59 +1,23 @@
 digraph G {
 node[shape=Mrecord]
-96[label="chtml | ",style=bold]
-95[label="encabezado | ",style=bold]
-{96}->{95}
-3[label="ccss | ",style=bold]
-{95}->{3}
-7[label="cjs | ",style=bold]
-{95}->{7}
-9[label="titulo | ",style=bold]
-{95}->{9}
-93[label="cuerpo | ",style=bold]
-{96}->{93}
-12[label="texto_a | ",style=bold]
-{93}->{12}
-16[label="enlace | ",style=bold]
-{93}->{16}
-44[label="panel | ",style=bold]
-{93}->{44}
-28[label="boton | ",style=bold]
-{44}->{28}
-36[label="boton | ",style=bold]
-{44}->{36}
-43[label="boton | ",style=bold]
+44[label="chtml | ",style=bold]
+43[label="encabezado | ",style=bold]
 {44}->{43}
-91[label="tabla | ",style=bold]
-{93}->{91}
-74[label="fila | ",style=bold]
-{91}->{74}
-55[label="ct | ",style=bold]
-{74}->{55}
-54[label="texto | ",style=bold]
-{55}->{54}
-61[label="ct | ",style=bold]
-{74}->{61}
-60[label="boton | ",style=bold]
-{61}->{60}
-67[label="ct | ",style=bold]
-{74}->{67}
-66[label="boton | ",style=bold]
-{67}->{66}
-73[label="ct | ",style=bold]
-{74}->{73}
-72[label="boton | ",style=bold]
-{73}->{72}
-77[label="fila | ",style=bold]
-{91}->{77}
-90[label="fila | ",style=bold]
-{91}->{90}
-84[label="ct | ",style=bold]
-{90}->{84}
-83[label="boton | ",style=bold]
-{84}->{83}
-89[label="ct | ",style=bold]
-{90}->{89}
-88[label="texto | ",style=bold]
-{89}->{88}
+3[label="ccss | ",style=bold]
+{43}->{3}
+7[label="cjs | ",style=bold]
+{43}->{7}
+9[label="titulo | ",style=bold]
+{43}->{9}
+41[label="cuerpo | ",style=bold]
+{44}->{41}
+38[label="panel | ",style=bold]
+{41}->{38}
+22[label="boton | ",style=bold]
+{38}->{22}
+30[label="boton | ",style=bold]
+{38}->{30}
+37[label="boton | ",style=bold]
+{38}->{37}
 
 }

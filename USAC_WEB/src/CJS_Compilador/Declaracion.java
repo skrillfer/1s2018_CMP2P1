@@ -69,41 +69,79 @@ public class Declaracion extends Compilador{
         switch (raiz.nombre) {
             //********************  AMBITO GLOBAL ******************************
             case "declara_var":
-                declara_var();
+                try {
+                    declara_var();
+                } catch (Exception e) {
+                }
+                
                 break;
             case "declara_vecF1":
-                declara_vecF1();
+                try {
+                    declara_vecF1();
+                } catch (Exception e) {
+                }
+                
                 break;
             case "declara_vecF2":
-                declara_vecF2();
+                try {
+                    declara_vecF2();
+                } catch (Exception e) {
+                }
                 break;    
             case "asigna_vecGlbF1":
-                asigna_vecGlbF1();
+                try {
+                    asigna_vecGlbF1();
+                } catch (Exception e) {
+                }
                 break;
             case "asigna_vecGlbF2":
-                asigna_vecGlbF2();
+                try {
+                    asigna_vecGlbF2();
+                } catch (Exception e) {
+                }
                 break;
             case "asignacionGlb":
-                asignacionGlb();
+                try {
+                    asignacionGlb();
+                } catch (Exception e) {
+                }
                 break;
             //********************   AMBITO LOCAL ******************************    
             case "declara_var_L":  
-                declara_var_L();
+                try {
+                    declara_var_L();
+                } catch (Exception e) {
+                }
                 break;
             case "declara_vecF1_L":
-                declara_vecF1_L();
+                try {
+                    declara_vecF1_L();
+                } catch (Exception e) {
+                }
                 break;
             case "declara_vecF2_L":
-                declara_vecF2_L();
+                try {
+                    declara_vecF2_L();
+                } catch (Exception e) {
+                }
                 break;
             case "asigna_vecLocalF1":
-                asigna_vecLocalF1();
+                try {
+                    asigna_vecLocalF1();
+                } catch (Exception e) {
+                }
                 break;
             case "asigna_vecLocalF2":
-                asigna_vecLocalF2();
+                try {
+                    asigna_vecLocalF2();
+                } catch (Exception e) {
+                }
                 break;
             case "asignacionLocal":
-                asignacionLocal();
+                try {
+                    asignacionLocal();
+                } catch (Exception e) {
+                }
                 break;
             default:
                 System.out.println(raiz.nombre);
@@ -184,19 +222,23 @@ public class Declaracion extends Compilador{
         if(sim.esArreglo){
             
             Arreglo arreglo = (Arreglo)sim.valor;
-            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones,miTemplate);
+            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones,miTemplate,0);
             //************como es de una sola dimension
             // si la cantidad de datos es menor o igual al tamanio unidimensional
             if(arr1.getDatos().size()<=arreglo.getDatos().size()){
-
-                for (int i = 0; i < arr1.getDatos().size(); i++) {
-                    arreglo.getDatos().set(i, arr1.getDatos().get(i));
+                try {
+                    
+                    for (int x = 0; x < arr1.getDatos().size(); x++) {
+                        arreglo.getDatos().set(x, arr1.getDatos().get(x));
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
                 
             }else{
-                System.out.println("cantidad de valores a agregar es mayor a el tamano del vector");
+                
             }
-            System.out.println("");
+            
         }
     }
     
@@ -348,21 +390,28 @@ public class Declaracion extends Compilador{
     public void asigna_vecLocalF1(){
         String nombre = raiz.hijos.get(0).valor;
         String tipo="";
+        
         SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
-        if(sim.esArreglo){            
+        if(sim.esArreglo){
+            
             Arreglo arreglo = (Arreglo)sim.valor;
-            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones,miTemplate);
+            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones,miTemplate,0);
             //************como es de una sola dimension
             // si la cantidad de datos es menor o igual al tamanio unidimensional
             if(arr1.getDatos().size()<=arreglo.getDatos().size()){
-
-                for (int i = 0; i < arr1.getDatos().size(); i++) {
-                    arreglo.getDatos().set(i, arr1.getDatos().get(i));
+                try {
+                    
+                    for (int x = 0; x < arr1.getDatos().size(); x++) {
+                        arreglo.getDatos().set(x, arr1.getDatos().get(x));
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
                 
             }else{
-                System.out.println("cantidad de valores a agregar es mayor a el tamano del vector");
+                
             }
+            
         }
     }
     

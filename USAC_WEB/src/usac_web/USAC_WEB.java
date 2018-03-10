@@ -50,7 +50,7 @@ public class USAC_WEB {
             
             Arbol_CCSS gen_arbol = new Arbol_CCSS();
             if(raiz!=null){
-                gen_arbol.generacion_arbolCCSS(raiz);
+                //gen_arbol.generacion_arbolCCSS(raiz);
             }
             retorno=raiz;
         } catch (Exception e) {
@@ -70,7 +70,7 @@ public class USAC_WEB {
             Nodo raiz = parser.getRoot();
             Arbol_CJS genTcjs = new Arbol_CJS();
             if(raiz!=null){
-                genTcjs.generacion_arbolCJS(raiz);
+                //genTcjs.generacion_arbolCJS(raiz);
             }
             retorno=raiz;
             
@@ -101,7 +101,7 @@ public class USAC_WEB {
             Arbol_DOM gen_arbol = new Arbol_DOM();
             if(raiz!=null){
                 System.out.println("***");
-                gen_arbol.generacion_arbolCJS(raiz);
+                //gen_arbol.generacion_arbolCJS(raiz);
             }
             
             retorno=raiz;

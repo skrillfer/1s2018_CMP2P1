@@ -129,6 +129,35 @@ public class Accion_Setear extends Compilador{
                     }
                 }
             }
+        }else if(raiz.hijos.size()==1){
+            //DOCUMENTO:w PtoSetElemento:h      |       DOCUMENTO:w PtoObservador:h
+            Nodo pto = raiz.hijos.get(0);
+            
+            Componente componente = miTemplate1.lista_componentes.get("$cuerpo");
+            
+            if(componente!=null){
+                switch(pto.nombre){
+                    case "pto_elemento":
+                        try {
+                            setElemento(pto.hijos.get(0), pto.hijos.get(1), componente, componente.tipo, "$cuerpo");
+                        } catch (Exception e) {
+                        }
+                        break;
+                    case "pto_observador":
+                        Nodo evento = pto.hijos.get(0);
+                        Nodo funcion_anonima = pto.hijos.get(1);
+                        try {
+                            setObservador(evento, funcion_anonima, componente, componente.tipo);
+                        } catch (Exception e) {
+                        }
+
+                        break;
+                }
+                
+            }
+            
+            //
+            
         }
         return metodoActual;
     }
@@ -197,7 +226,7 @@ public class Accion_Setear extends Compilador{
                 nuevopanel.lanzarEditado();
                 switch (propiedad) {
                     case "id":
-                        if(val.tipo.equals("string")){
+                        if(val.tipo.equals("string") && !nuevopanel.propiedades.get("id").valor.equals("$cuerpo")){
                             String value=((String)val.valor).trim();
                             String actual=nuevopanel.propiedades.get("id").valor.trim();
                             
@@ -2599,7 +2628,7 @@ public class Accion_Setear extends Compilador{
                                     }
                                     break;
                                 default:
-                                    ////addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
 
                             }   
                         }
@@ -2665,7 +2694,7 @@ public class Accion_Setear extends Compilador{
                 case "centrado":    
                     do_alineado = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
 
             }
             switch (cmp.tipo) {
@@ -2741,7 +2770,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;      
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2777,7 +2806,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_texto = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, texto solo acepta STRING", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, texto solo acepta STRING", "Lenguaje CCSS");
 
             }
             switch (cmp.tipo) {
@@ -2831,7 +2860,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;    
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2866,7 +2895,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_letra = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Letra solo acepta: STRING ", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Letra solo acepta: STRING ", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -2898,7 +2927,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2933,7 +2962,7 @@ public class Accion_Setear extends Compilador{
                 case "number":
                     do_tamtext = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,Tamtex solo acepta: NUMBER", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,Tamtex solo acepta: NUMBER", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -2965,7 +2994,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, TamTex  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, TamTex  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2998,7 +3027,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_fondo = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,fondoElemento solo acepta: STRING", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,fondoElemento solo acepta: STRING", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3020,7 +3049,7 @@ public class Accion_Setear extends Compilador{
                                 System.out.println("se aplico fondocolor: [" + valor + "] a "+ cmp.id);
                                 btn.setBackground(color);
                             }else{
-                                //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna,(String) nodo.hijos.get(0).valor , "el color es invalido", "LenguajeCCSS");
+                                miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna,(String) nodo.hijos.get(0).valor , "el color es invalido", "LenguajeCCSS");
                             }
                             
                         } catch (Exception e) {
@@ -3030,7 +3059,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, FondoElemento  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, FondoElemento  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3062,7 +3091,7 @@ public class Accion_Setear extends Compilador{
                 case "boolean":
                     do_fondo = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible solo acepta: boolean", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible solo acepta: boolean", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3088,7 +3117,7 @@ public class Accion_Setear extends Compilador{
                     
                     break;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3128,7 +3157,7 @@ public class Accion_Setear extends Compilador{
                 do_borde=true;
                 System.out.println("si cumple");
             }else{
-                //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Eror Semantico, Borde debe ser [number,string,boolean] error en los tipos", "Lenguaje CCSS");
+                miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Eror Semantico, Borde debe ser [number,string,boolean] error en los tipos", "Lenguaje CCSS");
             }
             
             switch (cmp.tipo) {
@@ -3154,13 +3183,13 @@ public class Accion_Setear extends Compilador{
                                     LineBorder brdr = new LineBorder(color, r1.intValue(),true);
                                     btn.setBorder(brdr);
                                 }else{
-                                    //addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
+                                    miTemplate1.addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
                                 }
                             }else{
                                 if(color!=null){
                                     btn.setBorder(BorderFactory.createMatteBorder(r1.intValue(), r1.intValue(), r1.intValue(), r1.intValue(), color));
                                 }else{
-                                    //addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
+                                    miTemplate1.addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
                                 }
                                 
                             }
@@ -3172,7 +3201,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Borde  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Borde  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3202,7 +3231,7 @@ public class Accion_Setear extends Compilador{
                 case "boolean":
                     do_fondo = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque solo acepta: true o false", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque solo acepta: true o false", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3228,7 +3257,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3260,7 +3289,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_colortext = true;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, color text solo acepta: string", "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, color text solo acepta: string", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3278,7 +3307,7 @@ public class Accion_Setear extends Compilador{
                             if(color!=null){
                                 btn.setForeground(color);
                             }else{
-                                //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, COLORTEXT, color Invalido->: "+valor, "Lenguaje CCSS");
+                                miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, COLORTEXT, color Invalido->: "+valor, "Lenguaje CCSS");
                             }
                             System.out.println("se aplico colortext: [" + valor + "]");
                         } catch (Exception e) {
@@ -3288,7 +3317,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, ColorText  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    miTemplate1.addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, ColorText  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;    
             }
         }

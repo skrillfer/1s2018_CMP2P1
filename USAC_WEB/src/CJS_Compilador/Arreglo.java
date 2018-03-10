@@ -27,6 +27,24 @@ public class Arreglo {
         datos = new ArrayList<>();
     }
     
+    public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla, ArrayList<Integer> dimensiones,Template template1,int num) {
+        this.miTemplate=template1;
+        this.dimensiones = dimensiones;
+        datos = new ArrayList<>();
+        this.global = global;
+        this.tabla = tabla;
+        opL = new OperacionesARL(global, tabla,miTemplate);
+        
+        for (int i = 0; i < dimensiones.size(); i++) {
+            int tam = dimensiones.get(i);
+            for (int j = 0; j < tam; j++) {
+                datos.add(null);
+            }
+        }
+        
+        guardarValores2(raiz);
+    }
+    
     //****asignando valores a un vector EXISTENTE
     public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla, ArrayList<Integer> dimensiones,Template template1) {
         this.miTemplate=template1;
@@ -37,6 +55,7 @@ public class Arreglo {
         opL = new OperacionesARL(global, tabla,miTemplate);
         guardarValores2(raiz);
     }
+    
     //*****creando VECTOR con una lista de VALORES
     public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla,Template template1) {
         this.miTemplate=template1;

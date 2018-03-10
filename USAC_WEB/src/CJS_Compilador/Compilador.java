@@ -42,6 +42,7 @@ public abstract class Compilador {
                 case "declara_vecF2_L":
                 case "asignacionLocal":
                 case "asigna_vecLocalF2":    
+                case "asigna_vecLocalF1":        
                     try {
                         new Declaracion(sentencia, global, tabla,miTemplate);
                     } catch (Exception e) {

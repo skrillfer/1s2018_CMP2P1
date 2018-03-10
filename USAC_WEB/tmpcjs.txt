@@ -1,4 +1,8 @@
 
+documento.observador("listo",funcion(){
+                   Mensaje("finalizado html ");  
+        });
+
 Dimv boton:documento.obtener("boton1");
 boton.setElemento("fondo","green");
 
@@ -39,7 +43,17 @@ boton:documento.obtener("btn4Tbla");
 boton.observador("listo",funcion(){
                    Mensaje("btn4Tbla listo");  
         });
-
+Dimv hl;
+    hl:{1,2,3,4};
 Funcion modificar(){
+    
+    hl{0}:100;
+    Mensaje(hl{0});
+    boton:documento.obtener("boton1");
     boton.setelemento("fondo","red");
 }
+
+
+
+
+

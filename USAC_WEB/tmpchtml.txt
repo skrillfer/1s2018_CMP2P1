@@ -1,10 +1,14 @@
+<//- adasdsaasdasasd -//>
+<//- asdasdasdasdasdasdas -//>
 <CHTML>
+    <//-asdsadasdsa-//>
  <ENCABEZADO>
+    <//- sadasdsa -//>
     <CCSS ruta="/home/fernando/Escritorio/a_cristina/Contenido/pag1.ccss";> <FIN-CCSS>
     <CJS ruta="/home/fernando/Escritorio/a_cristina/Contenido/pag1.cjs";> <FIN-CJS>
     <TITULO> PAGINA USAC<FIN-TITULO>
     <FIN-ENCABEZADO>
-    <CUERPO>
+    <CUERPO  fondo="blue";>
 
 <TEXTO_A>asdasdsadsa <FIN-TEXTO_A>
 <ENLACE ruta="/home/fernando/Escritorio/a_cristina/Contenido/home.chtml";> <Fin-enlace>
@@ -44,5 +48,8 @@
 
 
     <fin-cuerpo>
+<//-asdasdsadsadsa-//>
 <fin-CHTML>
 
+<//-aaaaaaaaaaaaaaaaaa-//>
+<//-bbbbbb-//>

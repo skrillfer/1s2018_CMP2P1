@@ -112,7 +112,7 @@ public class Template extends JPanel implements ActionListener{
     //************ MENSAJE PAGINA NO ENCONTRADA ********************************
     JLabel error404 = new JLabel("Error Pagina no Encontrada");
     //************ PANEL PADRE**************************************************
-    JPanel panel_P = new JPanel();
+    PanelGenerico panel_P = new PanelGenerico(null, principal_cjs, this);
     //final JScrollPane scroll = new JScrollPane();
     //************ Atributos de la Barra Principal *****************************
     JPanel barraPrincipal = new JPanel();
@@ -135,6 +135,7 @@ public class Template extends JPanel implements ActionListener{
     //**************************************************************************
     public Template() {
         crearBarraPrincipal();
+        //panel_P.setPre
         panel_P.setName("$cuerpo");
         lista_componentes.put("$cuerpo",new Componente("$cuerpo","panel",panel_P,null));
         campoURL.addKeyListener(new KeyAdapter() {
@@ -287,7 +288,7 @@ public class Template extends JPanel implements ActionListener{
                     lista_cjs = new Hashtable<>();
                     lista_ccss =  new Hashtable<>();
                     panel_P.removeAll();
-
+                    lista_componentes.put("$cuerpo",new Componente("$cuerpo","panel",panel_P,null));
                     
                    
                     if(lista_cargadas.size()>1 && lista_cargadas.getPt()==-1){
@@ -312,7 +313,12 @@ public class Template extends JPanel implements ActionListener{
                } catch (Exception e) {
                    reporteError_CJS.agregar("Error Ejecucion", dom.linea, dom.columna,"Ejecutando CJS ->"+ e.getMessage(), path);
                }
+               
                imprimirComponentes(panel_P);
+               try {
+                   panel_P.lanzarFinalizado();
+               } catch (Exception e) {
+               }
            }
            
         } else {
@@ -328,7 +334,7 @@ public class Template extends JPanel implements ActionListener{
             lista_cjs = new Hashtable<>();
             lista_ccss =  new Hashtable<>();
             panel_P.removeAll();
-
+            lista_componentes.put("$cuerpo",new Componente("$cuerpo","panel",panel_P,null));
             
             setearFont(error404);
             panel_P.add(error404);
@@ -360,7 +366,12 @@ public class Template extends JPanel implements ActionListener{
         }
         if(boton==opciones){
             String data=lista_cargadas.getPagina(lista_cargadas.getIndex());
-            System.out.println("===>"+data);
+            try {
+                for (Erro_r err : lista_errores) {
+                    reporteError_CJS.agregar("", err.getFila(),err.getColumna(), err.getDetalle(),"");
+                }
+            } catch (Exception xe) {}
+            
             new VentanaOpciones(data,obtenerListaArchivosCJS(),obtenerListaArchivosCCSS(),CONSOLA,reporteError_CJS.generarHtml("Errores ", "CJS y CSS"));
         }else if(boton==reload){
             cargar_Recargar();
@@ -536,8 +547,8 @@ public class Template extends JPanel implements ActionListener{
                     //JPanel regenera= new JPanel();
                     //regenera.setBackground(Color.green);
                     //regenera.setName("");
-                    
-                    
+                    this.panel_P.propiedades=hijo.propiedades;
+                    this.panel_P.setFondo();
                     //this.panel_P.add(regenera);
                     GENERADOR_VISTA(hijo,panel_P);
                     //this.panel_P.add(regenera);
@@ -549,7 +560,7 @@ public class Template extends JPanel implements ActionListener{
                     
                     PanelGenerico nuevopanel = new PanelGenerico(hijo.propiedades,principal_cjs,this);
                     nuevopanel.setVisible(false);
-                    nuevopanel.setLayout(new BoxLayout(nuevopanel, BoxLayout.Y_AXIS));
+                    //nuevopanel.setLayout(new BoxLayout(nuevopanel, BoxLayout.Y_AXIS));
                     try {
                         addComponente(nuevopanel.getName(),"panel",nuevopanel,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
