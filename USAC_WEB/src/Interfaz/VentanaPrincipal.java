@@ -95,11 +95,24 @@ public class VentanaPrincipal extends JFrame implements ActionListener,Component
         
     }
     
+    public static void remontarPagina(String link){
+        int index = controlTab1.getSelectedIndex();
+        if(index>=0){
+            try {
+                Template ttt= (Template)controlTab1.getComponent(index);
+                ttt = new Template();
+                ttt.campoURL.setText(link);
+                
+            } catch (Exception e) {
+            }
+        }
+    }
+    
     public static void lanzarPagina(String link){
-        agregarNuevaPagina("nuevo_"+VentanaPrincipal.controlTab1.getComponentCount());
+        agregarNuevaPagina("nuevo_"+controlTab1.getComponentCount());
         
         int index = controlTab1.getSelectedIndex();
-        if(index>0){
+        if(index>=0){
             System.out.println("\n\n\n\n\n INDEX:"+index);
             try {
                 Template ttt = (Template)controlTab1.getComponentAt(index);

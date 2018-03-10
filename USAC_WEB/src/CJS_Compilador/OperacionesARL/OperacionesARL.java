@@ -24,7 +24,11 @@ public class OperacionesARL {
     private int columna1=0;
     private int columna2=0;
     
-    public OperacionesARL(TablaSimboloG global, TablaSimboloG local) {
+    
+    public Template miTemplate;
+    
+    public OperacionesARL(TablaSimboloG global, TablaSimboloG local,Template template1) {
+        this.miTemplate=template1;
         this.tabla = local;
         this.global = global;
     }
@@ -1315,8 +1319,8 @@ public class OperacionesARL {
                 break;
             case "id_componente":
                 nombre = raiz.valor;
-                if(Template.lista_componentes.containsKey(nombre)){
-                    Componente componente=Template.lista_componentes.get(nombre);
+                if(miTemplate.lista_componentes.containsKey(nombre)){
+                    Componente componente=miTemplate.lista_componentes.get(nombre);
                     retorno.valor = componente;
                     retorno.tipo  = componente.tipo;
                     retorno.simbolo = null;
@@ -1389,7 +1393,7 @@ public class OperacionesARL {
                 if(simbolo.esArreglo){
                     Arreglo arreglo = (Arreglo) simbolo.valor;
                     ArrayList<Integer> indices = new ArrayList<>();
-                    OperacionesARL opL = new OperacionesARL(global, tabla);
+                    OperacionesARL opL = new OperacionesARL(global, tabla,miTemplate);
                     ResultadoG indice = opL.ejecutar(raiz.hijos.get(0));
                     if (indice != null) {
                         if (indice.tipo.equals("number")) {

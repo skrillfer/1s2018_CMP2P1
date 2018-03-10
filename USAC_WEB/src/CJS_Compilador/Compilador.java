@@ -16,7 +16,7 @@ import Interfaz.Template;
  */
 public abstract class Compilador {
     //--------------------------------------------------------------------------
-    
+    public Template miTemplate;
     public static Clase claseActual;
     public static Stack<Clase> pilaClases;
     public static Stack<Metodo> pilaMetodos;
@@ -43,13 +43,13 @@ public abstract class Compilador {
                 case "asignacionLocal":
                 case "asigna_vecLocalF2":    
                     try {
-                        new Declaracion(sentencia, global, tabla);
+                        new Declaracion(sentencia, global, tabla,miTemplate);
                     } catch (Exception e) {
                     }
                     break;
                 case "llamadaFuncion":
                     try {
-                        opL = new OperacionesARL(global, tabla);
+                        opL = new OperacionesARL(global, tabla,miTemplate);
                         opL.acceso(sentencia);
                     } catch (Exception e) {
                     }
@@ -128,16 +128,16 @@ public abstract class Compilador {
                     nivelCiclo--;
                     break;    
                 case "imprimir":
-                    opL = new OperacionesARL(global,tabla);
+                    opL = new OperacionesARL(global,tabla,miTemplate);
                     ResultadoG rs = opL.ejecutar(sentencia.hijos.get(0));
                     try {
-                        Template.CONSOLA+="\n"+(String)rs.valor;
+                        miTemplate.CONSOLA+="\n"+(String)rs.valor;
                         System.out.println((String)rs.valor);
                     } catch (Exception e) {
                     }
                     break;
                 case "mensaje":
-                    opL = new OperacionesARL(global,tabla);
+                    opL = new OperacionesARL(global,tabla,miTemplate);
                     ResultadoG r1s = opL.ejecutar(sentencia.hijos.get(0));
                     try {
                         String texto=r1s.valor.toString();
@@ -158,16 +158,16 @@ public abstract class Compilador {
                     }
                     break;    
                 case "Accion_Setear":
-                    Accion_Setear setear = new Accion_Setear();
+                    Accion_Setear setear = new Accion_Setear(miTemplate);
                     metodoActual = setear.ejecutar(sentencia);
                     break;   
                 case "Accion_Obtener":
-                    opL = new OperacionesARL(global,tabla);
+                    opL = new OperacionesARL(global,tabla,miTemplate);
                     opL.ejecutar(sentencia);
                     break;
                 case "ADD":
                 case "SUB":
-                    opL = new OperacionesARL(global, global);
+                    opL = new OperacionesARL(global, global,miTemplate);
                     ResultadoG resp=opL.ejecutar(sentencia);
                     if(resp!=null){
                         if(!sentencia.valor.equals("")){
@@ -175,7 +175,7 @@ public abstract class Compilador {
                                 Nodo raizz = new Nodo("asignacionLocal","",sentencia.linea,sentencia.columna,11222);
                                 raizz.add(new Nodo("id", sentencia.valor, sentencia.linea, sentencia.columna, 8889));
                                 raizz.add(new Nodo(resp.tipo,resp.valor.toString(),sentencia.linea,sentencia.columna,666));
-                                new Declaracion(raizz, global, tabla);
+                                new Declaracion(raizz, global, tabla,miTemplate);
                             } catch (Exception e) {}
                             
                             //System.out.println(resp.valor.toString());

@@ -5,6 +5,7 @@
  */
 package Interfaz;
 
+import CJS_Compilador.CJS;
 import CJS_Compilador.Clase;
 import CJS_Compilador.TablaSimboloG;
 import Estructuras.Nodo;
@@ -33,7 +34,7 @@ import javax.swing.JTextField;
  * @author fernando
  */
 public class EnlaceGenerico extends JLabel{
-        
+        public  CJS principal_cjs=null;
     public Observador click=null;
     public Observador modificado=null;
     public Observador listo=null;
@@ -44,8 +45,11 @@ public class EnlaceGenerico extends JLabel{
     public boolean minuscula=false;
     public boolean capital_t=false; 
     public Hashtable<String,Propiedad> propiedades;
-  
-    public EnlaceGenerico(Hashtable<String,Propiedad> propiedades) throws URISyntaxException {
+    public Template template1;
+    public EnlaceGenerico(Hashtable<String,Propiedad> propiedades,CJS principal_cjs,Template template1) throws URISyntaxException {
+        this.template1=template1;
+        this.principal_cjs=principal_cjs;
+                
         this.propiedades=propiedades;
         setPropiedades();
     }
@@ -81,7 +85,7 @@ public class EnlaceGenerico extends JLabel{
                     String metodo = propiedades.get("click").valor;
                     if(!metodo.equals("")){
                         metodo = metodo.replace("(", "").replace(")", "");
-                        Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                        principal_cjs.ejecutarMetodo(metodo, 0, 0,template1);
                     }
                 } catch (Exception ex) {
                 }
@@ -95,8 +99,8 @@ public class EnlaceGenerico extends JLabel{
                 if(!rrrta.equals("")){
                     try {
                         //VentanaPrincipal.agregarNuevaPagina("nuevo_"+VentanaPrincipal.controlTab1.getComponentCount());
-                        
-                        VentanaPrincipal.lanzarPagina(rrrta);
+                        template1.buscarPagina(rrrta);
+                        //VentanaPrincipal.lanzarPagina(rrrta);
                     } catch (Exception ex) {
                     }
                 }
@@ -131,19 +135,19 @@ public class EnlaceGenerico extends JLabel{
     
     public void lanzarClick(){
         if(click!=null){
-            Template.principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual);
+            principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual,template1);
         }
     }
     
     public void lanzarEditado(){
         if(modificado!=null){
-            Template.principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual);
+            principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual,template1);
         }
     }
     
     public void lanzarFinalizado(){
         if(listo!=null){
-            Template.principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual);
+            principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual,template1);
         }
     }
     
@@ -176,7 +180,7 @@ public class EnlaceGenerico extends JLabel{
                 }else if(mayuscula){
                     txt=txt.toUpperCase();
                 }else if(capital_t){
-                    txt=Template.toCapital_t(txt);
+                    txt=template1.toCapital_t(txt);
                 }
             } catch (Exception e) {}
             setText(txt);
@@ -219,7 +223,7 @@ public class EnlaceGenerico extends JLabel{
         boolean flag=true;
         try {
             String fondo = propiedades.get("fondo").valor.trim();
-            Color color=Template.meta_colores.obtenerColor(fondo);
+            Color color=template1.meta_colores.obtenerColor(fondo);
             if(color!=null){
                 setBackground(color);
             }else{flag=false;}
@@ -281,15 +285,15 @@ public class EnlaceGenerico extends JLabel{
         if(!grupo.equals("")){
             // si existe el grupo que quiero setear a este
             // sino existe entonces agrego este grupo
-            if(!Template.lista_grupos.containsKey(grupo)){
+            if(!template1.lista_grupos.containsKey(grupo)){
                 Lista lt = new Lista();
-                Template.lista_grupos.put(grupo,lt);
+                template1.lista_grupos.put(grupo,lt);
             }
             // vere si el id existe en el grupo que tiene este mismo OBJETO
             String a_grupo=propiedades.get("grupo").valor.trim();
             if(!a_grupo.equals("")){ // si no es vacio el grupo de este componente
                 // tengo que buscar el componente en la lista de grupos
-                Lista lt= Template.lista_grupos.get(a_grupo);
+                Lista lt= template1.lista_grupos.get(a_grupo);
                 int index=0;
                 
                 Componente cmp=null;
@@ -316,13 +320,13 @@ public class EnlaceGenerico extends JLabel{
         // verificar si el nuevo id se puede cambiar
         id=id.trim();
         if(!id.equals("")){
-            if(!Template.lista_componentes.containsKey(id)){
+            if(!template1.lista_componentes.containsKey(id)){
                 // se saca el anterior y se mete el nuevo
-                Componente cmp = Template.lista_componentes.get(getName());
+                Componente cmp = template1.lista_componentes.get(getName());
                 
                 if(cmp!=null){
-                    Template.lista_componentes.remove(id);
-                    Template.lista_componentes.put(id, cmp);
+                    template1.lista_componentes.remove(id);
+                    template1.lista_componentes.put(id, cmp);
                     setName(id);
                     propiedades.get("id").valor=getName();
                             

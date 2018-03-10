@@ -18,7 +18,8 @@ public class Declaracion extends Compilador{
     TablaSimboloG global;
 
     //* cuando DECLARO PARAMETROS USO ESTE CONSTRUCTOR
-    public Declaracion(Nodo raiz, ResultadoG resultado, TablaSimboloG global, TablaSimboloG tabla) {
+    public Declaracion(Nodo raiz, ResultadoG resultado, TablaSimboloG global, TablaSimboloG tabla,Template template1) {
+        this.miTemplate=template1;
         this.raiz = raiz;
         this.global = global;
         this.tabla = tabla;
@@ -26,11 +27,12 @@ public class Declaracion extends Compilador{
     }
     
     //* cuando hago una declaracion simple USO este CONSTRUCTOR
-    public Declaracion(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla) {
+    public Declaracion(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla,Template template1) {
+        this.miTemplate=template1;
         this.raiz = raiz;
         this.global = global;//tabla de variables locales
         this.tabla = tabla;//tabla de variables globales
-        opL = new OperacionesARL(global, tabla);
+        opL = new OperacionesARL(global, tabla,miTemplate);
         declarar();
     }
     
@@ -152,7 +154,7 @@ public class Declaracion extends Compilador{
     public void declara_vecF1(){
         String nombre = raiz.hijos.get(0).valor;
         String tipo="";
-        Arreglo arreglo = new Arreglo(raiz, global, tabla);
+        Arreglo arreglo = new Arreglo(raiz, global, tabla,miTemplate);
         if (arreglo.estado) {
             SimboloG simbolo = new SimboloG(tipo, nombre, "", arreglo);
             simbolo.inicializado = true;
@@ -165,7 +167,7 @@ public class Declaracion extends Compilador{
     public void declara_vecF2(){
         String nombre = raiz.hijos.get(0).valor;
         String tipo = "";
-        Arreglo arreglo = new Arreglo(raiz,tabla,global,0);
+        Arreglo arreglo = new Arreglo(raiz,tabla,global,0,miTemplate);
         SimboloG simbolo = new SimboloG(tipo,nombre,arreglo);
         simbolo.inicializado = true;
         
@@ -182,7 +184,7 @@ public class Declaracion extends Compilador{
         if(sim.esArreglo){
             
             Arreglo arreglo = (Arreglo)sim.valor;
-            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones);
+            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones,miTemplate);
             //************como es de una sola dimension
             // si la cantidad de datos es menor o igual al tamanio unidimensional
             if(arr1.getDatos().size()<=arreglo.getDatos().size()){
@@ -320,7 +322,7 @@ public class Declaracion extends Compilador{
     public void declara_vecF1_L(){
         String nombre = raiz.hijos.get(0).valor;
         String tipo="";
-        Arreglo arreglo = new Arreglo(raiz, global, tabla);
+        Arreglo arreglo = new Arreglo(raiz, global, tabla,miTemplate);
         if (arreglo.estado) {
             SimboloG simbolo = new SimboloG(tipo, nombre, "", arreglo);
             simbolo.inicializado = true;
@@ -334,7 +336,7 @@ public class Declaracion extends Compilador{
     public void declara_vecF2_L(){
         String nombre = raiz.hijos.get(0).valor;
         String tipo = "";
-        Arreglo arreglo = new Arreglo(raiz,tabla,global,0);
+        Arreglo arreglo = new Arreglo(raiz,tabla,global,0,miTemplate);
         SimboloG simbolo = new SimboloG(tipo,nombre,arreglo);
         simbolo.inicializado = true;
         
@@ -349,7 +351,7 @@ public class Declaracion extends Compilador{
         SimboloG sim = tabla.getSimbolo(nombre, CJS.claseActual);
         if(sim.esArreglo){            
             Arreglo arreglo = (Arreglo)sim.valor;
-            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones);
+            Arreglo arr1 = new Arreglo(raiz, global, tabla, arreglo.dimensiones,miTemplate);
             //************como es de una sola dimension
             // si la cantidad de datos es menor o igual al tamanio unidimensional
             if(arr1.getDatos().size()<=arreglo.getDatos().size()){

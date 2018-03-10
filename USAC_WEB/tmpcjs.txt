@@ -1,36 +1,45 @@
-dimv num1:10;
-dimv cad1:"cadena1";
 
-dimv flag1 : "false" ;
+Dimv boton:documento.obtener("boton1");
+boton.setElemento("fondo","green");
 
-dimv date:"12/12/12";
-date:date+"";
-dimv datetime:"12/78/78 12:23:23";
-datetime: datetime+"";
+Mensaje(" yo pertenezco a la pagina 1");
 
-Mensaje("num1:"+ num1 + "\ncad1:" + cad1 + "\\nflag:" + flag1 + "\\ndate:" + date + "\\ndatetime:"+datetime);
-
-dimv vector1 : {"1","2","3","4","5","6"};
-
-Mensaje(devolverIndice(vector1));
-
-dimv prr:"true";
-
-Mensaje (prr + 10);
-
-Funcion devolverIndice(x){
-    retornar x.atexto();
-}
-
-setear();
-
-Funcion setear(){
-    Dimv var1:"sexo";
-    var22:"sss";
-    Dimv boton1;
-    boton1:Documento.obtener("boton1");
-    boton1.observador("click",funcion(){
-                   Mensaje(var1);  
+ boton.observador("listo",funcion(){
+                   Mensaje("boton1 listo");  
         });
-    
+
+boton:documento.obtener("boton21");
+boton.observador("listo",funcion(){
+                   Mensaje("boton21 listo");  
+        });
+
+boton:documento.obtener("panel_1");
+boton.observador("listo",funcion(){
+                   Mensaje("panel_1 listo");  
+        });
+
+
+
+boton:documento.obtener("btn1Tbla");
+boton.observador("listo",funcion(){
+                   Mensaje("btn1Tbla listo");  
+        });
+
+boton:documento.obtener("btn2Tbla");
+boton.observador("listo",funcion(){
+                   Mensaje("btn2Tbla listo");  
+        });
+
+boton:documento.obtener("btn3Tbla");
+boton.observador("listo",funcion(){
+                   Mensaje("btn3Tbla listo");  
+        });
+
+boton:documento.obtener("btn4Tbla");
+boton.observador("listo",funcion(){
+                   Mensaje("btn4Tbla listo");  
+        });
+
+Funcion modificar(){
+    boton.setelemento("fondo","red");
 }

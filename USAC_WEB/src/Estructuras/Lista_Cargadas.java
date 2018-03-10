@@ -19,12 +19,14 @@ public class Lista_Cargadas {
     int index=-1;
     int pt=-1;
     
-    public void add(String rutaNueva){
+    public boolean add(String rutaNueva){
         if(!ultima_agregada.equals(rutaNueva)){
             listaPerfecta.add(rutaNueva);
             index=(listaPerfecta.size()-1);
             ultima_agregada=rutaNueva;
+            return false;
         }
+        return true;
     }
     
     public int getIndex(){
@@ -50,5 +52,7 @@ public class Lista_Cargadas {
     public void setPt(int pt){
         this.pt=pt;
     }
+    
+    
     
 }

@@ -5,6 +5,7 @@
  */
 package Interfaz;
 
+import CJS_Compilador.CJS;
 import CJS_Compilador.Clase;
 import CJS_Compilador.TablaSimboloG;
 import Estructuras.Nodo;
@@ -33,18 +34,22 @@ public class TablaGenerica2 extends JPanel {
         public Observador click=null;
     public Observador modificado=null;
     public Observador listo=null;
-    
+    public  CJS principal_cjs=null;
     int filas =0;
     int columnas=0;
     NodoDOM raizT;
 
     public Hashtable<String, Propiedad> propiedadesTabla;
-
-    public TablaGenerica2(Hashtable<String, Propiedad> propiedadesTabla, NodoDOM raizT) {
-        this.propiedadesTabla=this.propiedadesTabla;
+    public Template template1;
+    public TablaGenerica2(Hashtable<String, Propiedad> propiedadesTabla, NodoDOM raizT,CJS principal_cjs,Template template1) {
+        this.template1=template1;
+        this.principal_cjs=principal_cjs;
+        this.propiedadesTabla=propiedadesTabla;
         this.raizT=raizT;
         setDimension();
         
+        
+        System.out.println("FONDO TABLA"+propiedadesTabla.get("fondo").valor);
         try {
             if(filas>0 && columnas>0){
                 setLayout(new GridLayout(filas, columnas));
@@ -61,8 +66,8 @@ public class TablaGenerica2 extends JPanel {
         
         try {
             if(propiedadesTabla.get("alto").valor.equals("") && propiedadesTabla.get("alto").valor.equals("") ){
-                setPreferredSize(new Dimension(300, 300));
-                setBackground(Color.blue);
+                setPreferredSize(new Dimension(400, 400));
+                //setBackground(Color.blue);
             }
         } catch (Exception e) {
         }
@@ -88,7 +93,7 @@ public class TablaGenerica2 extends JPanel {
                     String metodo = propiedadesTabla.get("click").valor;
                     if(!metodo.equals("")){
                         metodo = metodo.replace("(", "").replace(")", "");
-                        Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
+                        principal_cjs.ejecutarMetodo(metodo, 0, 0,template1);
                     }
                 } catch (Exception ex) {
                 }
@@ -122,19 +127,19 @@ public class TablaGenerica2 extends JPanel {
     
     public void lanzarClick(){
         if(click!=null){
-            Template.principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual);
+            principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual,template1);
         }
     }
     
     public void lanzarEditado(){
         if(modificado!=null){
-            Template.principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual);
+            principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual,template1);
         }
     }
     
     public void lanzarFinalizado(){
         if(listo!=null){
-            Template.principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual);
+            principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual,template1);
         }
     }
     
@@ -177,7 +182,7 @@ public class TablaGenerica2 extends JPanel {
     public boolean setFondo(){
         try {
             String fondo = propiedadesTabla.get("fondo").valor.trim();
-            Color color=Template.meta_colores.obtenerColor(fondo);
+            Color color=template1.meta_colores.obtenerColor(fondo);
             
             if(color!=null){
                 setBackground(color);
@@ -249,48 +254,66 @@ public class TablaGenerica2 extends JPanel {
             
             
             for (int c = 0; c < columnas; c++) {
-                PanelGenerico panel1 = new PanelGenerico(fill.propiedades);
+                PanelGenerico panel1 = new PanelGenerico(fill.propiedades,principal_cjs,template1);
+                panel1.setVisible(false);
                 if(c<fill.hijos.size()){
                     NodoDOM coll = fill.hijos.get(c);
                     NodoDOM hijo = coll.hijos.get(0);
                     
-                    PanelGenerico panel = new PanelGenerico(coll.propiedades);                    
+                    PanelGenerico panel = new PanelGenerico(coll.propiedades,principal_cjs,template1);
+                    panel.setVisible(false);
                     add(panel);
                     if(hijo.nombre.equals("boton")){
-                        
-                       panel.add(new BotonGenerico(hijo.propiedades));
+                        BotonGenerico btng = new BotonGenerico(hijo.propiedades,principal_cjs,template1);
+                        try {
+                            template1.addComponente(btng.getName(), "boton", btng, this, "tabla", getName());
+                        } catch (Exception e) {}
+                       panel.add(btng);
                     }else if(hijo.nombre.equals("imagen")){
                         
-                       ImagenGenerica imagen=new ImagenGenerica(hijo.propiedades);
-                       
+                       ImagenGenerica imagen=new ImagenGenerica(hijo.propiedades,principal_cjs,template1);
+                       imagen.setVisible(false);
                         try {
-                            Template.addComponente(imagen.getName(), "imagen", imagen, this, "tabla", getName());
+                            template1.addComponente(imagen.getName(), "imagen", imagen, this, "tabla", getName());
                         } catch (Exception e) {}
                        panel.add(imagen);
                     }else if(hijo.nombre.equals("texto")){
                         //System.out.println("=>=>"+coll.propiedades.get("$text").valor);
-                       AreaTextoGenerica area=new AreaTextoGenerica(coll.propiedades,panel.getPreferredSize());
+                       AreaTextoGenerica area=new AreaTextoGenerica(coll.propiedades,panel.getPreferredSize(),principal_cjs,template1);
+                       
+                       if(area.propiedades.get("alto").valor.trim().equals("") || area.propiedades.get("alto").valor.trim().equals("")){
+                           area.setPreferredSize(new Dimension(90, 120));
+                       }
+                       
+                       area.setVisible(false);
                        area.setOpaque(true);
                        area.setEditable(false);
                        area.setBorder(new EtchedBorder(EtchedBorder.RAISED));
                        try {
-                            Template.addComponente(area.getName(), "areatexto", area, this, "tabla", getName());
+                            template1.addComponente(area.getName(), "areatexto", area, this, "tabla", getName());
+                            
                         } catch (Exception e) {}
                        panel.add(area);
                     }
-                    panel.setBackground(Color.ORANGE);
+                    //panel.setBackground(Color.ORANGE);
                     //add(panel);
                 }else{
                     add(panel1);
-                    AreaTextoGenerica area=new AreaTextoGenerica(fill.propiedades,panel1.getPreferredSize());
+                     
+                     AreaTextoGenerica area=new AreaTextoGenerica(fill.propiedades,panel1.getPreferredSize(),principal_cjs,template1);
+                     if(area.propiedades.get("alto").valor.trim().equals("") || area.propiedades.get("alto").valor.trim().equals("")){
+                           area.setPreferredSize(new Dimension(90, 120));
+                     }
+                       
+                    area.setVisible(false);
                     area.setOpaque(true);
                     area.setEditable(false);
                     area.setBorder(new EtchedBorder(EtchedBorder.RAISED));
                     try {
-                         Template.addComponente(area.getName(), "areatexto", area, this, "tabla", getName());
+                         template1.addComponente(area.getName(), "areatexto", area, this, "tabla", getName());
                      } catch (Exception e) {}
                     panel1.add(area);
-                    panel1.setBackground(Color.orange);
+                    //panel1.setBackground(Color.orange);
                     panel1.updateUI();
                     //add(panel1);
                 }

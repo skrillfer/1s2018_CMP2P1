@@ -1,6 +1,6 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template file, choose Tools | miTemplate1s
  * and open the template in the editor.
  */
 package CJS_Compilador;
@@ -22,10 +22,8 @@ import Interfaz.PanelGenerico;
 import Interfaz.SpinnerGenerico;
 import Interfaz.TablaGenerica2;
 import Interfaz.Template;
-import static Interfaz.Template.addComponente;
-import static Interfaz.Template.addError;
-import static Interfaz.Template.lista_componentes;
-import static Interfaz.Template.meta_colores;
+
+
 import Interfaz.TextoGenerico;
 import java.awt.Color;
 import java.awt.Font;
@@ -50,9 +48,10 @@ import javax.swing.border.LineBorder;
  * @author fernando
  */
 public class Accion_Setear extends Compilador{
-
-    
-  
+    public Template miTemplate1;
+    public Accion_Setear(Template template1) {
+        miTemplate1=template1;
+    }
     
     @Override
     public Metodo ejecutar(Nodo raiz) {
@@ -60,7 +59,7 @@ public class Accion_Setear extends Compilador{
         if(raiz.hijos.size()==2 && raiz.hijos.get(0).nombre.equals("id_cmp")){//I_D:w PtoSetElemento:h   |   I_D:w PtoObservador:h
             Nodo id  = raiz.hijos.get(0);
             Nodo pto = raiz.hijos.get(1);
-            opL= new OperacionesARL(global, tabla);
+            opL= new OperacionesARL(global, tabla,miTemplate1);
             ResultadoG componente = opL.ejecutar(id);
             
             System.out.println("QUIERO setear lo que hay en var:"+id.valor);
@@ -84,7 +83,7 @@ public class Accion_Setear extends Compilador{
                     try { 
                         String ID = ((Componente) componente.valor).id;
                         ArrayList<Componente> lt = null;
-                        lt = Template.cmps_repetidos.get(ID.trim()).getLista();
+                        lt = miTemplate1.cmps_repetidos.get(ID.trim()).getLista();
                         for (Componente componente1 : lt) {
                             setObservador(evento, funcion_anonima, componente1, componente1.tipo);
                         }
@@ -101,7 +100,7 @@ public class Accion_Setear extends Compilador{
             Nodo id = pto_Obtener.hijos.get(0);
             if(id.nombre.equals("string")){
                 id.nombre="id_componente";
-                opL= new OperacionesARL(global, tabla);
+                opL= new OperacionesARL(global, tabla,miTemplate1);
                 ResultadoG componente = opL.ejecutar(id);
                 if(componente!=null){
                     switch(pto.nombre){
@@ -120,7 +119,7 @@ public class Accion_Setear extends Compilador{
                             try {
                                 String ID = ((Componente) componente.valor).id;
                                 ArrayList<Componente> lt = null;
-                                lt = Template.cmps_repetidos.get(ID.trim()).getLista();
+                                lt = miTemplate1.cmps_repetidos.get(ID.trim()).getLista();
                                 for (Componente componente1 : lt) {
                                     setObservador(evento, funcion_anonima, componente1, componente1.tipo);
                                 }
@@ -135,7 +134,7 @@ public class Accion_Setear extends Compilador{
     }
     
     public boolean setElemento(Nodo nodo1, Nodo nodo2,Componente comp, String tipo_comp, String ID){
-        opL= new OperacionesARL(global, tabla);
+        opL= new OperacionesARL(global, tabla,miTemplate1);
         ResultadoG    pro = opL.ejecutar(nodo1);
         ResultadoG    val = opL.ejecutar(nodo2);
     
@@ -153,16 +152,16 @@ public class Accion_Setear extends Compilador{
                 int stop=0;
                 
                 try {
-                    stop=Template.cmps_repetidos.get(ID.trim()).getLista().size();
+                    stop=miTemplate1.cmps_repetidos.get(ID.trim()).getLista().size();
                 } catch (Exception e) {
                 }
                 
                 
                 for (int i = 0; i < stop; i++) {
-                    Componente componente=Template.cmps_repetidos.get(ID.trim()).getLista().get(i);
+                    Componente componente=miTemplate1.cmps_repetidos.get(ID.trim()).getLista().get(i);
                     TerminarSetear(componente.tipo, propiedad, pro, val, componente, nodo1, nodo2);
                     try {
-                        stop=Template.cmps_repetidos.get(ID.trim()).getLista().size();
+                        stop=miTemplate1.cmps_repetidos.get(ID.trim()).getLista().size();
                     } catch (Exception e) {
                     }
                     
@@ -171,12 +170,12 @@ public class Accion_Setear extends Compilador{
                 System.out.println("*******************");
                 
                 /*
-                for (Componente componente :  Template.cmps_repetidos.get(ID.trim()).getLista()) {
+                for (Componente componente :  miTemplate1.cmps_repetidos.get(ID.trim()).getLista()) {
                     TerminarSetear(componente.tipo, propiedad, pro, val, componente, nodo1, nodo2);
                 }*/
                 
             }else{
-                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, "Ambos Valores string,string deben ser String en SETELEMENTO");
+                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, "Ambos Valores string,string deben ser String en SETELEMENTO");
             }
         }
         
@@ -202,29 +201,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=nuevopanel.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 nuevopanel.propiedades.get("id").valor=value;
                                 nuevopanel.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -252,21 +251,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=nuevopanel.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 nuevopanel.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -289,7 +288,7 @@ public class Accion_Setear extends Compilador{
                                 nuevopanel.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 nuevopanel.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -297,7 +296,7 @@ public class Accion_Setear extends Compilador{
                                 nuevopanel.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 nuevopanel.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -308,7 +307,7 @@ public class Accion_Setear extends Compilador{
                                 nuevopanel.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 nuevopanel.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -316,21 +315,21 @@ public class Accion_Setear extends Compilador{
                                 nuevopanel.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 nuevopanel.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             nuevopanel.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             nuevopanel.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -338,10 +337,10 @@ public class Accion_Setear extends Compilador{
                             nuevopanel.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = nuevopanel.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -358,12 +357,12 @@ public class Accion_Setear extends Compilador{
                             nuevopanel.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = nuevopanel.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "texto":
@@ -376,29 +375,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=texxto.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 texxto.propiedades.get("id").valor=value;
                                 texxto.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -426,13 +425,13 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=texxto.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 
                                 try {
@@ -440,8 +439,8 @@ public class Accion_Setear extends Compilador{
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 texxto.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -463,7 +462,7 @@ public class Accion_Setear extends Compilador{
                                 texxto.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 texxto.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -471,7 +470,7 @@ public class Accion_Setear extends Compilador{
                                 texxto.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 texxto.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -482,7 +481,7 @@ public class Accion_Setear extends Compilador{
                                 texxto.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 texxto.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -490,14 +489,14 @@ public class Accion_Setear extends Compilador{
                                 texxto.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 texxto.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             texxto.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
@@ -505,7 +504,7 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             texxto.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -513,10 +512,10 @@ public class Accion_Setear extends Compilador{
                             texxto.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = texxto.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -533,12 +532,12 @@ public class Accion_Setear extends Compilador{
                             texxto.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = texxto.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "boton":
@@ -551,29 +550,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=btn.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 btn.propiedades.get("id").valor=value;
                                 btn.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -601,21 +600,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=btn.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 btn.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -637,7 +636,7 @@ public class Accion_Setear extends Compilador{
                                 btn.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 btn.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -645,7 +644,7 @@ public class Accion_Setear extends Compilador{
                                 btn.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 btn.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -656,7 +655,7 @@ public class Accion_Setear extends Compilador{
                                 btn.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 btn.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -664,21 +663,21 @@ public class Accion_Setear extends Compilador{
                                 btn.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 btn.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             btn.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             btn.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -686,10 +685,10 @@ public class Accion_Setear extends Compilador{
                             btn.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = btn.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -707,12 +706,12 @@ public class Accion_Setear extends Compilador{
                             boolean paso = btn.setFondo();
                             System.out.println(" fondo === " +paso);
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "cajatexto":
@@ -725,29 +724,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=ctxt.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 ctxt.propiedades.get("id").valor=value;
                                 ctxt.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -775,21 +774,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=ctxt.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 ctxt.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -811,7 +810,7 @@ public class Accion_Setear extends Compilador{
                                 ctxt.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 ctxt.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -819,7 +818,7 @@ public class Accion_Setear extends Compilador{
                                 ctxt.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 ctxt.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -830,7 +829,7 @@ public class Accion_Setear extends Compilador{
                                 ctxt.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 ctxt.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -838,21 +837,21 @@ public class Accion_Setear extends Compilador{
                                 ctxt.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 ctxt.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             ctxt.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             ctxt.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -860,10 +859,10 @@ public class Accion_Setear extends Compilador{
                             ctxt.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = ctxt.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -880,12 +879,12 @@ public class Accion_Setear extends Compilador{
                             ctxt.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = ctxt.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "areatexto":
@@ -899,29 +898,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=txt_a.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 txt_a.propiedades.get("id").valor=value;
                                 txt_a.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -949,21 +948,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=txt_a.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 txt_a.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -985,7 +984,7 @@ public class Accion_Setear extends Compilador{
                                 txt_a.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 txt_a.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -993,7 +992,7 @@ public class Accion_Setear extends Compilador{
                                 txt_a.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 txt_a.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -1004,7 +1003,7 @@ public class Accion_Setear extends Compilador{
                                 txt_a.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 txt_a.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1012,21 +1011,21 @@ public class Accion_Setear extends Compilador{
                                 txt_a.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 txt_a.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             txt_a.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             txt_a.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -1034,10 +1033,10 @@ public class Accion_Setear extends Compilador{
                             txt_a.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = txt_a.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -1054,12 +1053,12 @@ public class Accion_Setear extends Compilador{
                             txt_a.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = txt_a.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "spinner":
@@ -1072,29 +1071,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=sp.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 sp.propiedades.get("id").valor=value;
                                 sp.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -1122,21 +1121,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=sp.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 sp.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -1158,7 +1157,7 @@ public class Accion_Setear extends Compilador{
                                 sp.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 sp.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1166,7 +1165,7 @@ public class Accion_Setear extends Compilador{
                                 sp.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 sp.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -1177,7 +1176,7 @@ public class Accion_Setear extends Compilador{
                                 sp.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 sp.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1185,21 +1184,21 @@ public class Accion_Setear extends Compilador{
                                 sp.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 sp.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             sp.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             sp.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -1207,10 +1206,10 @@ public class Accion_Setear extends Compilador{
                             sp.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = sp.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -1227,12 +1226,12 @@ public class Accion_Setear extends Compilador{
                             sp.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = sp.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "enlace":
@@ -1245,29 +1244,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=enlac.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 enlac.propiedades.get("id").valor=value;
                                 enlac.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -1295,21 +1294,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=enlac.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 enlac.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -1331,7 +1330,7 @@ public class Accion_Setear extends Compilador{
                                 enlac.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 enlac.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1339,7 +1338,7 @@ public class Accion_Setear extends Compilador{
                                 enlac.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 enlac.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -1350,7 +1349,7 @@ public class Accion_Setear extends Compilador{
                                 enlac.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 enlac.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1358,21 +1357,21 @@ public class Accion_Setear extends Compilador{
                                 enlac.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 enlac.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             enlac.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             enlac.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -1380,10 +1379,10 @@ public class Accion_Setear extends Compilador{
                             enlac.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = enlac.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -1400,12 +1399,12 @@ public class Accion_Setear extends Compilador{
                             enlac.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = enlac.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "tabla":
@@ -1418,29 +1417,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=tabla1.propiedadesTabla.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 tabla1.propiedadesTabla.get("id").valor=value;
                                 tabla1.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -1468,21 +1467,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=tabla1.propiedadesTabla.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 tabla1.propiedadesTabla.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -1504,7 +1503,7 @@ public class Accion_Setear extends Compilador{
                                 tabla1.propiedadesTabla.get("alto").valor = String.valueOf(num.intValue());
                                 tabla1.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1512,7 +1511,7 @@ public class Accion_Setear extends Compilador{
                                 tabla1.propiedadesTabla.get("alto").valor = String.valueOf(num.intValue());
                                 tabla1.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -1523,7 +1522,7 @@ public class Accion_Setear extends Compilador{
                                 tabla1.propiedadesTabla.get("ancho").valor = String.valueOf(num.intValue());
                                 tabla1.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1531,21 +1530,21 @@ public class Accion_Setear extends Compilador{
                                 tabla1.propiedadesTabla.get("ancho").valor = String.valueOf(num.intValue());
                                 tabla1.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             tabla1.propiedadesTabla.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             tabla1.propiedadesTabla.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -1553,26 +1552,26 @@ public class Accion_Setear extends Compilador{
                             tabla1.propiedadesTabla.get("alineado").valor = (String) val.valor;
                             boolean paso = tabla1.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Texto no APLICA");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Texto no APLICA");
                         break;
                     case "fondo":
                         if (val.tipo.equals("string")) {
                             tabla1.propiedadesTabla.get("fondo").valor = (String) val.valor;
                             boolean paso = tabla1.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "imagen":
@@ -1585,29 +1584,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=img.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 img.propiedades.get("id").valor=value;
                                 img.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -1635,21 +1634,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=img.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 img.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -1671,7 +1670,7 @@ public class Accion_Setear extends Compilador{
                                 img.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 img.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1679,7 +1678,7 @@ public class Accion_Setear extends Compilador{
                                 img.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 img.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -1690,7 +1689,7 @@ public class Accion_Setear extends Compilador{
                                 img.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 img.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1698,21 +1697,21 @@ public class Accion_Setear extends Compilador{
                                 img.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 img.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             img.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             img.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -1720,10 +1719,10 @@ public class Accion_Setear extends Compilador{
                             img.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = img.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -1740,12 +1739,12 @@ public class Accion_Setear extends Compilador{
                             img.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = img.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "cajaopciones":
@@ -1758,29 +1757,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=combo.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 combo.propiedades.get("id").valor=value;
                                 combo.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -1808,21 +1807,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=combo.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 combo.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -1844,7 +1843,7 @@ public class Accion_Setear extends Compilador{
                                 combo.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 combo.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1852,7 +1851,7 @@ public class Accion_Setear extends Compilador{
                                 combo.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 combo.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -1863,7 +1862,7 @@ public class Accion_Setear extends Compilador{
                                 combo.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 combo.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -1871,21 +1870,21 @@ public class Accion_Setear extends Compilador{
                                 combo.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 combo.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             combo.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             combo.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -1893,10 +1892,10 @@ public class Accion_Setear extends Compilador{
                             combo.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = combo.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -1913,12 +1912,12 @@ public class Accion_Setear extends Compilador{
                             combo.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = combo.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
             case "opcion":
@@ -1931,29 +1930,29 @@ public class Accion_Setear extends Compilador{
                             String value=((String)val.valor).trim();
                             String actual=opcion.propiedades.get("id").valor.trim();
                             
-                            if(Template.lista_componentes.containsKey(actual)){
+                            if(miTemplate1.lista_componentes.containsKey(actual)){
                                 
-                                Componente inicial = Template.lista_componentes.get(actual);//inicial
+                                Componente inicial = miTemplate1.lista_componentes.get(actual);//inicial
                                 
                                 opcion.propiedades.get("id").valor=value;
                                 opcion.setName(value);
                                 
                                 inicial.id=value;
                                 
-                                Template.lista_componentes.put(value, inicial);
+                                miTemplate1.lista_componentes.put(value, inicial);
                                 
-                                Template.lista_componentes.remove(actual);
+                                miTemplate1.lista_componentes.remove(actual);
                                 
                                 
-                                Lista lt=Template.cmps_repetidos.get(actual);//repetidos
+                                Lista lt=miTemplate1.cmps_repetidos.get(actual);//repetidos
                                 lt.cambiarId(value);
                                 
-                                Template.cmps_repetidos.put(value, lt);
-                                Template.cmps_repetidos.remove(actual);
+                                miTemplate1.cmps_repetidos.put(value, lt);
+                                miTemplate1.cmps_repetidos.remove(actual);
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_id.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_id.get(value);
+                                if(miTemplate1.lista_estilos_id.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_id.get(value);
                                 }
                                 
                                 if(lista_estilos!=null){
@@ -1981,21 +1980,21 @@ public class Accion_Setear extends Compilador{
                         if (val.tipo.equals("string")) {
                             String value=((String)val.valor).trim();
                             String actual=opcion.propiedades.get("grupo").valor.trim();
-                            if(Template.lista_grupos.containsKey(actual)){
-                                Lista lt=Template.lista_grupos.get(actual);// componentes que pertences a un grupo
+                            if(miTemplate1.lista_grupos.containsKey(actual)){
+                                Lista lt=miTemplate1.lista_grupos.get(actual);// componentes que pertences a un grupo
                                 
-                                if(!Template.lista_grupos.containsKey(value)){
-                                    Template.lista_grupos.put(value,new Lista());
+                                if(!miTemplate1.lista_grupos.containsKey(value)){
+                                    miTemplate1.lista_grupos.put(value,new Lista());
                                 }
-                                Template.lista_grupos.get(value).getLista().add(comp);
+                                miTemplate1.lista_grupos.get(value).getLista().add(comp);
                                 
                                 try {
                                     lt.removeListaGrupo(comp);
                                 } catch (Exception e) {}
                                 
                                 ArrayList<NodoCSS> lista_estilos =null;
-                                if(Template.lista_estilos_grupo.containsKey(value)){
-                                    lista_estilos= Template.lista_estilos_grupo.get(value);
+                                if(miTemplate1.lista_estilos_grupo.containsKey(value)){
+                                    lista_estilos= miTemplate1.lista_estilos_grupo.get(value);
                                 }
                                 opcion.propiedades.get("grupo").valor=value;
                                 if(lista_estilos!=null){
@@ -2017,7 +2016,7 @@ public class Accion_Setear extends Compilador{
                                 opcion.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 opcion.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -2025,7 +2024,7 @@ public class Accion_Setear extends Compilador{
                                 opcion.propiedades.get("alto").valor = String.valueOf(num.intValue());
                                 opcion.setAlto();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alto necesita un numero");
                             }
                         }
                         break;
@@ -2036,7 +2035,7 @@ public class Accion_Setear extends Compilador{
                                 opcion.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 opcion.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         } else if (val.tipo.equals("number")) {
                             try {
@@ -2044,21 +2043,21 @@ public class Accion_Setear extends Compilador{
                                 opcion.propiedades.get("ancho").valor = String.valueOf(num.intValue());
                                 opcion.setAncho();
                             } catch (Exception e) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ancho necesita un numero");
                             }
                         }
                     case "ruta":
                         if (val.tipo.equals("string")) {
                             opcion.propiedades.get("ruta").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Ruta necesita una CADENA");
                         }
                         break;
                     case "click":
                         if (val.tipo.equals("string")) {
                             opcion.propiedades.get("click").valor = (String) val.valor;
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Click necesita una CADENA");
                         }
                         break;
                     case "alineado":
@@ -2066,10 +2065,10 @@ public class Accion_Setear extends Compilador{
                             opcion.propiedades.get("alineado").valor = (String) val.valor;
                             boolean paso = opcion.setAlineado();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado, valor " + (String) val.valor + " invalida");
                             }
                         } else {
-                            Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
+                            miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Alineado necesita una CADENA");
                         }
                         break;
                     case "texto":
@@ -2086,12 +2085,12 @@ public class Accion_Setear extends Compilador{
                             opcion.propiedades.get("fondo").valor = (String) val.valor;
                             boolean paso = opcion.setFondo();
                             if (!paso) {
-                                Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
+                                miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad Fondo, Color " + (String) val.valor + " invalido");
                             }
                         }
                         break;
                     default:
-                        Template.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
+                        miTemplate1.reporteError_CJS.agregar("Error Semantico", nodo1.linea, nodo1.columna, tipo_comp + " Propiedad: " + propiedad + " es invalida");
                 }
                 break;
         }
@@ -2099,7 +2098,7 @@ public class Accion_Setear extends Compilador{
 
     
     public void setObservador(Nodo evento, Nodo funcion,Componente comp, String tipo_comp){
-        opL= new OperacionesARL(global, tabla);
+        opL= new OperacionesARL(global, tabla,miTemplate1);
         ResultadoG event = opL.ejecutar(evento);
         if(event!=null){
             if(event.tipo.equals("string")){
@@ -2376,7 +2375,7 @@ public class Accion_Setear extends Compilador{
     
     public void aplicarCcss(NodoCSS raiz, Componente componente, boolean pasada){
         
-        CSS_Compilador.OperacionesARL opl = new CSS_Compilador.OperacionesARL();
+        CSS_Compilador.OperacionesARL opl = new CSS_Compilador.OperacionesARL(miTemplate1);
         for (NodoCSS nodo : raiz.hijos) {
             System.out.println(" <#####> "+ nodo.nombre);
             switch(nodo.nombre){
@@ -2392,7 +2391,7 @@ public class Accion_Setear extends Compilador{
                         //Componente cmp = lista_componentes.get(raiz.valor.trim());
                         Componente cmp = null;
                         if (!pasada) {
-                            cmp = lista_componentes.get(raiz.valor.trim());
+                            cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
                         }
                         if (cmp==null){
                             if (componente!=null){
@@ -2600,7 +2599,7 @@ public class Accion_Setear extends Compilador{
                                     }
                                     break;
                                 default:
-                                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                                    ////addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
 
                             }   
                         }
@@ -2639,7 +2638,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp=null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             
             if (cmp == null) {
@@ -2666,7 +2665,7 @@ public class Accion_Setear extends Compilador{
                 case "centrado":    
                     do_alineado = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo acepta: izquierda,derecha,centrado,justificado", "Lenguaje CCSS");
 
             }
             switch (cmp.tipo) {
@@ -2742,7 +2741,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;      
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, alineado solo No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2753,7 +2752,7 @@ public class Accion_Setear extends Compilador{
             Componente cmp=null;
             
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             
             //System.out.println("SIE ESTOY PUTO"+cmp.id);
@@ -2778,7 +2777,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_texto = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, texto solo acepta STRING", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, texto solo acepta STRING", "Lenguaje CCSS");
 
             }
             switch (cmp.tipo) {
@@ -2832,7 +2831,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;    
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2843,7 +2842,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             
             
@@ -2867,7 +2866,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_letra = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Letra solo acepta: STRING ", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Letra solo acepta: STRING ", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -2899,7 +2898,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Texto  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2910,7 +2909,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             
             //System.out.println("APLICARE TAMTEX a --> "+ cmp.id);
@@ -2934,7 +2933,7 @@ public class Accion_Setear extends Compilador{
                 case "number":
                     do_tamtext = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,Tamtex solo acepta: NUMBER", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,Tamtex solo acepta: NUMBER", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -2966,7 +2965,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, TamTex  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, TamTex  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -2977,7 +2976,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             
             if (cmp==null){
@@ -2999,7 +2998,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_fondo = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,fondoElemento solo acepta: STRING", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico,fondoElemento solo acepta: STRING", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3015,13 +3014,13 @@ public class Accion_Setear extends Compilador{
                     if (do_fondo) {
                         String valor = (String) res.valor;
                         valor = valor.trim();
-                        Color color = meta_colores.obtenerColor(valor);
+                        Color color = miTemplate1.meta_colores.obtenerColor(valor);
                         try {
                             if(color!=null){
                                 System.out.println("se aplico fondocolor: [" + valor + "] a "+ cmp.id);
                                 btn.setBackground(color);
                             }else{
-                                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna,(String) nodo.hijos.get(0).valor , "el color es invalido", "LenguajeCCSS");
+                                //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna,(String) nodo.hijos.get(0).valor , "el color es invalido", "LenguajeCCSS");
                             }
                             
                         } catch (Exception e) {
@@ -3031,7 +3030,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, FondoElemento  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, FondoElemento  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3042,7 +3041,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             if (cmp==null){
                 if(porGrupo!=null){
@@ -3063,7 +3062,7 @@ public class Accion_Setear extends Compilador{
                 case "boolean":
                     do_fondo = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible solo acepta: boolean", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible solo acepta: boolean", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3089,7 +3088,7 @@ public class Accion_Setear extends Compilador{
                     
                     break;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Visible  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3099,7 +3098,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             
             if (cmp==null){
@@ -3129,7 +3128,7 @@ public class Accion_Setear extends Compilador{
                 do_borde=true;
                 System.out.println("si cumple");
             }else{
-                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Eror Semantico, Borde debe ser [number,string,boolean] error en los tipos", "Lenguaje CCSS");
+                //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Eror Semantico, Borde debe ser [number,string,boolean] error en los tipos", "Lenguaje CCSS");
             }
             
             switch (cmp.tipo) {
@@ -3146,7 +3145,7 @@ public class Accion_Setear extends Compilador{
                         String r2=(String)res2.valor;
                         boolean r3 = (boolean)res3.valor;
                         System.out.println("ANTES se aplica borde redondeado");
-                        Color color=meta_colores.obtenerColor(r2);
+                        Color color=miTemplate1.meta_colores.obtenerColor(r2);
                         try {
                             if(r3){
                                 System.out.println("se aplica borde redondeado");
@@ -3155,13 +3154,13 @@ public class Accion_Setear extends Compilador{
                                     LineBorder brdr = new LineBorder(color, r1.intValue(),true);
                                     btn.setBorder(brdr);
                                 }else{
-                                    addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
+                                    //addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
                                 }
                             }else{
                                 if(color!=null){
                                     btn.setBorder(BorderFactory.createMatteBorder(r1.intValue(), r1.intValue(), r1.intValue(), r1.intValue(), color));
                                 }else{
-                                    addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
+                                    //addError(nodo.hijos.get(1).linea, nodo.hijos.get(1).columna, nodo.hijos.get(1).valor, "el color es invalido, no existe", "Lenguaje CCSS");
                                 }
                                 
                             }
@@ -3173,7 +3172,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Borde  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Borde  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3183,7 +3182,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             if (cmp==null){
                 if(porGrupo!=null){
@@ -3203,7 +3202,7 @@ public class Accion_Setear extends Compilador{
                 case "boolean":
                     do_fondo = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque solo acepta: true o false", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque solo acepta: true o false", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3229,7 +3228,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, Opaque  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;
             }
         }
@@ -3240,7 +3239,7 @@ public class Accion_Setear extends Compilador{
         if (raiz.nombre.equals("identificador")) {
             Componente cmp = null;
             if(!pasada){
-                cmp = lista_componentes.get(raiz.valor.trim());
+                cmp = miTemplate1.lista_componentes.get(raiz.valor.trim());
             }
             if (cmp==null){
                 if(porGrupo!=null){
@@ -3261,7 +3260,7 @@ public class Accion_Setear extends Compilador{
                 case "string":
                     do_colortext = true;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, color text solo acepta: string", "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, color text solo acepta: string", "Lenguaje CCSS");
             }
             switch (cmp.tipo) {
                 case "boton":
@@ -3273,13 +3272,13 @@ public class Accion_Setear extends Compilador{
                     if (do_colortext) {
                         String valor = (String) res.valor;
                         valor=valor.trim();
-                        Color color=meta_colores.obtenerColor(valor);
+                        Color color=miTemplate1.meta_colores.obtenerColor(valor);
 
                         try {
                             if(color!=null){
                                 btn.setForeground(color);
                             }else{
-                                addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, COLORTEXT, color Invalido->: "+valor, "Lenguaje CCSS");
+                                //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, COLORTEXT, color Invalido->: "+valor, "Lenguaje CCSS");
                             }
                             System.out.println("se aplico colortext: [" + valor + "]");
                         } catch (Exception e) {
@@ -3289,7 +3288,7 @@ public class Accion_Setear extends Compilador{
                     }
                     break;
                 default:
-                    addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, ColorText  No aplica a "+cmp.tipo, "Lenguaje CCSS");
+                    //addError(nodo.hijos.get(0).linea, nodo.hijos.get(0).columna, nodo.hijos.get(0).nombre, "Error Semantico, ColorText  No aplica a "+cmp.tipo, "Lenguaje CCSS");
                     break;    
             }
         }

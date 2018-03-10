@@ -37,10 +37,10 @@ public class Para extends Compilador {
         pilaTablas.push(tabla);
         tabla = tablaTempPrincipal;
 
-        Declaracion declara = new Declaracion(declaraVar, global, tabla);
+        Declaracion declara = new Declaracion(declaraVar, global, tabla,miTemplate);
         
         SimboloG simbolo = tabla.getSimbolo(declaracion.hijos.get(0).valor, CJS.claseActual);
-        opL = new OperacionesARL(global, tabla);
+        opL = new OperacionesARL(global, tabla,miTemplate);
         ResultadoG condicion = opL.ejecutar(expCondicion);
         
         if(simbolo!=null){
@@ -59,7 +59,7 @@ public class Para extends Compilador {
                     //**************************************************************
                     //**************************************************************
 
-                    opL = new OperacionesARL(global, tabla);
+                    opL = new OperacionesARL(global, tabla,miTemplate);
                     if (operador.valor.equals("add") || operador.valor.equals("sub")) {
                         Nodo n_ADD = new Nodo(operador.valor.toUpperCase(), "", operador.linea, operador.columna, 0);
                         declaracion.hijos.get(0).nombre = "id";

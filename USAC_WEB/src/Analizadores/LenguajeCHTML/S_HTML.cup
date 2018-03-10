@@ -221,7 +221,7 @@ et_cuerpo2 ::= IPANEL:x        list_atts:LT  EXPLICIT:P  contenido_panel:r      
              |ICAJA:x         list_atts:LT  EXPLICIT:P   contenido_caja:r         {: RESULT = parser.crearNodo("caja","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos;  :}
              |ISPINNER:x      list_atts:LT  EXPLICIT:P   FSPINNER      {: RESULT = parser.crearNodo("spinner","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
              |ISALTOF:x       {: RESULT = parser.crearNodo("salto","",x.getLinea(),x.getColumna(),"");  :}
-             |ITABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:  RESULT = rz;      :}
+             |ITABLA:x list_atts:LT EXPLICIT:P contenido_tabla:rz     {: RESULT = parser.crearNodo("tabla","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=rz.hijos; :}
              |APERTURA2  EXPLICIT_2  CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 et_cuerpo1 ::= TPANEL:x        list_atts:LT  EXPLICIT:P   contenido_panel:r        {: RESULT = parser.crearNodo("panel","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos; :}
@@ -234,7 +234,7 @@ et_cuerpo1 ::= TPANEL:x        list_atts:LT  EXPLICIT:P   contenido_panel:r     
               |TCAJA:x         list_atts:LT  EXPLICIT:P   contenido_caja:r         {: RESULT = parser.crearNodo("caja","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=r.hijos;  :}
               |TSPINNER:x      list_atts:LT  EXPLICIT:P   FSPINNER      {: RESULT = parser.crearNodo("spinner","",x.getLinea(),x.getColumna(),LT,P.getCadena());  :}
               |TSALTOF:x       {: RESULT = parser.crearNodo("salto","",x.getLinea(),x.getColumna(),"");  :}
-              |TTABLA list_atts:LT EXPLICIT:P contenido_tabla:rz {:    RESULT = rz;    :}
+              |TTABLA:x list_atts:LT EXPLICIT:P contenido_tabla:rz        {: RESULT = parser.crearNodo("tabla","",x.getLinea(),x.getColumna(),LT,P.getCadena());  RESULT.hijos=rz.hijos; :}
               |APERTURA1 EXPLICIT_2 CIERRE{: RESULT = parser.crearNodo("ignorar","",0,0,""); :};
 
 contenido_panel ::= FPANEL {: RESULT = parser.crearNodo("cajaT","",0,0,""); :}

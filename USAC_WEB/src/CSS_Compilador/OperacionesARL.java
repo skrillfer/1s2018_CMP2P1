@@ -18,6 +18,12 @@ public class OperacionesARL {
     
     int fila2=0;
     int columna2=0;
+    public Template template1;
+
+    public OperacionesARL(Template template1) {
+        this.template1=template1;
+    }
+    
     
     public ResultadoG ejecutar(NodoCSS nodo){
         ResultadoG result= null;
@@ -126,7 +132,7 @@ public class OperacionesARL {
                             result = new ResultadoG("string", valor );
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en suma", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en suma", "LenguajeCCSS");
                             break;
                     }
                     break;
@@ -145,7 +151,7 @@ public class OperacionesARL {
                             result = new ResultadoG("string", valor);
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en suma", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en suma", "LenguajeCCSS");
                             break;
                     }
                     break;
@@ -168,12 +174,12 @@ public class OperacionesARL {
                             result = new ResultadoG("string", valor );
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en suma", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en suma", "LenguajeCCSS");
                             break;
                     }
                     break;
                 default:
-                    Template.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en suma", "LenguajeCCSS");
+                    template1.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en suma", "LenguajeCCSS");
                     break;
             }
         }else if(op.equals("MENOS")){
@@ -189,12 +195,12 @@ public class OperacionesARL {
                             result = new ResultadoG("number", valor );
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en resta", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en resta", "LenguajeCCSS");
                             break;
                     }
                     break;
                 default:    
-                    Template.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en resta", "LenguajeCCSS");
+                    template1.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en resta", "LenguajeCCSS");
                     break;
             }
         }else if (op.equals("POR")){
@@ -210,7 +216,7 @@ public class OperacionesARL {
                             result = new ResultadoG("number", valor );
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en multiplicacion", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en multiplicacion", "LenguajeCCSS");
                             break;
                     }
                     break;
@@ -229,12 +235,12 @@ public class OperacionesARL {
                             result = new ResultadoG("number", valor);
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en multiplicacion", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en multiplicacion", "LenguajeCCSS");
                             break;
                     }  
                     break;
                 default:
-                    Template.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en multiplicacion", "LenguajeCCSS");
+                    template1.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en multiplicacion", "LenguajeCCSS");
                     break;
                     
             }
@@ -246,7 +252,7 @@ public class OperacionesARL {
                             try {
                                 valor = (Double)r1.valor / getBoolValor(r2.valor);
                             } catch (Exception e) {
-                                Template.addError(fila2, columna2, r2.tipo, "Error Semantico, division entre 0", "LenguajeCCSS");
+                                template1.addError(fila2, columna2, r2.tipo, "Error Semantico, division entre 0", "LenguajeCCSS");
                                 return new ResultadoG("-1",valor);
                             }
                             
@@ -256,14 +262,14 @@ public class OperacionesARL {
                             try {
                                 valor = (Double)r1.valor / (Double)r2.valor;
                             } catch (Exception e) {
-                                Template.addError(fila2, columna2, r2.tipo, "Error Semantico, division entre 0", "LenguajeCCSS");
+                                template1.addError(fila2, columna2, r2.tipo, "Error Semantico, division entre 0", "LenguajeCCSS");
                                 return new ResultadoG("-1",valor);
                             }
                             
                             result = new ResultadoG("number", valor );
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en division", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en division", "LenguajeCCSS");
                             break;
                     }
                     break;
@@ -273,18 +279,18 @@ public class OperacionesARL {
                             try {
                                 valor = getBoolValor(r1.valor) / (Double) r2.valor;
                             } catch (Exception e) {
-                                Template.addError(fila2, columna2, r2.tipo, "Error Semantico, division entre 0", "LenguajeCCSS");
+                                template1.addError(fila2, columna2, r2.tipo, "Error Semantico, division entre 0", "LenguajeCCSS");
                                 return new ResultadoG("-1",valor);
                             }
                             result = new ResultadoG("number", valor);
                             break;
                         default:
-                            Template.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en division", "LenguajeCCSS");
+                            template1.addError(fila2, columna2, r2.tipo, "Error Semantico, el tipo "+r2.tipo+" no es aplicaba en division", "LenguajeCCSS");
                             break;
                     }
                     break;
                 default:
-                    Template.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en division", "LenguajeCCSS");
+                    template1.addError(fila1, columna1, r1.tipo, "Error Semantico, el tipo "+r1.tipo+" no es aplicaba en division", "LenguajeCCSS");
                     break;
                 
             }

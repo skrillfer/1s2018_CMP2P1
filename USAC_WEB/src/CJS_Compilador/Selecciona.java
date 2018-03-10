@@ -32,7 +32,7 @@ public class Selecciona extends Compilador{
                     exp.add(acceso);
                     exp.add(comp);
 
-                    opL = new OperacionesARL(global, tabla);
+                    opL = new OperacionesARL(global, tabla,miTemplate);
                     ResultadoG condicion = opL.ejecutar(exp);
 
                     if (condicion.tipo.equals("boolean")) {

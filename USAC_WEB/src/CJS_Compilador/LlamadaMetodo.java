@@ -48,7 +48,7 @@ public class LlamadaMetodo extends Compilador{
                 Nodo parametro = metodoTemp.parametros.get(i);
                 ResultadoG valor = parametros.get(i);
                 
-                new Declaracion(parametro, valor, actual.global, tabla);
+                new Declaracion(parametro, valor, actual.global, tabla,miTemplate);
             }
             pilaMetodos.push(metodoActual);
             metodoActual = metodoTemp;
@@ -91,7 +91,7 @@ public class LlamadaMetodo extends Compilador{
         ArrayList<ResultadoG> parametros = new ArrayList<>();
         Nodo nodoParametros = raiz.hijos.get(1);
         for (Nodo hijo : nodoParametros.hijos) {
-            opL = new OperacionesARL(global, tabla);
+            opL = new OperacionesARL(global, tabla,miTemplate);
             ResultadoG resultado = opL.ejecutar(hijo);
             parametros.add(resultado);
         }

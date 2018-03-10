@@ -17,7 +17,7 @@ public class Retornar extends Compilador{
     @Override
     public Metodo ejecutar(Nodo raiz) {
         if (raiz.hijos.size() > 0) {
-            opL = new OperacionesARL(global, tabla);
+            opL = new OperacionesARL(global, tabla,miTemplate);
             ResultadoG retorno = opL.ejecutar(raiz.hijos.get(0));
             metodoActual.retorno = retorno;
             metodoActual.estadoRetorno = true;

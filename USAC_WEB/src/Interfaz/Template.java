@@ -46,6 +46,7 @@ import Estructuras.Historia;
 import Estructuras.Lista_Cargadas;
 import Estructuras.Nodo;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
@@ -74,38 +75,40 @@ import javax.swing.plaf.PanelUI;
 public class Template extends JPanel implements ActionListener{
     //***************** lista de CJS clases*************************************/
     int yahay=0;
-    public static CJS principal_cjs = new CJS();
+    public  CJS principal_cjs = new CJS();
     //******************* consola de salida ***/////////////////
-    public static String CONSOLA="";
+    public  String CONSOLA="";
+    
+    
     //----------------------------------------------------//
     public static ReporteError reporteError_CJS = new ReporteError(); // este REPORTE es para CJS
     
     //**************************************************************************
     //lista de COMPONENTES REPETIDOS
-    public static Hashtable<String,Lista> cmps_repetidos = new Hashtable<>();
+    public  Hashtable<String,Lista> cmps_repetidos = new Hashtable<>();
     
     //componentes HTML
-    public static Hashtable<String,Componente> lista_componentes= new Hashtable<>();
+    public  Hashtable<String,Componente> lista_componentes= new Hashtable<>();
     
     //lista de GRUPOS un grupo tiene una lista de componentes
-    public static Hashtable<String,Lista> lista_grupos= new Hashtable<>();
+    public  Hashtable<String,Lista> lista_grupos= new Hashtable<>();
     
     //lista de estilos ya sea por id o por grupo
-    public static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_id = new Hashtable<>();
-    public static Hashtable<String,ArrayList<NodoCSS>> lista_estilos_grupo = new Hashtable<>();
+    public  Hashtable<String,ArrayList<NodoCSS>> lista_estilos_id = new Hashtable<>();
+    public  Hashtable<String,ArrayList<NodoCSS>> lista_estilos_grupo = new Hashtable<>();
     
     public static Template instance;
     
-    static ArrayList<Erro_r> lista_errores = new ArrayList<>();
+     ArrayList<Erro_r> lista_errores = new ArrayList<>();
     //**************************************************************************
-    static Hashtable<String,String> lista_cjs= new Hashtable<>(); 
-    static Hashtable<String,String> lista_ccss= new Hashtable<>(); 
+    Hashtable<String,String> lista_cjs= new Hashtable<>(); 
+     Hashtable<String,String> lista_ccss= new Hashtable<>(); 
     //**************************************************************************
-    static public Colores meta_colores = new Colores();
+     public Colores meta_colores = new Colores();
     //______________________________ PILA DE PAGINAS____________________________
     ArrayList<JPanel> listaPaginas = new ArrayList<>();
     //__________________________________________________________________________
-    static Lista_Cargadas lista_cargadas = new Lista_Cargadas();
+     Lista_Cargadas lista_cargadas = new Lista_Cargadas();
     //************ MENSAJE PAGINA NO ENCONTRADA ********************************
     JLabel error404 = new JLabel("Error Pagina no Encontrada");
     //************ PANEL PADRE**************************************************
@@ -260,7 +263,7 @@ public class Template extends JPanel implements ActionListener{
 
     // este metodo busca la pagina ingresada en el campo de texto
     public void buscarPagina(String path) throws FileNotFoundException, URISyntaxException {
-        
+        campoURL.setText(path);
         panel_P.removeAll();
         panel_P.setBackground(new Color(238, 238, 238));
         updateUI();
@@ -271,14 +274,29 @@ public class Template extends JPanel implements ActionListener{
            if(dom!=null){
                try {
                     VentanaPrincipal.lista_historial.add(new Historia(path));
-                    lista_cargadas.add(path);
+                    boolean si=lista_cargadas.add(path);
                     
+                    CONSOLA="";
+                    principal_cjs = new CJS();
+                    cmps_repetidos= new Hashtable<>();
+                    lista_componentes=new Hashtable<>();
+                    lista_grupos= new Hashtable<>();
+                    lista_estilos_id = new Hashtable<>();
+                    lista_estilos_grupo = new Hashtable<>();
+                    lista_errores =  new ArrayList<>();
+                    lista_cjs = new Hashtable<>();
+                    lista_ccss =  new Hashtable<>();
+                    panel_P.removeAll();
+
+                    
+                   
                     if(lista_cargadas.size()>1 && lista_cargadas.getPt()==-1){
                         atras.setEnabled(true);
                     }
                     
                     
                     GENERADOR_VISTA(dom,panel_P);
+                    //imprimirComponentes(panel_P);
                } catch (Exception e) {
                    reporteError_CJS.agregar("Error Ejecucion", dom.linea, dom.columna,"Generando Vista-> "+ e.getMessage(), path);
                }
@@ -294,11 +312,23 @@ public class Template extends JPanel implements ActionListener{
                } catch (Exception e) {
                    reporteError_CJS.agregar("Error Ejecucion", dom.linea, dom.columna,"Ejecutando CJS ->"+ e.getMessage(), path);
                }
+               imprimirComponentes(panel_P);
            }
            
         } else {
             System.out.println("no existe");
+            CONSOLA="";
+            principal_cjs = new CJS();
+            cmps_repetidos= new Hashtable<>();
+            lista_componentes=new Hashtable<>();
+            lista_grupos= new Hashtable<>();
+            lista_estilos_id = new Hashtable<>();
+            lista_estilos_grupo = new Hashtable<>();
+            lista_errores =  new ArrayList<>();
+            lista_cjs = new Hashtable<>();
+            lista_ccss =  new Hashtable<>();
             panel_P.removeAll();
+
             
             setearFont(error404);
             panel_P.add(error404);
@@ -306,6 +336,8 @@ public class Template extends JPanel implements ActionListener{
             updateUI();
         }
     }
+    
+    
 
     public void setearFont(JLabel label) {
         label.setFont(new Font("Trebuchet MS", Font.BOLD, 50));
@@ -396,6 +428,7 @@ public class Template extends JPanel implements ActionListener{
             int index = lista_cargadas.getIndex();
             String link = lista_cargadas.getPagina(index);
             if(!link.equals("")){
+                AlertaGenerica alert= new AlertaGenerica("Se ha agregado Exitosamente a Favoritos:\n" +link);
                 VentanaPrincipal.lista_favoritos.add(link);
             }
             
@@ -404,6 +437,70 @@ public class Template extends JPanel implements ActionListener{
         }
     }
 
+    public void imprimirComponentes(JPanel panel_P){
+        for (Component component : panel_P.getComponents()) {
+            String nombre_clase=component.getClass().getSimpleName();
+            nombre_clase=nombre_clase.toLowerCase();
+            switch(nombre_clase){
+                case "panelgenerico":
+                    ((PanelGenerico)component).setVisible(true);
+                    imprimirComponentes((PanelGenerico)component);
+                    ((PanelGenerico)component).lanzarFinalizado();
+                    break;
+                case "textogenerico":
+                    ((TextoGenerico)component).setVisible(true);
+                    ((TextoGenerico)component).lanzarFinalizado();
+                    break;
+                case "jscrollpane":
+                    ((JScrollPane)component).setVisible(true);
+                    try {
+                        Component areatexto=((TextoGenerico)component).getComponent(0);
+                        ((AreaTextoGenerica)areatexto).lanzarEditado();
+                    } catch (Exception e) {
+                    }
+                    
+                    
+                    break;
+                case "tablagenerica2":
+                    ((TablaGenerica2)component).setVisible(true);
+                    imprimirComponentes((TablaGenerica2)component);
+                    ((TablaGenerica2)component).lanzarFinalizado();
+                    break;
+                case "spinnergenerico":
+                    ((SpinnerGenerico)component).setVisible(true);
+                    ((SpinnerGenerico)component).lanzarFinalizado();
+                    break;
+                case "opciongenerica":
+                    ((OpcionGenerica)component).setVisible(true);
+                    ((OpcionGenerica)component).lanzarFinalizado();
+                    break;
+                case "imagengenerica":
+                    ((ImagenGenerica)component).setVisible(true);
+                    ((ImagenGenerica)component).lanzarFinalizado();
+                    break;
+                case "enlacegenerico":
+                    ((EnlaceGenerico)component).setVisible(true);
+                    ((EnlaceGenerico)component).lanzarFinalizado();
+                    break;    
+                case "cajatextogenerica":
+                    ((CajaTextoGenerica)component).setVisible(true);
+                    ((CajaTextoGenerica)component).lanzarFinalizado();
+                    break;     
+                case "cajaopcionesgenerica":
+                    ((CajaOpcionesGenerica)component).setVisible(true);
+                    ((CajaOpcionesGenerica)component).lanzarFinalizado();
+                    break;         
+                case "botongenerico":
+                    ((BotonGenerico)component).setVisible(true);
+                    ((BotonGenerico)component).lanzarFinalizado();
+                    break;             
+                case "areatextogenerica":
+                    ((AreaTextoGenerica)component).setVisible(true);
+                    ((AreaTextoGenerica)component).lanzarFinalizado();
+                    break;                 
+            }
+        }
+    }
     public String leerArchivo(String path){
          try {
             File file = new File(path);
@@ -450,7 +547,8 @@ public class Template extends JPanel implements ActionListener{
                     break;
                 case "panel":
                     
-                    JPanel nuevopanel = new PanelGenerico(hijo.propiedades);
+                    PanelGenerico nuevopanel = new PanelGenerico(hijo.propiedades,principal_cjs,this);
+                    nuevopanel.setVisible(false);
                     nuevopanel.setLayout(new BoxLayout(nuevopanel, BoxLayout.Y_AXIS));
                     try {
                         addComponente(nuevopanel.getName(),"panel",nuevopanel,panel_P,"panel",panel_P.getName());
@@ -462,7 +560,8 @@ public class Template extends JPanel implements ActionListener{
                     //panel_P=pila_panels.pop();
                     break;
                 case "texto":
-                    JTextPane texxto = new TextoGenerico(hijo.propiedades,panel_P.getPreferredSize());
+                    TextoGenerico texxto = new TextoGenerico(hijo.propiedades,panel_P.getPreferredSize(),principal_cjs,this);
+                    texxto.setVisible(false);
                     try {
                         addComponente(texxto.getName(),"texto",texxto,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
@@ -470,7 +569,8 @@ public class Template extends JPanel implements ActionListener{
                     updateUI();
                     break;
                 case "boton":                    
-                    JButton btn=new BotonGenerico(hijo.propiedades);
+                    BotonGenerico btn=new BotonGenerico(hijo.propiedades,principal_cjs,this);
+                    btn.setVisible(false);
                     try {
                         addComponente(btn.getName(),"boton",btn,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
@@ -478,7 +578,8 @@ public class Template extends JPanel implements ActionListener{
                     updateUI();
                     break;
                 case "caja_texto":
-                    JTextField txt=new CajaTextoGenerica(hijo.propiedades);
+                    CajaTextoGenerica txt=new CajaTextoGenerica(hijo.propiedades,principal_cjs,this);
+                    txt.setVisible(false);
                     try {
                         addComponente(txt.getName(),"cajatexto",txt,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
@@ -487,10 +588,12 @@ public class Template extends JPanel implements ActionListener{
                     break;
                 case "texto_a":
                     //VER BIEN
-                    JTextPane txt_a=new AreaTextoGenerica(hijo.propiedades,panel_P.getPreferredSize());
+                    AreaTextoGenerica txt_a=new AreaTextoGenerica(hijo.propiedades,panel_P.getPreferredSize(),principal_cjs,this);
+                    
                     JScrollPane scroll = new JScrollPane(txt_a,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                     scroll.setName("texto_a-"+txt_a.getName());
+                    scroll.setVisible(false);
                     try {
                         addComponente(txt_a.getName(),"areatexto",txt_a,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
@@ -498,7 +601,8 @@ public class Template extends JPanel implements ActionListener{
                     updateUI();
                     break;
                 case "spinner":
-                    JSpinner sp= new SpinnerGenerico(hijo.propiedades);
+                    SpinnerGenerico sp= new SpinnerGenerico(hijo.propiedades,principal_cjs,this);
+                    sp.setVisible(false);
                     try {
                         addComponente(sp.getName(),"spinner",sp,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
@@ -506,7 +610,8 @@ public class Template extends JPanel implements ActionListener{
                     updateUI();
                     break;
                 case "enlace":
-                     JLabel enlac = new EnlaceGenerico(hijo.propiedades);
+                     EnlaceGenerico enlac = new EnlaceGenerico(hijo.propiedades,principal_cjs,this);
+                     enlac.setVisible(false);
                      try {
                         addComponente(enlac.getName(),"enlace",enlac,panel_P,"panel",panel_P.getName());
                      } catch (Exception e) {}
@@ -516,8 +621,8 @@ public class Template extends JPanel implements ActionListener{
                      break;
                 case "tabla":
                     
-                     JPanel tabla = new TablaGenerica2(hijo.propiedades, hijo);
-                     
+                     TablaGenerica2 tabla = new TablaGenerica2(hijo.propiedades, hijo,principal_cjs,this);
+                     tabla.setVisible(false);
                      try {
                          addComponente(tabla.getName(),"tabla",tabla,panel_P,"panel",panel_P.getName());
                      } catch (Exception e) {}
@@ -526,7 +631,8 @@ public class Template extends JPanel implements ActionListener{
                      updateUI();
                      break;
                 case "imagen":
-                    JLabel img = new ImagenGenerica(hijo.propiedades);
+                    ImagenGenerica img = new ImagenGenerica(hijo.propiedades,principal_cjs,this);
+                    img.setVisible(false);
                     try {
                         addComponente(img.getName(),"imagen",img,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
@@ -535,7 +641,8 @@ public class Template extends JPanel implements ActionListener{
                     updateUI();
                     break;
                 case "caja":
-                    CajaOpcionesGenerica combo = new CajaOpcionesGenerica(hijo.propiedades, hijo.hijos,meta_colores);
+                    CajaOpcionesGenerica combo = new CajaOpcionesGenerica(hijo.propiedades, hijo.hijos,meta_colores,principal_cjs,this);
+                    combo.setVisible(false);
                     try {
                         addComponente(combo.getName(),"cajaopciones",combo,panel_P,"panel",panel_P.getName());
                     } catch (Exception e) {}
@@ -548,7 +655,7 @@ public class Template extends JPanel implements ActionListener{
         }
     }
     
-    public static void addComponente(String id, String tipo,Object objeto, Object padre, String tipopadre, String idpadre){
+    public   void addComponente(String id, String tipo,Object objeto, Object padre, String tipopadre, String idpadre){
         System.out.println("CCCC   >   " + id);
         
             //se obtiene el componente padre
@@ -892,7 +999,7 @@ public class Template extends JPanel implements ActionListener{
             for (String ruta : listacjs) {
                 try {
                    Nodo root=new USAC_WEB().CompilarCJS(leerArchivo(ruta));     
-                   principal_cjs.ejecucionCJS(root, "", ruta);
+                   principal_cjs.ejecucionCJS(root, "", ruta,this);
                 } catch (Exception e) {
                 }
                 
@@ -901,7 +1008,7 @@ public class Template extends JPanel implements ActionListener{
     }
     public void aplicarCcss(NodoCSS raiz, Componente componente){
         
-        OperacionesARL opl = new OperacionesARL();
+        OperacionesARL opl = new OperacionesARL(this);
         for (NodoCSS nodo : raiz.hijos) {
             switch(nodo.nombre){
                 case "alineado":
@@ -1804,7 +1911,7 @@ public class Template extends JPanel implements ActionListener{
         return salida;
     }
     
-    public static void addError( int fila,int columna,String valor, String Detalle, String pertenece){
+    public  void addError( int fila,int columna,String valor, String Detalle, String pertenece){
         lista_errores.add(new Erro_r(fila, columna, valor, Detalle,pertenece));
     }
 

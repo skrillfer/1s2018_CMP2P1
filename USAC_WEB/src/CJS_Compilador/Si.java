@@ -21,7 +21,7 @@ public class Si extends Compilador{
         Nodo sentenciasSino = raiz.hijos.get(2);// nodo de las sentencias SINO
         
         // se ejecuta el nodo EXPRESION
-        opL = new OperacionesARL(global, tabla);
+        opL = new OperacionesARL(global, tabla,miTemplate);
         ResultadoG condicion = opL.ejecutar(exp);
         
         /*

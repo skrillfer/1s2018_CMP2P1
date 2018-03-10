@@ -8,6 +8,7 @@ package CJS_Compilador;
 import java.util.ArrayList;
 import CJS_Compilador.OperacionesARL.*;
 import Estructuras.Nodo;
+import Interfaz.Template;
 /**
  *
  * @author fernando
@@ -19,7 +20,7 @@ public class Arreglo {
     private TablaSimboloG tabla;
     public boolean estado = true;
     private  OperacionesARL opL;
-    
+    public Template miTemplate;
     
     public Arreglo() {
         dimensiones = new ArrayList<>();
@@ -27,31 +28,34 @@ public class Arreglo {
     }
     
     //****asignando valores a un vector EXISTENTE
-    public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla, ArrayList<Integer> dimensiones) {
+    public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla, ArrayList<Integer> dimensiones,Template template1) {
+        this.miTemplate=template1;
         this.dimensiones = dimensiones;
         datos = new ArrayList<>();
         this.global = global;
         this.tabla = tabla;
-        opL = new OperacionesARL(global, tabla);
+        opL = new OperacionesARL(global, tabla,miTemplate);
         guardarValores2(raiz);
     }
     //*****creando VECTOR con una lista de VALORES
-    public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla) {
+    public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla,Template template1) {
+        this.miTemplate=template1;
         dimensiones = new ArrayList<>();
         datos = new ArrayList<>();
         this.global = global;
         this.tabla = tabla;
-        opL = new OperacionesARL(global, tabla);
+        opL = new OperacionesARL(global, tabla,miTemplate);
         guardarValores(raiz);
     }
 
     //*****creando un VECTOR sin valores pero con TAM establecido
-    public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla, int n) {
+    public Arreglo(Nodo raiz, TablaSimboloG global, TablaSimboloG tabla, int n,Template template1) {
+        this.miTemplate=template1;
         dimensiones = new ArrayList<>();
         datos = new ArrayList<>();
         this.global = global;
         this.tabla = tabla;
-        opL = new OperacionesARL(global, tabla);
+        opL = new OperacionesARL(global, tabla,miTemplate);
         guardarDimensiones(raiz);
         for (int i = 0; i < dimensiones.size(); i++) {
             int tam = dimensiones.get(i);

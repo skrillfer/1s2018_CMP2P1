@@ -5,6 +5,7 @@
  */
 package Interfaz;
 
+import CJS_Compilador.CJS;
 import CJS_Compilador.Clase;
 import CJS_Compilador.TablaSimboloG;
 import Estructuras.Nodo;
@@ -31,7 +32,7 @@ import javax.swing.ListCellRenderer;
  * @author fernando
  */
 public class CajaOpcionesGenerica extends JComboBox {
-        
+    public  CJS principal_cjs=null;
     public Observador click=null;
     public Observador modificado=null;
     public Observador listo=null;
@@ -49,8 +50,10 @@ public class CajaOpcionesGenerica extends JComboBox {
     Colores meta_colores;
     public Hashtable<String, Propiedad> propiedades;
     ArrayList<NodoDOM> opciones;
-
-    public CajaOpcionesGenerica(Hashtable<String, Propiedad> propiedades, ArrayList<NodoDOM> opciones,Colores meta_colores) {
+    public Template template1;
+    public CajaOpcionesGenerica(Hashtable<String, Propiedad> propiedades, ArrayList<NodoDOM> opciones,Colores meta_colores,CJS principal_cjs,Template template1) {
+        this.template1=template1;
+        this.principal_cjs=principal_cjs;
         this.meta_colores=meta_colores;
         this.propiedades = propiedades;
         this.opciones = opciones;
@@ -81,19 +84,19 @@ public class CajaOpcionesGenerica extends JComboBox {
     
     public void lanzarClick(){
         if(click!=null){
-            Template.principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual);
+            principal_cjs.ejecutarMETODO1(click.global, click.tabla,click.sentencias, click.claseActual,template1);
         }
     }
     
     public void lanzarEditado(){
         if(modificado!=null){
-            Template.principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual);
+            principal_cjs.ejecutarMETODO1(modificado.global, modificado.tabla,modificado.sentencias, modificado.claseActual,template1);
         }
     }
     
     public void lanzarFinalizado(){
         if(listo!=null){
-            Template.principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual);
+            principal_cjs.ejecutarMETODO1(listo.global, listo.tabla,listo.sentencias, listo.claseActual,template1);
         }
     }
     
@@ -129,11 +132,19 @@ public class CajaOpcionesGenerica extends JComboBox {
                     String metodo = propiedades.get("click").valor;
                     if(!metodo.equals("")){
                         metodo = metodo.replace("(", "").replace(")", "");
-                        Template.principal_cjs.ejecutarMetodo(metodo, 0, 0);
-                    }
-                    
+                        principal_cjs.ejecutarMetodo(metodo, 0, 0,template1);
+                    }    
                 } catch (Exception ex) {
                 }
+                
+                String rrrta=propiedades.get("ruta").valor.trim();
+                if(!rrrta.equals("")){
+                    try {
+                        template1.buscarPagina(rrrta);
+                    } catch (Exception ex) {
+                    }
+                }
+                
 
                 try {
                     lanzarClick();
@@ -230,7 +241,7 @@ public class CajaOpcionesGenerica extends JComboBox {
                 valor=texto;
             }
             
-            OpcionGenerica opciong = new OpcionGenerica(opcion.propiedades);
+            OpcionGenerica opciong = new OpcionGenerica(opcion.propiedades,principal_cjs,template1);
             System.out.println("OPCION :  "+opciong.getName());
             
             lista_opciones.add(new opcion(texto, valor));
@@ -253,7 +264,7 @@ public class CajaOpcionesGenerica extends JComboBox {
     
     public void agregarOpciones(){
         for (OpcionGenerica opciong : lista_generica) {
-            Template.addComponente(opciong.getName(),"opcion",opciong,this,"cajaopciones",getName());
+            template1.addComponente(opciong.getName(),"opcion",opciong,this,"cajaopciones",getName());
         }
         
     }

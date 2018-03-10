@@ -20,7 +20,7 @@ public class Mientras extends Compilador{
         Nodo sentencias = raiz.hijos.get(1);// nodo SENTENCIAS
 
         //se ejecuta EXPR y se obtiene el resultado
-        opL = new OperacionesARL(global, tabla);
+        opL = new OperacionesARL(global, tabla,miTemplate);
         ResultadoG condicion = opL.ejecutar(exp);
         
         if (condicion.tipo.equalsIgnoreCase("boolean")) {
@@ -36,7 +36,7 @@ public class Mientras extends Compilador{
                 
                 //regresamos al ambito
                 tabla = pilaTablas.pop();
-                opL = new OperacionesARL(global, tabla);
+                opL = new OperacionesARL(global, tabla,miTemplate);
                 condicion = opL.ejecutar(exp);
 
                 if (metodoActual.estadoRetorno) {

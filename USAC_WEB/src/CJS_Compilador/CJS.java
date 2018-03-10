@@ -18,14 +18,17 @@ import java.util.Stack;
 public class CJS extends Compilador{
     ArrayList<Clase> lista_Clases = new ArrayList<>();
     
-    public void ejecucionCJS(Nodo raiz,String metodoInicio,String archivo){
+    public void ejecucionCJS(Nodo raiz,String metodoInicio,String archivo, Template template1){
         //aqui habra una lista de archivos cjs que pertenecen a el html
         //como hay una lista de archivos cjs debe haber una lista de CLASES (JAVASCRIPT)
         //##############Se crear una nueva CLASE
+        System.out.println("\n\n al menos si llego aqui");
+        miTemplate=template1;
         raiz.valor=archivo;
         Clase n_clase = new Clase(raiz);
         n_clase.archivo=archivo;
-       
+        
+        
         
         claseActual=n_clase;
         global=n_clase.global;
@@ -44,7 +47,7 @@ public class CJS extends Compilador{
             if (atributo.nombre.equalsIgnoreCase("declara_var") || atributo.nombre.equalsIgnoreCase("declara_vecF1")
                     || atributo.nombre.equalsIgnoreCase("declara_vecF2") || atributo.nombre.equalsIgnoreCase("asigna_vecGlbF1")
                     || atributo.nombre.equalsIgnoreCase("asigna_vecGlbF2") || atributo.nombre.equalsIgnoreCase("asignacionGlb")) {
-                new Declaracion(atributo, global, tabla);
+                new Declaracion(atributo, global, tabla,template1);
             } else {
                 Nodo padre = new Nodo("Sentencias", "", 0, 0, 898);
                 padre.hijos.add(atributo);
@@ -66,10 +69,10 @@ public class CJS extends Compilador{
         n_clase.global=tmpGlobal;
         n_clase.tabla=tmpLocal;
         lista_Clases.add(n_clase);
-        
+        System.out.println(" \n\n y acabo aqui");
     }
     
-    public void ejecutarMETODO1(TablaSimboloG global1,TablaSimboloG local,ArrayList<Nodo> Sentencias,Clase claseActual1){
+    public void ejecutarMETODO1(TablaSimboloG global1,TablaSimboloG local,ArrayList<Nodo> Sentencias,Clase claseActual1,Template template1){
         claseActual=claseActual1;
         global=global1;
         if(local==null){
@@ -77,7 +80,7 @@ public class CJS extends Compilador{
         }else{
             tabla =local;
         }
-        
+        miTemplate=template1;
         pilaNivelCiclo = new Stack<>();
         pilaClases = new Stack<>();
         pilaMetodos = new Stack<>();
@@ -90,7 +93,7 @@ public class CJS extends Compilador{
         }
     }
     
-    public void ejecutarMetodo(String nombre, int linea, int columna){
+    public void ejecutarMetodo(String nombre, int linea, int columna,Template template1){
         for (Clase clase : lista_Clases) {
             //se busca el metodo
             claseActual=clase;
@@ -98,6 +101,7 @@ public class CJS extends Compilador{
             global=clase.global;
             tabla =clase.tabla;
             
+            miTemplate=template1;
             
             pilaNivelCiclo = new Stack<>();
             pilaClases = new Stack<>();
